@@ -1,0 +1,230 @@
+# Notes
+## Biological Background
+- Catastrophic forgetting hinders learning from new samples in real time, two parts to overcome:
+	- Need to show the ability to acquire new knowledge and refine existing
+	- Prevent new samples int
+- Stability-Plasticity Dilemma: system needs to be stable to prevent catastrophic interference but plastic enough to learn and integrate new knowledge
+- Two types of plasticity needed for a stable continuous lifelong process:
+	- Hebbian plasticity - Postive feedback instability
+	- Compensatory Homeostatic Plasticity - Stabilises neural activity
+- Decreasing rates of synaptic plasticity has been observed in brains
+- *Idea*: One network deals with rapid learning, another deals with preservation
+	- Inspiration is hippocampal system which specialises in short-term rapid learning and the neocortical system is for long term storage
+	- Problem: studies have shown that catastrophic forgetting may still occur
+- *AP:* Look into **self-organising neural networks**
+- *AP:* Look into **transfer learning**
+- Suggests that learning in animals is severely impacted if they are affected immediately from birth but nearly unaffected when impacted at older ages
+	- Perhaps suggests that supervised learning at the start followed by unsupervised learning in the future is potentially viable
+- Hebb's Rule: When one neuron drives the activity of another neuron then the connection between them is strengthened
+	- Constrained by upper limits or averages to prevent plasticity becoming too dominant
+	- Homeostatic plasticity can be viewed as a feedback control system regulating the instability of Hebbian plasticity
+- Input-driven self-organsiation plays a crucial role in the brain
+- Hierarchical oragnsition can be used to provide top-down feedback
+- Two core ways the brain learns:
+	- Extraction of statistical structure of events to generalise to new events
+	- Memory of episodic-like events
+- Literature is unclear if the brain continues to create significant amounts of new neurons as it ages
+- Samples are learned by many parts of the brain and consolidated during sleep (i.e. REM cycle)
+	- *Idea:* Perhaps suggests that a rest period is necessary to reconfigure learning e.g. reconfiguring the hyperparameters or the architecture of the network
+- Suggests the brain falsifies experiences to learn from (e.g. model-based RL)
+- Suggests the order in which classes are introduced may impact how effectively they are learned
+- Knowledge can be overwritten entirely in the brain but that information that is being overwritten by impact the learning of the information overwritting it
+## Computational Models
+- Learning from a fixed dataset overcomes catastrophic forgetting by learning on a the shuffled training data
+- Difficulty arises because we have no control over the continuous stream of input samples
+- *AP:* What are Hopfield networks?
+- Early attempts to overcome CF meant storing samples and interleaving them with incoming data
+- Another approach is increasing the neural resources whenever they are required
+	- Leads to scalability issues and slow neural networks
+	- Also don't know the number of classes and samples per class *a priori*.
+	- Non-trivial to decided how many resources to allocate in advance without making strong assumptions about unseen data
+- Three primary methods:
+	- Methods that retrain the whole network while regularizing to prevent catastrophic forgetting with previously learned
+	- Methods that selectively train the network and expand it if necessary to represent new tasks
+	- Methods that model complementary learning systems for memory consolidation
+
+### Regularisation Approaches
+- Regularisation imposes constraints on the update of the neural weights
+- Computationally modelled via additional regularisation terms that penalise changes in the mapping of the network
+- Elastic Weight Control
+- AR1 Model
+- Ensemble models can be good
+- Fixed expansion layer ensembles are quite effective w.r.t. memory space
+- Summary: 'provide a way to alleviate catastrophic forgetting under certain conditions but comprise additional loss terms which may lead to a trade off in performance'
+
+### Dynamic Approaches
+- Change architectural properties in response to new information
+- Does so by adding new neural network resources
+- Progressive networks: assign new sub-networks with fixed capacity to train with new information. Retains a pool of pre-trained models.
+- Adapt the network structure and its weights
+- Hierarchical grouping of classes based on similarities
+- Neurogenesis deep learning adds new neural units to faciliate adding new classes with intrinsic replauy
+- Dynamically expanding newtwork (DEN) increases trainable parameters to incrementally learn new tasks
+- Self-organising incremental neural network (SOINN) combined with CNNs
+	- Scalability concerns
+	- Problems with using pre-trained CNNs leads to the network conditioning on the fixed representations
+- Rehersals: Store example points that dynamically adapt the weights of the feature extractors
+- Prediction driven NNs: Self-organising recurrent networks organised in a hierarchy, Hebbian learning
+- Growing networks show promise compared to static networks
+- If using neurogenesis approach need some way to regulate the plasticity of the network
+- Need to prevent it growing obtusely large
+- Adaptive Resonance Theory
+	- One issue with it is that the order of training matters quite a lot
+- GWR learning algorithm is an efficient computation model (GWR? Geographically Weighted?)
+- Plasticity seems to have solid grounding in both biology and computational experiments
+
+### Complementary Learning Systems and Experience Replay
+- Each synaptic connection has two weights: plastic weight with slow change rate (stores long term knowledge), fast changing weight stores temporary knowledge (Hinton and Plaut 1987)
+- Reflects the properties of CLS to mitigate catastrophic forgetting during sequential task learning
+- Pseudo-recurrent dual-memory framework: one for early processing and one for long term storage (French 1997)
+- Pseudo-rehersal training, samples drawn from probability distribution rather than stored directly (Robins 1995)
+- No empirical evidence that shows these approaches scale to current datasets
+- Short and long term plasticity. Consolidate knowledge based on cause-effect hypothesis testing - learning with delayed rewards (Soltoggio 2015)
+	- Difference between long and short term plasiticity is related to confidence of consistency in the cause-effect rather than the length of time the memory has been stored
+- Self-organising map (SOM) or SOM extended with a short-term memory - GeppNet (Gepperth and Karaoguz 2015)
+	- Short-term memory has limited capacity so new knowledge can overwrite
+	- Two-phase: Initialisation and Incremental Learning
+	- Performs significantly worse than EWC (Kirkpatrick et al. 2017)
+	- Requires storing whole dataset
+- Dual-model architecture with deep generative model and a task solver (Shin et al. 2017)
+	- Training data from previously learned tasks can be sampled from generative model
+	- Sampled data interleaved with new incoming information
+	- Reduces memory consumption
+	- Conceptually similar to pseudo-rehersal
+	- Robins 1995 showed this helps consolidate existing knowledge without storing memories explictly
+- Pseudo-rehearsal incremental training with an autoencoder using output statistics of encoder to generate input for decoder during replays (Draelos et al. 2017)
+	- Same scaling problems, not proven it can scale
+- Evolable Neural Turing Machine (ENTM) (Luders et al. 2016)
+	- Agents can store long-term memory by progressively allocating additional external memory components
+	- Optimal structure is found from initially minimal configuration and then evolving topology and weights of the network
+	- One shot learning of new associations to mitigate effects of catastrophic forgetting
+	- Experiments showed that the dynamic nature will lead to the ENTM expanding memory usage forever
+	- Expanding memory will slow down the learning process a lot
+	- One fix is to use cost functions to improve efficiency of allocation
+- Gradient Episodic Memory (GEM) (Lopez-Paz and Ranzato 2017)
+	- Yields positive transfer of knowledge to previous tasks
+	- Episodic memory used to store subset of observed examples from a given task
+	- Minmises loss on current task t. Treats losses on the episodic memories of tasks k < t as inequality constraints.
+	- Avoid decreases in old tasks but allows them to increase.
+	- Requires a large amount of memory compared to things like EWC
+	- Can work much better in single pass setting
+- FearNet (Kemker and Kanan 2018)
+	- Inspired by studies of recall and consolidation during fear conditioning
+	- Three networks:
+		- Uses a hippocampal network capable of immediately recalling new examples
+		- PFC network for long-term memories
+		- Third neural network for determining whether PFC or hippocampal should be used for each example
+	- Has 'sleep' phases where it consolidates information from its hippocampal network into its PFC network
+	- PFC is a generative network creating pseudo samples that are mixed with recently observed examples from hippocampal network
+- Similarly, Kamra at el. 2018, presented a dual-memory framework 
+	- Uses a variational autoencoder as a generative model for pseudo-rehearsal
+	- Framework generates short-term memory module for each new task
+	- Prior to consolidation predictions are made using an orcale which knows which module contains the associated memory
+- Self-organising dual memory architecture (Parisi et al. 2018)
+	- Learns a spatiotemporal representation from videos in a lifelong fashion
+	- Complementary memories modelled as recurrent self-organising neural networks
+	- Episodic memory quickly adapts to incoming novel observations (uses competitive Hebbian learning)
+	- Semantic memory progressively learns compact representations by regularising intrinsic levels of structural plasticity using task-relevant signals
+	- To consolidate knowledge, trajectories of neural reactivations from the episodic memory are periodically replayed
+	- Method signficantly outperforms previously proposed lifelong learning methods
+	- Unsupervised neural maps
+	- Gradient Episodic Memory
+
+## Benchmarking and Datasets
+- No established benchmark datasets and metrics
+- Comparison of methods is hindered by limited evaluation schemes to assess overall performance, catastrophic forgetting levels and knowledge transfer
+- Lopez-Paz and Ranzato 2017:
+	- Defines protocols to assess quality
+	- Transfer of knowledge can be forwards or backwards
+	- Forwards measures influence that task T_A has on performance of future task T_B
+	- Backwards measures influence that task T_B has on performance of previous task T_A
+	- Transfer is positive when learning about T_A improves T_B (or T_B improves T_A in backwards case)
+	- Negative otherwise
+- Kemker et al. 2018, Three benchmark experiments:
+	- Data permutation
+		- Consists of training a model with a dataset along with a permuted version of the same dataset
+		- Tests the model's ability to incrementally learn new information with similar feature representations
+		- Expected that the model prevents catastrophic forgetting with original data regardless of randomly permuted data samples
+	- Incremental class learning
+		- Model reflects ability to retain previously learned information while incrementally learning one class at a time
+	- Multimodal learning
+		- Same model is sequentially trained with datasets of different modalities
+		- Tests ability of model to incrementally learning one class at a time with dramatically different feature representations
+		- e.g. using image classification dataset and then learn audio classification dataset
+- Better dataset than CIFAR-10 is the Caltech-UCSD Birds-200 (CUB-200) (Wah et al. 2011)
+- AudioSet dataset is another good one, built from YouTube videos with 10s audio clips from 632 classes, 2 million annotations (Gemmeke et al. 2017)
+- Experimental results on Standard MLP trained online, Elastic Weight Consolidation, PathNet, GeppNet, GeppNet+STM, FEL
+	- Data permutation: best was PathNet, then EWC - suggests ensembling and regularisation mechanisms work best at incrementally learning new tasks / datasets with similar feature distributions
+	- Multi-modal: EWC performed better than PathNet as EWC is better at separating non-redundant data
+	- Incremental Learning: Best results were obtained with combination of rehearsal and dual-memory systems, i.e. GeppNet+STM. Knowledge consolidation is better in these.
+	- (rehearsals are good but require storing the raw samples, pseudo-rehearsal may be a better strategy for efficiency)
+- Another good choice is CORe50 (Lomonaco and Maltoni 2017), provides 50 classes that are more similar to real-world situations encountered by autonomous robots
+- CORe50 also proposes 3 incremental learning scenarios:
+	- New instances: All classes are shown in first batch while subsequent instances of known classes become available over time
+	- New classes: In each sequential batch, new object classes are available so the model needs to deal with learning new classes without forgetting old ones
+	- New instances and classes: Both new classes and instances are presented in each training batch
+	- EWC and LwF perform signficantly worse in NC and NIC than in NI
+	- Unsurprisingly, performance generally drops when using CUB-200 or CORe50 compared with MNIST and varies based on learning strategy
+	- Indicate lifelong learning is a very challenging task
+	- Suggests large number of approaches capable of alleviating catastrophic forgetting in highly-controlled conditions do not apply too well for complex scenarios
+- Additional research is needed to develop robust and flexible approaches subject to these more exhaustive benchmarks and datasets
+
+## Developmental Approaches
+- Cruical component of human learning is the dynamic cross-modal environment with spontaneous capacity of autonomously generating goals
+- Typical complexity of datasets for lifelong learning tasks are very limited - don't reflect the richness and uncertainty of real life environments
+- Unrealistic to provide artifical agent with all necessary prior knowledge
+- Infants have a short window where they learn exceptionally quickly
+- Some self-organisation models use the following steps:
+	- Neural map is trained with a high learning rate to get the network into a rough topological shape
+	- In the second phase the learning rate and neighbourhood size are iteratively reduced for fine-tuning 
+	- Has been shown to be a very complex practice
+- Use of generative models can be helpful
+- Humans and animals exhibit better learning performance when examples are organised in a meaningful way
+	- e.g. making tasks progressively more difficult
+- Experiments on datasets of limited complexity showed that curriculum learning acts as unsupervised pre-training leading to improved generalisation and faster speed of convergence
+- Graves et al. 2017 proposes using a task selection problem as a stochastic policy
+- Curosity-driven exploration approach (Pathak et al. 2017)
+- Barros et al. 2017 proposed a deep architecture modelling cross-modal expectation learning.
+
+# Potentially Ideas
+- ADAM optimises the whole network with a single learning rate, could look at multi-variate learning rate to control across the network connections
+	- Donahue et al 2014 propose reducing learning rate might be worth a look
+	- I think this might be what Elastic Weight Control does
+	- Though Kemker et al 2018 showed EWC is not capable of learning new categories incrementally
+- PathNET looks like a promising paper to review
+	- Needs separate, independent output layer for each addition
+	- Means it cannot learn new classes incrementally
+- Analysis of how many neurons are needed to learn a class
+	- Look at formal mathematical proofs perhaps?
+- Some way to quantify how significant a sample is to the overall development of the netowrk
+	- Perhaps look at RL approaches such as TD error in the priority replay buffer but for network importance?
+
+# Further Reading
+- Learning without Forgetting: Li and Hoiem 2016
+- Transferring to smaller models: Hinton, Vinyals & Dean 2014
+- Reducing learning rates: Donahue et al. 2014
+- Elastic Weight Control: Kirkpatrick et al. 2017
+- Connection self-importance evaluation: Zenke, Poole et al. 2017
+- AR1 model (combines regularisation with archiectural strategies): Maltoni and Lomonaco 2018
+- Fixed expansion layer: Coop, Mishtal and Arel 2013
+- Genetic algorithm to find optimal path through network (PathNET): Fernando et al. 2017, Kemker et al. 2018
+- Progressive networks: Rusu et al. 2016
+- Incremental training of denoising autoencoders: Zhou, Shon, and Lee 2012
+- Adaptive network structure: Cortes et al. 2016
+- Hierarchical grouping: Xiao et al. 2014
+- Neurogenesis deep learning: Draelos et al. 2017
+- DEN: Yoon et al. 2018
+- CNN with SOINN: Part and Lemon 2016, 2017
+- Rehersal: Rebuffi et al. 2016
+- Lifelong learning with prediction-driven NNs: Parisi et al. 2017
+- Self-organising networks with additive neurogenesis: Parisi, Ji, and Wermter 2018
+- Adaptive Resonance Theory: Grossberg 2012
+- GeppNet: Gepperth and Karaoguz 2015
+- Dual-model architecture: Shin et al. 2017
+- Incremental training of autoencoder using pseudo-rehearsal: Draelos et al. 2017
+- Evolable Neural Turing Machine (ENTM): Luders et al. 2016
+- Gradient Episodic Memory (GEM) + some evaluation metrics: Lopez-Paz and Ranzato 2017
+- FearNet: Kemker and Kanan 2018
+- Self-organising dual memory architecture: Parisi et al. 2018
+- Curosity-driven exploration: Pathak et al. 2017
+- Architecture modelling cross-modal expectation learning: Barros et al. 2017
