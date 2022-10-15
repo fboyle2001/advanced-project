@@ -1,8 +1,8 @@
-# Notes
+# Continual lifelong learning with neural networks - A review
 ## Biological Background
 - Catastrophic forgetting hinders learning from new samples in real time, two parts to overcome:
 	- Need to show the ability to acquire new knowledge and refine existing
-	- Prevent new samples int
+	- Prevent new samples int 
 - Stability-Plasticity Dilemma: system needs to be stable to prevent catastrophic interference but plastic enough to learn and integrate new knowledge
 - Two types of plasticity needed for a stable continuous lifelong process:
 	- Hebbian plasticity - Postive feedback instability
