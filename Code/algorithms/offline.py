@@ -17,8 +17,9 @@ class OfflineTrainingAlgorithm(BaseTrainingAlgorithm):
             log_to_console=log_to_console
         )
 
-    def train(self, model, train_loader, max_epochs):
-        super().train(model, train_loader)
+    def train(self, model, dataset, max_epochs):
+        super().train(model, dataset)
+        train_loader = dataset.training_loader
 
         for epoch in range(max_epochs):
             self.logger.info(f"Starting epoch {epoch+1} / {max_epochs}")

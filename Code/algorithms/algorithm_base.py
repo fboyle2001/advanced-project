@@ -10,6 +10,8 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.utils.data
 
+from datasets import BaseDataset
+
 class BaseTrainingAlgorithm(ABC):
     def __init__(
         self,
@@ -72,7 +74,7 @@ class BaseTrainingAlgorithm(ABC):
     def train(
         self,
         model: nn.Module,
-        train_loader: torch.utils.data.DataLoader
+        dataset: BaseDataset
     ) -> None:
         self._setup_training(model)
 
@@ -93,3 +95,26 @@ class BaseTrainingAlgorithm(ABC):
 
         self.logger.debug(f"Initiated dump of model to {self.save_directory}/{name}.pth")
         torch.save(model.state_dict(), f"{self.save_directory}/{name}.pth")
+
+# class ExampleTrainingAlgorithm(BaseTrainingAlgorithm):
+#     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):
+#         super().__init__(
+#             name="",
+#             alg_directory="",
+#             optimiser_class=optim.Adam, 
+#             initial_optimiser_parameters={ "lr": 1e-3 },
+#             criterion_class=nn.CrossEntropyLoss,
+#             device=device,
+#             verbose=verbose,
+#             log_to_file=log_to_file,
+#             log_to_console=log_to_console
+#         )
+
+#     def train(self, model, dataset, max_epochs):
+#         super().train(model, dataset)
+#         train_loader = dataset.training_loader
+
+#         for epoch in range(max_epochs):
+#             self.logger.info(f"Starting epoch {epoch+1} / {max_epochs}")
+        
+#         self.logger.info("Training completed")

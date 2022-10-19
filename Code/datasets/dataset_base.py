@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, List, Any
 
 import torchvision
 import torchvision.transforms as transforms
@@ -11,6 +11,7 @@ class BaseDataset():
         training_dataset_parameters: dict,
         testing_dataset_parameters: dict,
         transform: transforms.Compose,
+        classes: List[Any],
         batch_size: int = 64,
         folder: str = "./data",
     ):
@@ -24,3 +25,16 @@ class BaseDataset():
         
         self.testing_data = dataset(root=folder, transform=transform, **testing_dataset_parameters)
         self.testing_loader = torch.utils.data.DataLoader(self.testing_data, batch_size=batch_size, shuffle=False, num_workers=0)
+
+        self.classes = classes
+
+# class ExampleDataset(BaseDataset):
+#     def __init__(self, batch_size):
+#         super().__init__(
+#             dataset=None,
+#             training_dataset_parameters={},
+#             testing_dataset_parameters={},
+#             transform=transforms.Compose(...),
+#             classes=["a", "b", "c"],
+#             batch_size=batch_size
+#         )
