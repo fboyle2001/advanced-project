@@ -11,7 +11,7 @@
 - Nodes added to output layer for each new class - these are fully connected to the previous layer with randonly initialised weights
   - Also gives a suggestion for the number of new parameters to introduce (see paper)
 - Train to minimise loss over all tasks and some regularisation using SGD
-- Freeze \theta_s and \theta_o and train \theta_n to convergence (warm-up step)
+- Freeze $\theta_s$ and $\theta_o$ and train $\theta_n$ to convergence (warm-up step)
 - Then jointly train all \theta until convergence (joint-optimisation)
 - Warm-up is needed to enhance fine-tuning of old task performance
 - Instead of using the old training data we use the old output from the network to train on

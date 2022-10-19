@@ -8,7 +8,7 @@
 
 ### Methodology
 * Proposes a different perspective to address continual learning based on the latent space of a weight-generating process rather than weights themselves
-* Uses a varitional auto-encoder (VAE)
+* Uses a variational auto-encoder (VAE)
 * Trains base network
 * Learns the parameter distribution
 * Samples parameters from distribution to form ensemble of models used to predict at evaluation time
