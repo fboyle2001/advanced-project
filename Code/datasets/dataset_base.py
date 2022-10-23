@@ -24,6 +24,8 @@ class BaseCLDataset():
         self._transform_composition = transform
         self._batch_size = batch_size
         self._folder = folder
+        self._training_dataset_parameters = training_dataset_parameters
+        self._testing_dataset_parameters = testing_dataset_parameters
 
         self.training_data = dataset(root=folder, transform=transform, **training_dataset_parameters)
         self.training_loader = torch.utils.data.DataLoader(self.training_data, batch_size=batch_size, shuffle=True, num_workers=0)
@@ -40,15 +42,42 @@ class BaseCLDataset():
         self.randomised_split = randomised_split
         
         if per_split is None:
-            self.task_splits = [i for i in range(len(self.classes))]
+            self.task_splits = [[i for i in range(len(self.classes))]]
             self.task_datasets = [self.training_data]
         else:
             self.task_splits, self.task_datasets = self._setup_task_datasets()
 
-    def get_metadata(self) -> str:
-        return f"{self._dataset_class.__qualname__} with {self._batch_size} batch size, is split: {self.per_split is not None}"
+    def resolve_class_indexes(
+        self,
+        indexes: List[int]
+    ) -> List[str]:
+        labels = []
 
-    def _setup_task_datasets(self) -> Tuple[List[List[str]], List[torch.utils.data.Dataset]]:
+        for i in indexes:
+            labels.append(self.classes[i])
+
+        return labels
+
+    def get_metadata(self) -> List[str]:
+        metadata = [
+            f"CL Dataset: {__name__}",
+            f"Raw Dataset: {self._dataset_class.__qualname__}",
+            f"Classes: {self.classes}",
+            f"Batch Size: {self._batch_size}",
+            f"Transform: {self._transform_composition}",
+            f"Is Split: {self.per_split is not None}"
+        ]
+
+        if self.per_split is not None:
+            metadata.append(f"Randomised Split: {self.randomised_split}")
+            metadata.append(f"Class Indexes in Tasks: {self.task_splits}")
+
+            resolved_classes = [self.resolve_class_indexes(task) for task in self.task_splits]
+            metadata.append(f"Class Names in Tasks: {resolved_classes}")
+
+        return metadata
+
+    def _setup_task_datasets(self) -> Tuple[List[List[int]], List[torch.utils.data.Dataset]]:
         assert self.per_split is not None, "Cannot setup task datasets as per_split is not set"
         divided = {}
 

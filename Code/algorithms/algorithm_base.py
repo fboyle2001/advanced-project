@@ -83,7 +83,15 @@ class BaseTrainingAlgorithm(ABC):
         model: nn.Module,
         dataset: BaseCLDataset
     ) -> None:
-        self.logger.info(dataset.get_metadata())
+        dataset_metadata = dataset.get_metadata()
+
+        for line in dataset_metadata:
+            self.logger.info(line)
+
+        with open(f"{self.save_directory}/dataset_metadata.txt", "w+") as fp:
+            for line in dataset_metadata:
+                fp.write(f"{line}\n")
+
         self._setup_training(model)
 
     @property
