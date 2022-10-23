@@ -4,6 +4,8 @@ from typing import Type, Union
 import logging
 import time
 import os
+import traceback
+import sys
 
 import torch
 import torch.optim as optim
@@ -20,7 +22,7 @@ class BaseTrainingAlgorithm(ABC):
         optimiser_class: Type[optim.Optimizer],
         initial_optimiser_parameters: dict,
         criterion_class: Type[nn.modules.loss._Loss],
-        device: Union[str, None],
+        device: Union[str, torch.device, None],
         verbose: bool,
         log_to_file: bool,
         log_to_console: bool
@@ -53,6 +55,11 @@ class BaseTrainingAlgorithm(ABC):
             style="{",
             level=(logging.DEBUG if verbose else logging.INFO)
         )
+
+        def exc_handler(exctype, value, tb):
+            self.logger.exception(''.join(traceback.format_exception(exctype, value, tb)))
+            
+        sys.excepthook = exc_handler
 
         self.logger.debug(f"Initialised training algorithm {name}")
         self.logger.info(f"Storing files at {self.save_directory}/")

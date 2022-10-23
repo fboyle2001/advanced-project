@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from .algorithm_base import BaseTrainingAlgorithm
 
-class OfflineTrainingAlgorithm(BaseTrainingAlgorithm):
+class OfflineTraining(BaseTrainingAlgorithm):
     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):
         super().__init__(
             name="Offline Training",
