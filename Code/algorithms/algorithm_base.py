@@ -12,7 +12,7 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.utils.data
 
-from datasets import BaseDataset
+from datasets import BaseCLDataset
 
 class BaseTrainingAlgorithm(ABC):
     def __init__(
@@ -81,12 +81,13 @@ class BaseTrainingAlgorithm(ABC):
     def train(
         self,
         model: nn.Module,
-        dataset: BaseDataset
+        dataset: BaseCLDataset
     ) -> None:
+        self.logger.info(dataset.get_metadata())
         self._setup_training(model)
 
     @property
-    def save_directory(self):
+    def save_directory(self) -> str:
         directory = f"./models/{self._alg_directory}/{self._init_time}"
         os.makedirs(directory, exist_ok=True)
         return directory
@@ -95,13 +96,16 @@ class BaseTrainingAlgorithm(ABC):
         self,
         model: nn.Module,
         name: Union[str, None] = None
-    ):
+    ) -> str:
         if name is None:
             name = f"save-{self._save_count}"
             self._save_count += 1
 
-        self.logger.debug(f"Initiated dump of model to {self.save_directory}/{name}.pth")
-        torch.save(model.state_dict(), f"{self.save_directory}/{name}.pth")
+        loc = f"{self.save_directory}/{name}.pth"
+
+        self.logger.debug(f"Initiated dump of model to {loc}")
+        torch.save(model.state_dict(), loc)
+        return loc
 
 # class ExampleTrainingAlgorithm(BaseTrainingAlgorithm):
 #     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):

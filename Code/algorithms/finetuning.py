@@ -19,25 +19,27 @@ class Finetuning(BaseTrainingAlgorithm):
 
     def train(self, model, dataset):
         super().train(model, dataset)
-        train_loader = dataset.training_loader
 
         self.logger.info(f"Performing single finetuning pass")
         running_loss = 0
 
-        for i, data in enumerate(train_loader, 0):
-            inp, labels = data
-            inp = inp.to(self.device)
-            labels = labels.to(self.device)
-            self.optimiser.zero_grad()
-            predictions = model(inp)
-            loss = self.criterion(predictions, labels)
-            loss.backward()
-            self.optimiser.step()
+        for i, (task_split, task_training_loader) in enumerate(dataset.iterate_task_dataloaders()):
+            self.logger.info(f"Finetuning on task #{i + 1} with class split {task_split}")
 
-            running_loss += loss.item()
+            for i, data in enumerate(task_training_loader, 0):
+                inp, labels = data
+                inp = inp.to(self.device)
+                labels = labels.to(self.device)
+                self.optimiser.zero_grad()
+                predictions = model(inp)
+                loss = self.criterion(predictions, labels)
+                loss.backward()
+                self.optimiser.step()
 
-            if i == len(train_loader) - 1:
-                self.logger.info(f"Loss: {running_loss / 2000:.3f}")
-                running_loss = 0
+                running_loss += loss.item()
+
+                if i == len(task_training_loader) - 1:
+                    self.logger.info(f"Loss: {running_loss / 2000:.3f}")
+                    running_loss = 0
         
         self.logger.info("Training completed")

@@ -1,5 +1,4 @@
-from lib2to3.pytree import Base
-from .dataset_base import BaseDataset
+from .dataset_base import BaseCLDataset
 
 import torchvision
 from torchvision import transforms
@@ -11,13 +10,15 @@ cifar_transform = transforms.Compose([
 
 cifar_classes = ["plane", "car", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 
-class CIFAR10(BaseDataset):
-    def __init__(self, batch_size):
+class CIFAR10(BaseCLDataset):
+    def __init__(self, batch_size, per_split=None, randomised_split=True):
         super().__init__(
             dataset=torchvision.datasets.CIFAR10,
             training_dataset_parameters={ "train": True, "download": True },
             testing_dataset_parameters={ "train": False, "download": True },
             transform=cifar_transform,
             classes=cifar_classes,
+            per_split=per_split,
+            randomised_split=randomised_split,
             batch_size=batch_size
         )

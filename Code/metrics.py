@@ -1,12 +1,12 @@
 from typing import Dict, Tuple, Union
 
-from datasets import BaseDataset
+from datasets import BaseCLDataset
 import torch
 
 def evaluate_accuracy(
     model: torch.nn.Module,
     device: Union[str, torch.device, None], 
-    dataset: BaseDataset,
+    dataset: BaseCLDataset,
     model_location = None
 ) -> Tuple[int, int, Dict[Union[str, int], Dict[str, int]]]:
     if model_location is not None:
