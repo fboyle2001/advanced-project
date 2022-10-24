@@ -31,7 +31,7 @@ algorithm_kwargs_lookup = {
     },
     algorithms.ElasticWeightConsolidation: {
         "init": {
-            "task_importance": 1000
+            "task_importance": 100
         },
         "train": {
             "epochs_per_task": 5
