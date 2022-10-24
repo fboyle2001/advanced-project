@@ -17,29 +17,32 @@ class Finetuning(BaseTrainingAlgorithm):
             log_to_console=log_to_console
         )
 
-    def train(self, model, dataset):
+    def train(self, model, dataset, epochs_per_task: int = 1):
         super().train(model, dataset)
+        self.logger.info(f"Performing finetuning with {epochs_per_task} epochs pers task for {len(dataset.task_splits)} tasks")
 
-        self.logger.info(f"Performing single finetuning pass")
         running_loss = 0
 
-        for i, (task_split, task_training_loader) in enumerate(dataset.iterate_task_dataloaders()):
-            self.logger.info(f"Finetuning on task #{i + 1} with class split {task_split}")
+        for task_id, (task_split, task_training_loader) in enumerate(dataset.iterate_task_dataloaders()):
+            self.logger.info(f"Finetuning on Task #{task_id + 1} with class split {task_split} (classes: {dataset.resolve_class_indexes(task_split)})")
 
-            for i, data in enumerate(task_training_loader, 0):
-                inp, labels = data
-                inp = inp.to(self.device)
-                labels = labels.to(self.device)
-                self.optimiser.zero_grad()
-                predictions = model(inp)
-                loss = self.criterion(predictions, labels)
-                loss.backward()
-                self.optimiser.step()
+            for epoch in range(epochs_per_task): 
+                self.logger.info(f"Epoch {epoch + 1} / {epochs_per_task} for Task #{task_id + 1}")
 
-                running_loss += loss.item()
+                for i, data in enumerate(task_training_loader, 0):
+                    inp, labels = data
+                    inp = inp.to(self.device)
+                    labels = labels.to(self.device)
+                    self.optimiser.zero_grad()
+                    predictions = model(inp)
+                    loss = self.criterion(predictions, labels)
+                    loss.backward()
+                    self.optimiser.step()
 
-                if i == len(task_training_loader) - 1:
-                    self.logger.info(f"Loss: {running_loss / 2000:.3f}")
-                    running_loss = 0
+                    running_loss += loss.item()
+
+                    if i == len(task_training_loader) - 1:
+                        self.logger.info(f"Loss: {running_loss / 2000:.3f}")
+                        running_loss = 0
         
         self.logger.info("Training completed")

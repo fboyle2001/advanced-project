@@ -1,7 +1,9 @@
+import logging
 from typing import Dict, Tuple, Union
 
 from datasets import BaseCLDataset
 import torch
+import json
 
 def evaluate_accuracy(
     model: torch.nn.Module,
@@ -70,5 +72,17 @@ def evaluate_accuracy(
     
     return total, total_correct, class_evaluation
 
+def run_metrics(
+    model: torch.nn.Module,
+    device: Union[str, torch.device],
+    dataset: BaseCLDataset,
+    directory: str,
+    logger: logging.Logger
+):
+    total, total_correct, class_eval = evaluate_accuracy(model, device, dataset)
 
+    with open(f"{directory}/classification_results.json", "w+") as fp:
+        json.dump(class_eval, fp, indent=2)
+
+    logger.info(f"Classified {total_correct} / {total} samples correctly ({100*total_correct/total:.2f})%")
 

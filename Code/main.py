@@ -5,14 +5,14 @@ import algorithms
 import datasets
 import metrics
 
-import json
-
 ## DEFAULT ALGORITHM SETTINGS
 
 algorithm_kwargs_lookup = {
     algorithms.Finetuning: {
         "init": {},
-        "train": {}
+        "train": {
+            "epochs_per_task": 1
+        }
     },
     algorithms.OfflineTraining: {
         "init": {},
@@ -28,16 +28,24 @@ algorithm_kwargs_lookup = {
             "batch_size": 16,
             "max_epochs": 5
         }
+    },
+    algorithms.ElasticWeightConsolidation: {
+        "init": {
+            "task_importance": 1000
+        },
+        "train": {
+            "epochs_per_task": 20
+        }
     }
 }
 
 ## PARAMETERS
 
 batch_size = 64
-algorithm_class = algorithms.Finetuning
+algorithm_class = algorithms.ElasticWeightConsolidation
 dataset_class = datasets.CIFAR10
 model = resnet18(weights=None)
-per_split = 2
+per_split = 5
 
 algorithm_kwargs_overrides = None
 
@@ -54,9 +62,4 @@ dataset = dataset_class(batch_size, **dataset_kwargs)
 trainer.train(model, dataset, **algorithm_kwargs["train"])
 trainer.dump_model(model)
 
-total, total_correct, class_eval = metrics.evaluate_accuracy(model, device, dataset)
-
-with open(f"{trainer.save_directory}/classification_results.json", "w+") as fp:
-    json.dump(class_eval, fp, indent=2)
-
-trainer.logger.info(f"Classified {total_correct} / {total} samples correctly ({100*total_correct/total:.2f})%")
+metrics.run_metrics(model, device, dataset, trainer.save_directory, trainer.logger)

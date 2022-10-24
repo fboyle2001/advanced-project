@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import Dataset
 import numpy as np
 from PIL import Image
+import random
 
 def get_gpu(fatal_on_error=True):
     cuda_available = torch.cuda.is_available()
@@ -39,3 +40,6 @@ class CustomImageDataset(Dataset):
     
     def __len__(self):
         return len(self.data)
+
+    def get_sample(self, sample_size):
+        return random.sample(self.data, k=sample_size)
