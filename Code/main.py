@@ -31,10 +31,10 @@ algorithm_kwargs_lookup = {
     },
     algorithms.ElasticWeightConsolidation: {
         "init": {
-            "task_importance": 1
+            "task_importance": 1000
         },
         "train": {
-            "epochs_per_task": 1
+            "epochs_per_task": 5
         }
     }
 }

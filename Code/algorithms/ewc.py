@@ -13,6 +13,9 @@ from torch.distributions import Categorical
 import copy
 import random
 
+from nngeometry.metrics import FIM
+from nngeometry.object import PMatKFAC, PMatDiag, PVector
+
 """
 Elastic Weight Consolidation (Kirkpatrick et al. 2017)
 
@@ -42,68 +45,8 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
         self.task_importance = task_importance
         self.stored_parameters = {}
 
-    def estimate_fim(self, model, dataset, sample_size, batch_size, device="cuda:0"):
-        # Compute the log likelihoods of samples
-        # Take the gradient of each log likelihood
-        # Square and mean the gradients
-
-        loglike = []
-
-        loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-        for img, labels in loader:
-            img = img.to(device)
-            labels = labels.to(device)
-
-            predictions = model(img)
-            loglike.append(F.log_softmax(predictions, dim=1)[range(batch_size), labels.data])
-
-            if len(loglike) >= sample_size // batch_size:
-                break
-
-        self.logger.debug(f"Have {len(loglike)} LL samples")
-
-        loglike = torch.cat(loglike).unbind()
-
-        self.logger.debug("Trying to autograd")
-        fisher_diagonals = []
-
-        parts = []
-
-        for i, l in enumerate(loglike):
-            # self.logger.debug(f"Autogradding {i + 1}")
-            gs = torch.autograd.grad(l, model.parameters(), retain_graph=True)
-
-            for j in range(len(gs)):
-                if i == 0:
-                    parts.append((gs[j] ** 2).mean(0))
-                else:
-                    parts[j] += (gs[j] ** 2).mean(0)
-
-        for i in range(len(parts)):
-            parts[i] /= len(parts)
-        
-        # loglike_grads = zip(*[torch.autograd.grad(l, model.parameters(), retain_graph=(i < len(loglike))) for i, l in enumerate(loglike, 1)])
-        # self.logger.debug("Autogradded")
-        # loglike_grads = [torch.stack(gs) for gs in parts]
-        # fisher_diagonals = [(g ** 2).mean(0) for g in loglike_grads]
-
-        return {n: f.detach() for n, f in zip([n for n, _ in model.named_parameters()], parts)}
-
-    def compute_ewc_loss_component(self, model: nn.Module, fim: Dict):
-        if len(self.stored_parameters.keys()) == 0:
-            return 0
-
-        losses = []
-
-        for name, parameter in model.named_parameters():
-            # Might need to require grad here?
-            locked_param = self.stored_parameters[name]
-            fisher_information = fim[name] 
-
-            losses.append((fisher_information * (parameter - locked_param) ** 2).sum())
-
-        return self.task_importance * sum(losses)
+        self.fim = None
+        self.v0 = None
 
     def train(self, model, dataset, epochs_per_task=1):
         super().train(model, dataset)
@@ -137,7 +80,18 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
 
                     self.optimiser.zero_grad()
                     predictions = model(imgs)
-                    loss = self.criterion(predictions, labels) + self.compute_ewc_loss_component(model, fim)
+
+                    loss = self.criterion(predictions, labels)
+
+                    if self.fim is not None: 
+                        c = 0
+                        l = 0
+                        for n, p in model.named_parameters():
+                            l += ((p - self.stored_parameters[n]) ** 2).sum()
+                            c += 1
+                        l /= c
+                        loss += self.task_importance * l
+
                     loss.backward()
                     self.optimiser.step()
 
@@ -147,14 +101,16 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
                         self.logger.info(f"Loss: {running_loss / len(task_training_loader):.3f}")
                         running_loss = 0
 
-            self.logger.debug("Copying parameters")
-            self.stored_parameters = copy.deepcopy({n: p for n, p in model.named_parameters()})
-            self.logger.debug("Computing FIM")
-
-            if task_no != len(dataset.task_datasets) - 1:
-                fim = self.estimate_fim(model, dataset.task_datasets[task_no], fisher_estimation_sample_size, fisher_batch_size)
+            if task_no != len(dataset.task_datasets):
+                self.logger.debug("Consolidating EWC parameters")
+                self.consolidate(model, dataset.task_datasets[0])
         
         self.logger.info("Training completed")
+
+    def consolidate(self, model, dataset):
+        self.logger.debug("Copying existing model parameters for ")
+        self.stored_parameters = copy.deepcopy({n: p for n, p in model.named_parameters()})
+        self.fim = {}
 
 def fim_diag(model: nn.Module, dataset: list, device: str = "cuda:0"):
     precision_matrices = {}
