@@ -50,7 +50,7 @@ class Example(BaseCLAlgorithm):
                 logger.info(f"Starting epoch {epoch} / {self.max_epochs_per_task}")
                 running_loss = 0
 
-                for i, data in enumerate(task_dataloader, 0):
+                for batch_no, data in enumerate(task_dataloader, 0):
                     inp, labels = data
                     inp = inp.to(self.device)
                     labels = labels.to(self.device)
@@ -64,7 +64,7 @@ class Example(BaseCLAlgorithm):
 
                     running_loss += loss.item()
 
-                    if i == len(task_dataloader) - 1:
+                    if batch_no == len(task_dataloader) - 1:
                         logger.info(f"{epoch}, loss: {running_loss / (len(task_dataloader) - 1):.3f}")
                         running_loss = 0
         

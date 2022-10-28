@@ -32,14 +32,13 @@ def evaluate_accuracy(
             images = images.to(algorithm.device)
             ground_truth = ground_truth.to(algorithm.device)
 
-            output = algorithm.model(images)
-            _, predicted = torch.max(output.data, 1)
+            predicted = algorithm.classify(images)
 
             total += ground_truth.size(0)
             
             for i, truth_tensor in enumerate(ground_truth):
                 truth = dataset.classes[truth_tensor.item()]
-                prediction = dataset.classes[predicted[i].item()]
+                prediction = dataset.classes[predicted[i].item()] # type: ignore
 
                 if truth not in class_evaluation.keys():
                     class_evaluation[truth] = {

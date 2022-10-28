@@ -1,12 +1,20 @@
+from typing import Any
+
 import random
 import pickle
 
-from torch_utils import CustomImageDataset
+import torch
+from datasets.utils import CustomImageDataset
 
+# TODO: Generate docstrings
 class HashReplayBuffer:
     VALID_STRATEGIES = ["random_from_largest_class"]
 
-    def __init__(self, max_size, max_strategy):
+    def __init__(
+        self, 
+        max_size: int, 
+        max_strategy: str
+    ):
         assert max_strategy in self.VALID_STRATEGIES, f"{max_strategy} is not a valid strategy"
         
         self.max_size = max_size
@@ -27,7 +35,7 @@ class HashReplayBuffer:
         self.hashes = set()
         self.count = 0
 
-    def _remove_sample(self):
+    def _remove_sample(self) -> None:
         if self.count == 0:
             return
 
@@ -44,7 +52,7 @@ class HashReplayBuffer:
         
         self.count -= 1
 
-    def add_to_buffer(self, img, label):
+    def add_to_buffer(self, img: torch.Tensor, label: Any) -> None:
         img = img.detach().cpu()
 
         # If the label is not in the keys then add it
@@ -71,7 +79,7 @@ class HashReplayBuffer:
 
         self.count += 1
 
-    def to_torch_dataset(self):
+    def to_torch_dataset(self) -> CustomImageDataset:
         data = []
         targets = []
 
