@@ -3,6 +3,13 @@ import torch.nn as nn
 
 from .algorithm_base import BaseTrainingAlgorithm
 
+"""
+Finetuning
+
+Disjoint Task Formulation: Yes
+Online CL: No
+Class Incremental: Yes
+"""
 class Finetuning(BaseTrainingAlgorithm):
     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):
         super().__init__(

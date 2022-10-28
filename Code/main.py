@@ -22,19 +22,19 @@ algorithm_kwargs_lookup = {
     },
     algorithms.GDumb: {
         "init": {
-            "max_memory_samples": 2000
+            "max_memory_samples": 10000
         },
         "train": {
-            "batch_size": 16,
-            "max_epochs": 5
+            "batch_size": 64,
+            "max_epochs": 100
         }
     },
     algorithms.ElasticWeightConsolidation: {
         "init": {
-            "task_importance": 100
+            "task_importance": 2300
         },
         "train": {
-            "epochs_per_task": 5
+            "epochs_per_task": 50
         }
     }
 }
@@ -42,10 +42,10 @@ algorithm_kwargs_lookup = {
 ## PARAMETERS
 
 batch_size = 64
-algorithm_class = algorithms.ElasticWeightConsolidation
+algorithm_class = algorithms.Finetuning
 dataset_class = datasets.CIFAR10
 model = resnet18(weights=None)
-per_split = 5
+per_split = None
 
 algorithm_kwargs_overrides = None
 

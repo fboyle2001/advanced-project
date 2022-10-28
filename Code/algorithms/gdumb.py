@@ -10,6 +10,10 @@ GDumb (Prabhu et al. 2020)
 
 Stores samples in a replay buffer and uses it at inference time to train
 a model from scratch. Challenges the success of existing algorithms
+
+Disjoint Task Formulation: No
+Online CL: Yes
+Class Incremental: Yes
 """
 class GDumb(BaseTrainingAlgorithm):
     def __init__(self, device, max_memory_samples, verbose=True, log_to_file=True, log_to_console=True):

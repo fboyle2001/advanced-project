@@ -3,6 +3,13 @@ import torch.nn as nn
 
 from .algorithm_base import BaseTrainingAlgorithm
 
+"""
+Offline Training
+
+Disjoint Task Formulation: N/A (Not CL)
+Online CL: N/A (Not CL)
+Class Incremental: N/A (Not CL)
+"""
 class OfflineTraining(BaseTrainingAlgorithm):
     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):
         super().__init__(

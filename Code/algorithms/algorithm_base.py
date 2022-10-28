@@ -115,6 +115,20 @@ class BaseTrainingAlgorithm(ABC):
         torch.save(model.state_dict(), loc)
         return loc
 
+# from .algorithm_base import BaseTrainingAlgorithm
+#
+# import torch.optim as optim
+# import torch.nn as nn
+#
+# """
+# [Name] (Reference)
+# 
+# [Description]
+# 
+# Disjoint Task Formulation: Yes / No
+# Online CL: Yes / No
+# Class Incremental: Yes / No
+# """
 # class ExampleTrainingAlgorithm(BaseTrainingAlgorithm):
 #     def __init__(self, device, verbose=True, log_to_file=True, log_to_console=True):
 #         super().__init__(

@@ -32,6 +32,10 @@ parameter value
 Reference repositories:
 https://github.com/kuc2477/pytorch-ewc/
 https://github.com/moskomule/ewc.pytorch
+
+Disjoint Task Formulation: Yes
+Online CL: No
+Class Incremental: Yes
 """
 class ElasticWeightConsolidation(BaseTrainingAlgorithm):
     def __init__(self, device, task_importance, verbose=True, log_to_file=True, log_to_console=True):
@@ -92,7 +96,10 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
                         running_ewc += ewc_loss.detach().item()
 
                     loss.backward()
-                    torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+
+                    if self.fim is not None:
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+                        
                     self.optimiser.step()
 
                     running_loss += loss.item()
@@ -107,8 +114,15 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
                         running_ewc = 0
 
             if task_no != len(dataset.task_datasets) - 1:
+                concat_ds = dataset.task_datasets[0]
+                self.logger.debug(f"Concat DS 0")
+
+                for k in range(1, task_no + 1):
+                    self.logger.debug(f"Concat DS {k}")
+                    concat_ds = torch.utils.data.ConcatDataset([concat_ds, dataset.task_datasets[k]])
+
                 self.logger.debug("Consolidating EWC parameters")
-                self.consolidate(model, dataset.task_datasets[0])
+                self.consolidate(model, concat_ds)
         
         self.logger.info("Training completed")
 
@@ -119,7 +133,7 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
         self.logger.debug("Computing FIM")
         # self.fim = {n: torch.ones_like(p) for n, p in model.named_parameters()}
 
-        real_fim = fim_diag(model, torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True), samples_no=1024, device=torch.device("cuda:0"), verbose=True)
+        real_fim = fim_diag(model, torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True), samples_no=4096, device=torch.device("cuda:0"), verbose=True)
         self.fim = real_fim
 
         # for n in self.stored_parameters.keys():
@@ -128,6 +142,7 @@ class ElasticWeightConsolidation(BaseTrainingAlgorithm):
 import time
 import sys
 
+# Need to replace, this is completely copied
 def fim_diag(model: nn.Module,
              data_loader: torch.utils.data.DataLoader,
              samples_no: int = None,
