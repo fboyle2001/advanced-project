@@ -97,10 +97,12 @@ class GDumb(BaseCLAlgorithm):
 
                 running_loss += loss.item()
 
-                if batch_no == len(buffer_dataloader) - 1:
-                    logger.info(f"{epoch} loss: {running_loss / (len(buffer_dataloader) - 1):.3f}")
-                    running_loss = 0
+            avg_running_loss = running_loss / (len(buffer_dataloader) - 1)
+            logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
+            self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch)
+            running_loss = 0
         
+        self.run_base_task_metrics(task_no=0)
         logger.info("Training completed")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:

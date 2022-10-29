@@ -42,6 +42,7 @@ class BaseCLAlgorithm(abc.ABC):
         self.loss_criterion = loss_criterion_instance
 
         self.writer = writer
+        self.directory = writer.log_dir
 
     @staticmethod
     @abc.abstractmethod
@@ -120,3 +121,28 @@ class BaseCLAlgorithm(abc.ABC):
         output = self.model(batch)
         _, predicted = torch.max(output.data, 1)
         return predicted
+    
+    def run_base_task_metrics(self, task_no: int):
+        """
+        Run 
+
+        Args:
+            task_no (int): _description_
+        """
+        import metrics
+
+        base_name = f"Task {task_no}"
+        base_label = f"task_{task_no}"
+        
+        logger.info(f"Running metrics: {base_name}")
+
+        total, total_correct, class_eval = metrics.evaluate_accuracy(self)
+
+        with open(f"{self.directory}/{base_label}_accuracy_results.json", "w+") as fp:
+            json.dump(class_eval, fp, indent=2)
+
+        logger.debug(f"Raw classification accuracy results saved to {self.directory}/{base_label}_accuracy_results.json")
+        logger.info(f"Correctly classified {total_correct} / {total} samples ({(100 * total_correct / total):.2f}% correct)")
+
+        accuracy_bar_figure = metrics.generate_accuracy_bar_chart(f"{base_name} Classification Accuracy", class_eval)
+        self.writer.add_figure(f"Acc_Plots/{base_label}", accuracy_bar_figure)

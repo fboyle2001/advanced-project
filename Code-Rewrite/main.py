@@ -4,12 +4,11 @@ from typing import Tuple
 
 from loguru import logger
 from torch.utils.tensorboard.writer import SummaryWriter
-from tb_utils import TensorboardSupervisor
 import atexit
 
 import datasets
 import algorithms
-import metrics
+# import algorithms.metrics.metrics as metrics
 
 import torch
 from torchvision.models import resnet18
@@ -26,20 +25,20 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.GDumb: {
         "batch_size": 64,
-        "max_memory_samples": 2000,
-        "post_population_max_epochs": 5
+        "max_memory_samples": 10000,
+        "post_population_max_epochs": 25
     },
     algorithms.ElasticWeightConsolidation: {
-        "max_epochs_per_task": 1,
+        "max_epochs_per_task": 5,
         "batch_size": 64,
-        "task_importance": 1500
+        "task_importance": 1000
     }
 }
 
 DATASET_DEFAULTS = {
     datasets.CIFAR10: {
-        "disjoint": True,
-        "classes_per_task": 5
+        "disjoint": False,
+        "classes_per_task": 0
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -91,10 +90,8 @@ def execute(algorithm_class, dataset_class, directory, writer):
     logger.info(f"Saving model to {model_save_loc}")
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
-    metrics.run_metrics(algorithm, dataset, directory, writer)
-
 if __name__ == "__main__":
-    algorithm_class = algorithms.ElasticWeightConsolidation
+    algorithm_class = algorithms.GDumb
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
@@ -102,15 +99,14 @@ if __name__ == "__main__":
     model.to(device)
 
     directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
-    tb_sup = TensorboardSupervisor(log_dp=directory)
 
-    def close_tb_sup():
+    def close_tensorboard_writer():
         writer.flush()
         writer.close()
-        tb_sup.finalize()
         logger.info("Shut down TensorBoard")
 
-    atexit.register(close_tb_sup)
+    logger.info(f"To access TensorBoard, run the command: tensorboard --logdir={writer.log_dir}")
+    atexit.register(close_tensorboard_writer)
 
     with logger.catch(exception=BaseException, reraise=True):
         execute(algorithm_class, dataset_class, directory, writer)

@@ -8,7 +8,6 @@ import datasets
 import torch.utils.data
 import torch.utils.tensorboard
 import copy
-import metrics
 
 import matplotlib.pyplot as plt
 
@@ -99,7 +98,7 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
 
                     running_loss += loss.item()
 
-                epoch_offset = (self.max_epochs_per_task + 1) * task_no
+                epoch_offset = self.max_epochs_per_task * task_no
 
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
@@ -114,10 +113,7 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
                 running_loss = 0
                 running_ewc = 0
 
-            # Run metrics
-            total, total_correct, class_eval = metrics.evaluate_accuracy(self, self.dataset)
-            fig = metrics.accuracy_figure(class_eval, name="Task Plot")
-            self.writer.add_figure(f"Accuracy/Task_{task_no + 1}_acc", fig)
+            self.run_base_task_metrics(task_no)
 
             if task_no != len(self.dataset.task_datasets) - 1:
                 concat_ds = self.dataset.task_datasets[0]

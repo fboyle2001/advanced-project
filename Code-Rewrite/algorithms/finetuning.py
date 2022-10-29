@@ -70,10 +70,17 @@ class Finetuning(BaseCLAlgorithm):
 
                     running_loss += loss.item()
 
-                    if batch_no == len(task_dataloader) - 1:
-                        logger.info(f"{epoch}, loss: {running_loss / (len(task_dataloader) - 1):.3f}")
-                        running_loss = 0
+                epoch_offset = self.max_epochs_per_task * task_no
+
+                avg_running_loss = running_loss / (len(task_dataloader) - 1)
+                logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
+                self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
+                self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
+                
+                running_loss = 0
         
+            self.run_base_task_metrics(task_no)
+
         logger.info("Training complete")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
