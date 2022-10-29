@@ -6,7 +6,11 @@ from .algorithm_base import BaseCLAlgorithm
 import torch
 import datasets
 import torch.utils.data
+import torch.utils.tensorboard
 import copy
+import metrics
+
+import matplotlib.pyplot as plt
 
 class ElasticWeightConsolidation(BaseCLAlgorithm):
     def __init__(
@@ -14,6 +18,7 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
         model: torch.nn.Module,
         dataset: datasets.BaseCLDataset,
         optimiser: torch.optim.Optimizer,
+        writer: torch.utils.tensorboard.writer.SummaryWriter,
         loss_criterion: torch.nn.modules.loss._Loss,
         max_epochs_per_task: int,
         batch_size: int,
@@ -24,7 +29,8 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
-            loss_criterion_instance=loss_criterion
+            loss_criterion_instance=loss_criterion,
+            writer=writer
         )
 
         self.max_epochs_per_task = max_epochs_per_task
@@ -93,12 +99,26 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
 
                     running_loss += loss.item()
 
-                    if batch_no == len(task_dataloader) - 1:
-                        logger.info(f"{epoch}, loss: {running_loss / (len(task_dataloader) - 1):.3f}")
-                        logger.info(f"{epoch}, EWC Loss: {running_ewc / (len(task_dataloader) - 1):.3f}")
-                        running_loss = 0
-                        running_ewc = 0
-                
+                epoch_offset = (self.max_epochs_per_task + 1) * task_no
+
+                avg_running_loss = running_loss / (len(task_dataloader) - 1)
+                logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
+                self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
+                self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
+
+                avg_running_ewc = running_ewc / (len(task_dataloader) - 1)
+                logger.info(f"{epoch}, EWC Loss: {avg_running_ewc:.3f}")
+                self.writer.add_scalar(f"Loss/Task_{task_no + 1}_EWC_avg", avg_running_ewc, epoch)
+                self.writer.add_scalar("Loss/Overall_EWC_avg", avg_running_ewc, epoch_offset + epoch)
+
+                running_loss = 0
+                running_ewc = 0
+
+            # Run metrics
+            total, total_correct, class_eval = metrics.evaluate_accuracy(self, self.dataset)
+            fig = metrics.accuracy_figure(class_eval, name="Task Plot")
+            self.writer.add_figure(f"Accuracy/Task_{task_no + 1}_acc", fig)
+
             if task_no != len(self.dataset.task_datasets) - 1:
                 concat_ds = self.dataset.task_datasets[0]
 

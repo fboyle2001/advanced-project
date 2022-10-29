@@ -3,6 +3,7 @@ import json
 from typing import Dict, Union
 
 from loguru import logger
+import torch.utils.tensorboard
 
 import torch
 import datasets
@@ -17,7 +18,8 @@ class BaseCLAlgorithm(abc.ABC):
         model_instance: torch.nn.Module,
         dataset_instance: datasets.BaseCLDataset,
         optimiser_instance: torch.optim.Optimizer,
-        loss_criterion_instance: torch.nn.modules.loss._Loss
+        loss_criterion_instance: torch.nn.modules.loss._Loss,
+        writer: torch.utils.tensorboard.writer.SummaryWriter
     ): 
         """
         Represents a complete training and classification package for a Continual Learning algorithm.
@@ -28,6 +30,7 @@ class BaseCLAlgorithm(abc.ABC):
             dataset_instance (datasets.BaseCLDataset): Instance of the dataset to use for training
             optimiser_instance (torch.optim.Optimizer): Instance of the optimiser to use with parameters set
             loss_criterion_instance (torch.nn.modules.loss._Loss): Instance of the loss criterion instance to use
+            writer (torch.utils.tensorboard.writer.SummaryWriter): TensorBoard writer for this instance
         """
         self.name = name
 
@@ -37,6 +40,8 @@ class BaseCLAlgorithm(abc.ABC):
         self.dataset = dataset_instance
         self.optimiser = optimiser_instance
         self.loss_criterion = loss_criterion_instance
+
+        self.writer = writer
 
     @staticmethod
     @abc.abstractmethod

@@ -1,9 +1,11 @@
 import os
 import time
-from turtle import hideturtle
-from xml.sax import xmlreader
+from typing import Tuple
 
 from loguru import logger
+from torch.utils.tensorboard.writer import SummaryWriter
+from tb_utils import TensorboardSupervisor
+import atexit
 
 import datasets
 import algorithms
@@ -28,7 +30,7 @@ ALGORITHM_DEFAULTS = {
         "post_population_max_epochs": 5
     },
     algorithms.ElasticWeightConsolidation: {
-        "max_epochs_per_task": 25,
+        "max_epochs_per_task": 1,
         "batch_size": 64,
         "task_importance": 1500
     }
@@ -45,13 +47,14 @@ DATASET_DEFAULTS = {
     }
 }
 
-def setup_files(algorithm_folder, dataset_class) -> str:
+def setup_files(algorithm_folder, dataset_class) -> Tuple[str, SummaryWriter]:
     directory = f"{PARENT_DIRECTORY}/{algorithm_folder}/{time.time()}_{dataset_class.__qualname__}"
     os.makedirs(directory, exist_ok=False)
 
     logger.add(f"{directory}/log.log", backtrace=True, diagnose=True)
+    writer = SummaryWriter(log_dir=directory)
 
-    return directory
+    return directory, writer
 
 class MLP(torch.nn.Module):
     def __init__(self, input_size=784, hidden_size=400, classes=10):
@@ -69,7 +72,7 @@ class MLP(torch.nn.Module):
         return x
         # return torch.nn.functional.softmax(x)
 
-def execute(algorithm_class, dataset_class, directory):
+def execute(algorithm_class, dataset_class, directory, writer):
     dataset = dataset_class(**DATASET_DEFAULTS[dataset_class])
 
     algorithm = algorithm_class(
@@ -77,6 +80,7 @@ def execute(algorithm_class, dataset_class, directory):
         dataset=dataset,
         optimiser=torch.optim.SGD(model.parameters(), lr=1e-3), #torch.optim.Adam(model.parameters()),
         loss_criterion=torch.nn.CrossEntropyLoss(),
+        writer=writer,
         **ALGORITHM_DEFAULTS[algorithm_class]
     )
 
@@ -87,17 +91,30 @@ def execute(algorithm_class, dataset_class, directory):
     logger.info(f"Saving model to {model_save_loc}")
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
-    metrics.run_metrics(algorithm, dataset, directory)
+    metrics.run_metrics(algorithm, dataset, directory, writer)
 
 if __name__ == "__main__":
-    algorithm_class = algorithms.GDumb
+    algorithm_class = algorithms.ElasticWeightConsolidation
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
     model = resnet18(weights=None)
     model.to(device)
 
-    directory = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
+    directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
+    tb_sup = TensorboardSupervisor(log_dp=directory)
+
+    def close_tb_sup():
+        writer.flush()
+        writer.close()
+        tb_sup.finalize()
+        logger.info("Shut down TensorBoard")
+
+    atexit.register(close_tb_sup)
 
     with logger.catch(exception=BaseException, reraise=True):
-        execute(algorithm_class, dataset_class, directory)
+        execute(algorithm_class, dataset_class, directory, writer)
+    
+    
+    
+

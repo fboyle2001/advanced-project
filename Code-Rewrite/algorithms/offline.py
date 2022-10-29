@@ -5,6 +5,7 @@ from .algorithm_base import BaseCLAlgorithm
 
 import torch
 import datasets
+import torch.utils.tensorboard
 
 class OfflineTraining(BaseCLAlgorithm):
     """
@@ -18,6 +19,7 @@ class OfflineTraining(BaseCLAlgorithm):
         dataset: datasets.BaseCLDataset,
         optimiser: torch.optim.Optimizer,
         loss_criterion: torch.nn.modules.loss._Loss,
+        writer: torch.utils.tensorboard.writer.SummaryWriter,
         max_epochs_per_task: int,
         batch_size: int
     ):
@@ -26,7 +28,8 @@ class OfflineTraining(BaseCLAlgorithm):
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
-            loss_criterion_instance=loss_criterion
+            loss_criterion_instance=loss_criterion,
+            writer=writer
         )
 
         self.max_epochs_per_task = max_epochs_per_task

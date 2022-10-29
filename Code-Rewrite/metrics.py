@@ -1,11 +1,54 @@
 from typing import Dict, Tuple, Union
 
 from loguru import logger
+from torch.utils.tensorboard.writer import SummaryWriter
+
 import json
 
 import torch
 import datasets
 import algorithms
+
+import matplotlib.pyplot as plt
+
+def accuracy_figure(data: Dict[Union[str, int], Dict[str, int]], name: str):
+    total_correct = 0
+    total_count = 0
+
+    x = []
+    y = []
+
+    for clazz in data.keys():
+        clazz_data = data[clazz]
+
+        total_correct += clazz_data["true_positives"]
+        total_count += clazz_data["real_total"]
+
+        accuracy = clazz_data["true_positives"]  / clazz_data["real_total"]
+        x.append(clazz)
+        y.append(accuracy)
+
+    x.append("total")
+    y.append(total_correct / total_count)
+    y = [yi * 100 for yi in y]
+
+    #fig = plt.figure()
+    fig, ax = plt.subplots()
+    # r = plt.bar(x, y)
+    # fig.add_subplot(r, )
+    # ax = fig.add_axes([0, 0, 1, 1])
+    ax.bar(x, y)
+    ax.set_title(name)
+    ax.set_xlabel("Classes")
+    ax.set_ylabel("Accuracy (%)")
+    ax.set_ylim(0, 100)
+    # ax.set_xticks(x)
+    # ax.set_yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])
+    # ax.set_title("Test")
+    # ax.yaxis.set_label("Y Leg")
+    # ax.xaxis.set_label("X Leg")
+
+    return fig
 
 def evaluate_accuracy(
     algorithm: algorithms.BaseCLAlgorithm,
@@ -70,7 +113,8 @@ def evaluate_accuracy(
 def run_metrics(
     algorithm: algorithms.BaseCLAlgorithm,
     dataset: datasets.BaseCLDataset,
-    directory: str
+    directory: str,
+    writer: SummaryWriter
 ):
     logger.info("Evaluating classification accuracy for each class")
     total, total_correct, class_eval = evaluate_accuracy(algorithm, dataset)

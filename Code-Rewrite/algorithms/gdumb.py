@@ -7,6 +7,7 @@ from . import utils
 
 import torch
 from torch.utils.data import DataLoader
+import torch.utils.tensorboard
 
 class GDumb(BaseCLAlgorithm):
     """
@@ -25,6 +26,7 @@ class GDumb(BaseCLAlgorithm):
         dataset: datasets.BaseCLDataset,
         optimiser: torch.optim.Optimizer,
         loss_criterion: torch.nn.modules.loss._Loss,
+        writer: torch.utils.tensorboard.writer.SummaryWriter,
         batch_size: int,
         max_memory_samples: int,
         post_population_max_epochs: int
@@ -34,7 +36,8 @@ class GDumb(BaseCLAlgorithm):
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
-            loss_criterion_instance=loss_criterion
+            loss_criterion_instance=loss_criterion,
+            writer=writer
         )
 
         self.batch_size = batch_size
