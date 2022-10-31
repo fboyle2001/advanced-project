@@ -122,7 +122,7 @@ class BaseCLAlgorithm(abc.ABC):
         _, predicted = torch.max(output.data, 1)
         return predicted
     
-    def run_base_task_metrics(self, task_no: int):
+    def run_base_task_metrics(self, task_no: int, tl):
         """
         Run 
 
@@ -136,7 +136,7 @@ class BaseCLAlgorithm(abc.ABC):
         
         logger.info(f"Running metrics: {base_name}")
 
-        total, total_correct, class_eval = metrics.evaluate_accuracy(self)
+        total, total_correct, class_eval = metrics.evaluate_accuracy(self, tl)
 
         with open(f"{self.directory}/{base_label}_accuracy_results.json", "w+") as fp:
             json.dump(class_eval, fp, indent=2)

@@ -10,6 +10,9 @@ from torch.utils.data import DataLoader
 import torch.utils.tensorboard
 import torch.optim as optim
 
+from dataloader import VisionDataset
+from dotmap import DotMap
+
 class GDumb(BaseCLAlgorithm):
     """
     GDumb (Prabhu et al. 2020)
@@ -71,27 +74,46 @@ class GDumb(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
-        logger.info("Populating replay buffer")
+        # logger.info("Populating replay buffer")
 
-        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+        # for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
+        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-            for batch_no, data in enumerate(task_dataloader, 0):
-                logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-                inp, labels = data
+        #     for batch_no, data in enumerate(task_dataloader, 0):
+        #         logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
+        #         inp, labels = data
 
-                for j in range(0, len(inp)):
-                    self.replay_buffer.add_to_buffer(inp[j], labels[j])
+        #         for j in range(0, len(inp)):
+        #             self.replay_buffer.add_to_buffer(inp[j], labels[j])
         
-        logger.info("Replay buffer populated")
-        logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
+        # logger.info("Replay buffer populated")
+        # logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
 
-        for class_name in self.replay_buffer.memory.keys():
-            logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        # for class_name in self.replay_buffer.memory.keys():
+        #     logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
 
-        buffer_dataset = self.replay_buffer.to_torch_dataset()
-        buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+        # buffer_dataset = self.replay_buffer.to_torch_dataset()
+        # buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+
+        logger.info("Setting up VDS")
+
+        opt = {
+            "workers": 0,
+            "batch_size": 16,
+            "dataset": "CIFAR10",
+            "data_dir": "./store/data",
+            "num_tasks": 5,
+            "num_classes_per_task": 2,
+            "memory_size": 1000,
+            "num_pretrain_classes": 0
+        }
+
+        opt = DotMap(opt)
+        vds = VisionDataset(opt)
+        vds.gen_cl_mapping()
+
+        buffer_dataloader = vds.cltrain_loader
 
         logger.info("Training model for inference from buffer")
 
@@ -115,6 +137,8 @@ class GDumb(BaseCLAlgorithm):
                 lr_warmer.step()
                 self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
 
+            self.model.train()
+
             for batch_no, data in enumerate(buffer_dataloader, 0):
                 inp, labels = data
                 inp = inp.to(self.device)
@@ -123,9 +147,9 @@ class GDumb(BaseCLAlgorithm):
                 do_cutmix = np.random.rand(1) < 0.5
                 if do_cutmix: inp, labels_a, labels_b, lam = cutmix_data(x=inp, y=labels, alpha=1.0)
                 
-                self.optimiser.zero_grad()
                 predictions = self.model(inp)
                 loss = lam * self.loss_criterion(predictions, labels_a) + (1 - lam) * self.loss_criterion(predictions, labels_b) if do_cutmix else self.loss_criterion(predictions, labels)
+                self.optimiser.zero_grad()
                 loss.backward()
 
                 if self.gradient_clip is not None:
@@ -141,9 +165,11 @@ class GDumb(BaseCLAlgorithm):
             running_loss = 0
 
             if epoch > 0 and epoch % 10 == 0:
-                self.run_base_task_metrics(task_no=epoch)
+                self.model.eval()
+                self.run_base_task_metrics(task_no=epoch, tl=vds.cltest_loader)
+                self.model.train()
         
-        self.run_base_task_metrics(task_no=0)
+        self.run_base_task_metrics(task_no=0, tl=vds.cltest_loader)
         logger.info("Training completed")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:

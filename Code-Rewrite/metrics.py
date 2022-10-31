@@ -52,10 +52,12 @@ def generate_accuracy_bar_chart(
 
 def evaluate_accuracy(
     algorithm: algorithms.BaseCLAlgorithm,
-    batch_size: int = 32
+    tl,
+    batch_size: int = 16,
 ) -> Tuple[int, int, Dict[Union[str, int], Dict[str, int]]]:
     dataset = algorithm.dataset
-    test_loader = dataset.create_evaluation_dataloader(batch_size=batch_size)
+    # test_loader = dataset.create_evaluation_dataloader(batch_size=batch_size)
+    test_loader = tl
 
     """
     For a class x and any class y,
