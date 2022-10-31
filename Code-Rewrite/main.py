@@ -17,14 +17,14 @@ PARENT_DIRECTORY = "./store/models"
 
 ALGORITHM_DEFAULTS = {
     algorithms.OfflineTraining: {
-        "max_epochs_per_task": 5,
+        "max_epochs_per_task": 100,
         "batch_size": 64
     },
     algorithms.Finetuning: {
         "batch_size": 64
     },
     algorithms.GDumb: {
-        "batch_size": 64,
+        "batch_size": 16,
         "max_memory_samples": 10000,
         "post_population_max_epochs": 25
     },
@@ -77,7 +77,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     algorithm = algorithm_class(
         model=model,
         dataset=dataset,
-        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3), #torch.optim.Adam(model.parameters()),
+        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3), #torch.optim.Adam(model.parameters())
         loss_criterion=torch.nn.CrossEntropyLoss(),
         writer=writer,
         **ALGORITHM_DEFAULTS[algorithm_class]
@@ -91,7 +91,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
 if __name__ == "__main__":
-    algorithm_class = algorithms.GDumb
+    algorithm_class = algorithms.OfflineTraining
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")

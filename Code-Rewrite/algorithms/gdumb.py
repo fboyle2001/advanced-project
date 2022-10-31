@@ -89,6 +89,7 @@ class GDumb(BaseCLAlgorithm):
                 inp, labels = data
                 inp = inp.to(self.device)
                 labels = labels.to(self.device)
+                
                 self.optimiser.zero_grad()
                 predictions = self.model(inp)
                 loss = self.loss_criterion(predictions, labels)

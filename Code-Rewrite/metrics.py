@@ -46,7 +46,7 @@ def generate_accuracy_bar_chart(
     ax.set_ylim(0, 100)
 
     for i in range(len(xs)):
-        ax.text(xs[i], ys[i] // 2, f"{ys[i]:.1f}", ha="center")
+        ax.text(xs[i], ys[i] // 2, f"{ys[i]:.1f}", ha="center", color="white")
 
     return fig
 

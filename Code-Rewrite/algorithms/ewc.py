@@ -69,7 +69,6 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
                     inp = inp.to(self.device)
                     labels = labels.to(self.device)
 
-                    labels = labels.to(self.device)
                     self.optimiser.zero_grad()
                     predictions = self.model(inp)
                     loss = self.loss_criterion(predictions, labels)
