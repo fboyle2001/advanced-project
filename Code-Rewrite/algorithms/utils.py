@@ -54,6 +54,7 @@ class HashReplayBuffer:
 
     def add_to_buffer(self, img: torch.Tensor, label: Any) -> None:
         img = img.detach().cpu()
+        label = label.detach().cpu().item()
 
         # If the label is not in the keys then add it
         if label not in self.memory.keys():

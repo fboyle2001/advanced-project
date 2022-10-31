@@ -25,8 +25,11 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.GDumb: {
         "batch_size": 16,
-        "max_memory_samples": 10000,
-        "post_population_max_epochs": 25
+        "max_memory_samples": 1000,
+        "post_population_max_epochs": 256,
+        "gradient_clip": 10,
+        "max_lr": 0.05,
+        "min_lr": 0.0005
     },
     algorithms.ElasticWeightConsolidation: {
         "max_epochs_per_task": 5,
@@ -77,7 +80,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     algorithm = algorithm_class(
         model=model,
         dataset=dataset,
-        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3), #torch.optim.Adam(model.parameters())
+        optimiser=torch.optim.SGD(model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
         loss_criterion=torch.nn.CrossEntropyLoss(),
         writer=writer,
         **ALGORITHM_DEFAULTS[algorithm_class]
@@ -91,7 +94,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
 if __name__ == "__main__":
-    algorithm_class = algorithms.OfflineTraining
+    algorithm_class = algorithms.GDumb
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")

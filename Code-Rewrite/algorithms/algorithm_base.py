@@ -56,13 +56,13 @@ class BaseCLAlgorithm(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_unique_information(self) -> Dict[str, Union[str, int]]:
+    def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         """
         Return non-standard parameters that are set for this method.
         If there are none then this should return {}
 
         Returns:
-            Dict[str, Union[str, int]]: _description_
+            Dict[str, Union[str, int, float]]: A dictionary with unique information about the algorithm
         """
         pass
 

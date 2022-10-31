@@ -39,8 +39,8 @@ class OfflineTraining(BaseCLAlgorithm):
     def get_algorithm_folder() -> str:
         return "offline"
 
-    def get_unique_information(self) -> Dict[str, Union[str, int]]:
-        info: Dict[str, Union[str, int]] = {
+    def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
+        info: Dict[str, Union[str, int, float]] = {
             "max_epochs_per_task": self.max_epochs_per_task,
             "batch_size": self.batch_size
         }
