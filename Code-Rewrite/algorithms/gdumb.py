@@ -10,6 +10,8 @@ from torch.utils.data import DataLoader
 import torch.utils.tensorboard
 import torch.optim as optim
 
+from . import dataloader
+
 class GDumb(BaseCLAlgorithm):
     """
     GDumb (Prabhu et al. 2020)
@@ -33,7 +35,8 @@ class GDumb(BaseCLAlgorithm):
         post_population_max_epochs: int,
         gradient_clip: Union[None, int],
         max_lr: float,
-        min_lr: float
+        min_lr: float,
+        opt
     ):
         super().__init__(
             name="GDumb",
@@ -50,6 +53,7 @@ class GDumb(BaseCLAlgorithm):
         self.gradient_clip = gradient_clip
         self.max_lr = max_lr
         self.min_lr = min_lr
+        self.opt = opt
         
         self.replay_buffer = utils.HashReplayBuffer(max_memory_samples, "random_from_largest_class")
 
@@ -71,33 +75,36 @@ class GDumb(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
-        logger.info("Populating replay buffer")
+        # logger.info("Populating replay buffer")
 
-        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+        # for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
+        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-            for batch_no, data in enumerate(task_dataloader, 0):
-                logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-                inp, labels = data
+        #     for batch_no, data in enumerate(task_dataloader, 0):
+        #         logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
+        #         inp, labels = data
 
-                for j in range(0, len(inp)):
-                    self.replay_buffer.add_to_buffer(inp[j], labels[j])
+        #         for j in range(0, len(inp)):
+        #             self.replay_buffer.add_to_buffer(inp[j], labels[j])
         
-        logger.info("Replay buffer populated")
-        logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
+        # logger.info("Replay buffer populated")
+        # logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
 
-        for class_name in self.replay_buffer.memory.keys():
-            logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        # for class_name in self.replay_buffer.memory.keys():
+        #     logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        dobj = dataloader.VisionDataset(self.opt, class_order=None)
+        dobj.gen_cl_mapping()
 
-        buffer_dataset = self.replay_buffer.to_torch_dataset()
-        buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+        # buffer_dataset = self.replay_buffer.to_torch_dataset()
+        # buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
 
         logger.info("Training model for inference from buffer")
 
         lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=0.0005)
 
         for epoch in range(1, self.post_population_max_epochs + 1):
+            self.model.train()
             logger.info(f"Starting epoch {epoch} / {self.post_population_max_epochs}")
             running_loss = 0
 
@@ -115,17 +122,23 @@ class GDumb(BaseCLAlgorithm):
                 lr_warmer.step()
                 self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
 
-            for batch_no, data in enumerate(buffer_dataloader, 0):
+            # logger.info(f"==> Size: {len(buffer_dataloader)}")
+
+            for batch_no, data in enumerate(dobj.cltrain_loader, 0):
                 inp, labels = data
+                # logger.info(f"==> Inp Size: {len(inp)}")
                 inp = inp.to(self.device)
                 labels = labels.to(self.device)
 
                 do_cutmix = np.random.rand(1) < 0.5
                 if do_cutmix: inp, labels_a, labels_b, lam = cutmix_data(x=inp, y=labels, alpha=1.0)
+                # logger.debug(f"Cutmix: {do_cutmix}")
                 
-                self.optimiser.zero_grad()
                 predictions = self.model(inp)
+
+                
                 loss = lam * self.loss_criterion(predictions, labels_a) + (1 - lam) * self.loss_criterion(predictions, labels_b) if do_cutmix else self.loss_criterion(predictions, labels)
+                self.optimiser.zero_grad()
                 loss.backward()
 
                 if self.gradient_clip is not None:
@@ -135,7 +148,7 @@ class GDumb(BaseCLAlgorithm):
 
                 running_loss += loss.item()
 
-            avg_running_loss = running_loss / (len(buffer_dataloader) - 1)
+            avg_running_loss = running_loss / (len(dobj.cltrain_loader) - 1)
             logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
             self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch)
             running_loss = 0

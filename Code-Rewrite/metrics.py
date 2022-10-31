@@ -73,6 +73,8 @@ def evaluate_accuracy(
             "real_total": 0
         }
 
+    algorithm.model.eval()
+
     total = 0
     total_correct = 0
 

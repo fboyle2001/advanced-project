@@ -2,6 +2,9 @@ import os
 import time
 from typing import Tuple
 
+from models import cifar
+from dotmap import DotMap
+
 from loguru import logger
 from torch.utils.tensorboard.writer import SummaryWriter
 import atexit
@@ -74,16 +77,17 @@ class MLP(torch.nn.Module):
         return x
         # return torch.nn.functional.softmax(x)
 
-def execute(algorithm_class, dataset_class, directory, writer):
+def execute(algorithm_class, dataset_class, directory, writer, opt):
     dataset = dataset_class(**DATASET_DEFAULTS[dataset_class])
 
     algorithm = algorithm_class(
         model=model,
         dataset=dataset,
         optimiser=torch.optim.SGD(model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
-        loss_criterion=torch.nn.CrossEntropyLoss(),
+        loss_criterion=torch.nn.CrossEntropyLoss().cuda(),
         writer=writer,
-        **ALGORITHM_DEFAULTS[algorithm_class]
+        **ALGORITHM_DEFAULTS[algorithm_class],
+        opt=opt
     )
 
     algorithm.train()
@@ -97,8 +101,34 @@ if __name__ == "__main__":
     algorithm_class = algorithms.GDumb
     dataset_class = datasets.CIFAR10
 
+    opts = {
+        "depth": 18,
+        "in_channels": 3,
+        "normtype": "BatchNorm",
+        "pooltype": "MaxPool2d",
+        "preact": False,
+        "activetype": "ReLU",
+        "bn": True,
+        "affine_bn": True,
+        "bn_eps": 1e-6,
+        "compression": 0.5,
+        "num_classes": 10,
+        "inp_size": 32,
+        "dataset": "CIFAR10",
+        "data_dir": "./store/data",
+        "workers": 0,
+        "batch_size": 16,
+        "num_tasks": 5,
+        "num_classes_per_task": 2,
+        "num_pretrain_classes": 0,
+        "memory_size": 1000
+    }
+
+    opts = DotMap(opts)
+
     device = torch.device("cuda:0")
-    model = resnet18(weights=None)
+    # model = resnet18(weights=None)
+    model = cifar.ResNet(opts)
     model.to(device)
 
     directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
@@ -112,7 +142,7 @@ if __name__ == "__main__":
     atexit.register(close_tensorboard_writer)
 
     with logger.catch(exception=BaseException, reraise=True):
-        execute(algorithm_class, dataset_class, directory, writer)
+        execute(algorithm_class, dataset_class, directory, writer, opts)
     
     
     
