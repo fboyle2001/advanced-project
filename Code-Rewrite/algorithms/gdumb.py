@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 import torch.utils.tensorboard
 import torch.optim as optim
 
-from dataloader import VisionDataset
+from simplified_dl import VisionDataset
 from dotmap import DotMap
 
 class GDumb(BaseCLAlgorithm):
@@ -74,43 +74,43 @@ class GDumb(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
-        # logger.info("Populating replay buffer")
+        logger.info("Populating replay buffer")
 
-        # for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
+            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-        #     for batch_no, data in enumerate(task_dataloader, 0):
-        #         logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-        #         inp, labels = data
+            for batch_no, data in enumerate(task_dataloader, 0):
+                logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
+                inp, labels = data
 
-        #         for j in range(0, len(inp)):
-        #             self.replay_buffer.add_to_buffer(inp[j], labels[j])
+                for j in range(0, len(inp)):
+                    self.replay_buffer.add_to_buffer(inp[j], labels[j])
         
-        # logger.info("Replay buffer populated")
-        # logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
+        logger.info("Replay buffer populated")
+        logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
 
-        # for class_name in self.replay_buffer.memory.keys():
-        #     logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        for class_name in self.replay_buffer.memory.keys():
+            logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
 
-        # buffer_dataset = self.replay_buffer.to_torch_dataset()
-        # buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+        buffer_dataset = self.replay_buffer.to_torch_dataset()
 
         logger.info("Setting up VDS")
 
-        opt = {
-            "workers": 0,
-            "batch_size": 16,
-            "dataset": "CIFAR10",
-            "data_dir": "./store/data",
-            "num_tasks": 5,
-            "num_classes_per_task": 2,
-            "memory_size": 1000,
-            "num_pretrain_classes": 0
-        }
+        # opt = {
+        #     "workers": 0,
+        #     "batch_size": 16,
+        #     "dataset": "CIFAR10",
+        #     "data_dir": "./store/data",
+        #     "num_tasks": 5,
+        #     "num_classes_per_task": 2,
+        #     "memory_size": 1000,
+        #     "num_pretrain_classes": 0
+        # }
 
-        opt = DotMap(opt)
-        vds = VisionDataset(opt)
+        # opt = DotMap(opt)
+        # vds = VisionDataset(opt)
+        vds = VisionDataset()
         vds.gen_cl_mapping()
 
         buffer_dataloader = vds.cltrain_loader
@@ -120,6 +120,9 @@ class GDumb(BaseCLAlgorithm):
         lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=0.0005)
 
         for epoch in range(1, self.post_population_max_epochs + 1):
+            logger.info("Creating new DL")
+            # buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+
             logger.info(f"Starting epoch {epoch} / {self.post_population_max_epochs}")
             running_loss = 0
 
@@ -167,9 +170,11 @@ class GDumb(BaseCLAlgorithm):
             if epoch > 0 and epoch % 10 == 0:
                 self.model.eval()
                 self.run_base_task_metrics(task_no=epoch, tl=vds.cltest_loader)
+                # self.run_base_task_metrics(task_no=epoch, tl=self.dataset.create_evaluation_dataloader(16))
                 self.model.train()
         
         self.run_base_task_metrics(task_no=0, tl=vds.cltest_loader)
+        self.run_base_task_metrics(task_no=1, tl=self.dataset.create_evaluation_dataloader(16))
         logger.info("Training completed")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:

@@ -15,6 +15,8 @@ from dotmap import DotMap
 import torch
 from torchvision.models import resnet18
 
+from models_n.cifar.resnet import ResNet
+
 PARENT_DIRECTORY = "./store/models"
 
 ALGORITHM_DEFAULTS = {
@@ -116,8 +118,24 @@ if __name__ == "__main__":
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
-    model = resnet18(weights=None)
-    model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
+    # model = resnet18(weights=None)
+    # model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
+    
+    opt = {
+        "depth": 18,
+        "num_classes": 10,
+        "bn": True,
+        "preact": False,
+        "normtype": "BatchNorm",
+        "affine_bn": True, 
+        "bn_eps": 1e-6,
+        "activetype": "ReLU",
+        "in_channels": 3
+    }
+
+    opt = DotMap(opt)
+    model = ResNet(opt)
+
     model.to(device)
 
     directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)

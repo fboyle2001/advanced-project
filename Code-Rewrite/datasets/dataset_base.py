@@ -10,6 +10,7 @@ import torch.utils.data
 import torchvision
 import random
 import datasets.utils as utils
+from torch.utils.data.sampler import SubsetRandomSampler
 
 class BaseCLDataset(abc.ABC):
     """
@@ -56,8 +57,20 @@ class BaseCLDataset(abc.ABC):
         self.testing_dataset_parameters = testing_dataset_parameters
         self.transform = transform
 
-        self.training_data = dataset_class(root=folder, transform=transform, **training_dataset_parameters)
-        self.testing_data = dataset_class(root=folder, transform=transform, **testing_dataset_parameters)
+        override_training_transform = torchvision.transforms.Compose([
+            torchvision.transforms.RandomCrop(32, padding=4),
+            torchvision.transforms.RandomHorizontalFlip(),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+
+        override_testing_transform = torchvision.transforms.Compose([
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+        ])
+
+        self.training_data = dataset_class(root=folder, transform=override_training_transform, **training_dataset_parameters)
+        self.testing_data = dataset_class(root=folder, transform=override_testing_transform, **testing_dataset_parameters)
 
         self.classes = classes
 
@@ -91,6 +104,7 @@ class BaseCLDataset(abc.ABC):
 
         divided = {}
 
+        # equiv to classwise_split
         for img, label in self.training_data: 
             if label not in divided.keys():
                 divided[label] = []
@@ -173,7 +187,7 @@ class BaseCLDataset(abc.ABC):
             torch.utils.data.DataLoader: A DataLoader containing the shuffled data in the task dataset
         """
         assert task_number < self.task_count
-        return torch.utils.data.DataLoader(self.task_datasets[task_number], batch_size=batch_size, shuffle=True, num_workers=0)
+        return torch.utils.data.DataLoader(self.task_datasets[task_number], batch_size=batch_size, num_workers=0, shuffle=True)
 
     def iterate_task_dataloaders(self, batch_size: int) -> Iterator[Tuple[List[int], torch.utils.data.DataLoader]]:
         """
