@@ -74,26 +74,26 @@ class GDumb(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
-        logger.info("Populating replay buffer")
+        # logger.info("Populating replay buffer")
 
-        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+        # for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
+        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-            for batch_no, data in enumerate(task_dataloader, 0):
-                logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-                inp, labels = data
+        #     for batch_no, data in enumerate(task_dataloader, 0):
+        #         logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
+        #         inp, labels = data
 
-                for j in range(0, len(inp)):
-                    self.replay_buffer.add_to_buffer(inp[j], labels[j])
+        #         for j in range(0, len(inp)):
+        #             self.replay_buffer.add_to_buffer(inp[j], labels[j])
         
-        logger.info("Replay buffer populated")
-        logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
+        # logger.info("Replay buffer populated")
+        # logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
 
-        for class_name in self.replay_buffer.memory.keys():
-            logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        # for class_name in self.replay_buffer.memory.keys():
+        #     logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
 
-        buffer_dataset = self.replay_buffer.to_torch_dataset()
+        # buffer_dataset = self.replay_buffer.to_torch_dataset()
 
         logger.info("Setting up VDS")
 

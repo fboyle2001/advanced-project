@@ -6,6 +6,10 @@ import argparse
 import numpy as np
 
 from dotmap import DotMap
+from loguru import logger
+
+import time
+import json
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -81,15 +85,25 @@ class VisionDataset(object):
         ), sampler=sampler, num_workers=0, batch_size=self.batch_size, shuffle=False, pin_memory=True)
 
     def gen_cl_mapping(self):
-        # Get the label -> idx mapping dictionary
+        ## START OF CLASS BINNING
+        # This part here is simply dividing the items into their class bins
         train_class_labels_dict = classwise_split(targets=self.supervised_trainloader.dataset.targets) # type: ignore
+        dumpable_trcld = {int(key): [int(x) for x in train_class_labels_dict[key]] for key in train_class_labels_dict.keys()}
+
+        with open("train_class_labels_dict.json", "w+") as f:
+            json.dump(dumpable_trcld, f, indent=2)
+
         test_class_labels_dict = classwise_split(targets=self.supervised_testloader.dataset.targets) # type: ignore
+        dumpable_tecld = {int(key): [int(x) for x in test_class_labels_dict[key]] for key in test_class_labels_dict.keys()}
+
+        with open("test_class_labels_dict.json", "w+") as f:
+            json.dump(dumpable_tecld, f, indent=2)
+
+        ## END OF CLASS BINNING
 
         # Sets classes to be 0 to n-1 if class order is not specified, else sets it to class order. To produce different effects tweak here.
-        class_list = self.class_order if self.class_order is not None else list(range(self.opt.total_num_classes))
-        assert(self.opt.num_tasks*self.opt.num_classes_per_task <= self.opt.total_num_classes), "num_classes lesser than classes_per_task * num_tasks"
-        cl_class_list = class_list[:self.opt.num_classes_per_task*self.opt.num_tasks]
-        if self.class_order is None: random.shuffle(cl_class_list) # Generates different class-to-task assignment
+        cl_class_list = list(range(self.opt.total_num_classes))
+        random.shuffle(cl_class_list) # Generates different class-to-task assignment
         
         self.class_mask = torch.from_numpy(np.kron(np.eye(self.opt.num_tasks,dtype=int),np.ones((self.opt.num_classes_per_task,self.opt.num_classes_per_task)))).cuda() #Generates equal num_classes for all tasks. 
         continual_target_transform = ReorderTargets(cl_class_list)  # Remaps the class order to a 0-n order, required for crossentropy loss using class list
