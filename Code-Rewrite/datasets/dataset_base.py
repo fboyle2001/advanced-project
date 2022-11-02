@@ -126,6 +126,7 @@ class BaseCLDataset(abc.ABC):
 
             for j in range(self.classes_per_task):
                 label = indexes[self.classes_per_task * i + j]
+                logger.info(f"{self.classes_per_task * i + j}, {label}")
                 split.append(label)
                 labelled_targets = [label] * len(divided[label])
 

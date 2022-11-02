@@ -6,6 +6,8 @@ import pickle
 import torch
 from datasets.utils import CustomImageDataset
 
+import torchvision
+
 # TODO: Generate docstrings
 class HashReplayBuffer:
     VALID_STRATEGIES = ["random_from_largest_class"]
@@ -54,7 +56,7 @@ class HashReplayBuffer:
 
     def add_to_buffer(self, img: torch.Tensor, label: Any) -> None:
         img = img.detach().cpu()
-        label = label.detach().cpu().item()
+        label = label
 
         # If the label is not in the keys then add it
         if label not in self.memory.keys():
@@ -91,7 +93,7 @@ class HashReplayBuffer:
                 data.append(item["sample"])
                 targets.append(clazz)
         
-        return CustomImageDataset(data, targets)
+        return CustomImageDataset(data, targets, transform=None)
 
 
     

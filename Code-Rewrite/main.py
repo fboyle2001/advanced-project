@@ -44,8 +44,8 @@ ALGORITHM_DEFAULTS = {
 
 DATASET_DEFAULTS = {
     datasets.CIFAR10: {
-        "disjoint": False,
-        "classes_per_task": 0
+        "disjoint": True,
+        "classes_per_task": 2
     },
     datasets.MNIST: {
         "disjoint": False,
