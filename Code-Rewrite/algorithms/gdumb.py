@@ -79,19 +79,10 @@ class GDumb(BaseCLAlgorithm):
         super().train()
         logger.info("Populating replay buffer")
 
-        # for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
-
-        #     for batch_no, data in enumerate(task_dataloader, 0):
-        #         logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-        #         inp, labels = data
-
-        #         for j in range(0, len(inp)):
-        #             self.replay_buffer.add_to_buffer(self.dataset.transform(Image.fromarray(inp[j])), labels[j])f
-
-        for img, label in self.dataset.training_data:
-            self.replay_buffer.add_to_buffer(img, label)
+        for idx in range(len(self.dataset.training_data.data)):
+            raw = self.dataset.training_data.data[idx]
+            label = self.dataset.training_data.targets[idx]
+            self.replay_buffer.add_to_buffer(raw, label)
         
         logger.info("Replay buffer populated")
         logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
@@ -101,26 +92,7 @@ class GDumb(BaseCLAlgorithm):
 
         buffer_dataset = self.replay_buffer.to_torch_dataset()
 
-        logger.info("Setting up VDS")
-
-        # opt = {
-        #     "workers": 0,
-        #     "batch_size": 16,
-        #     "dataset": "CIFAR10",
-        #     "data_dir": "./store/data",
-        #     "num_tasks": 5,
-        #     "num_classes_per_task": 2,
-        #     "memory_size": 1000,
-        #     "num_pretrain_classes": 0
-        # }
-
-        # opt = DotMap(opt)
-        # vds = VisionDataset(opt)
-        vds = VisionDataset()
-        vds.gen_cl_mapping()
-
-        # buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)# vds.cltrain_loader
-        buffer_dataloader = vds.cltrain_loader
+        buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
 
         logger.info("Training model for inference from buffer")
 
@@ -176,11 +148,9 @@ class GDumb(BaseCLAlgorithm):
 
             if epoch > 0 and epoch % 10 == 0:
                 self.model.eval()
-                self.run_base_task_metrics(task_no=epoch, tl=vds.cltest_loader)
                 self.run_base_task_metrics(task_no=epoch, tl=self.dataset.create_evaluation_dataloader(16))
                 self.model.train()
         
-        self.run_base_task_metrics(task_no=0, tl=vds.cltest_loader)
         self.run_base_task_metrics(task_no=1, tl=self.dataset.create_evaluation_dataloader(16))
         logger.info("Training completed")
 

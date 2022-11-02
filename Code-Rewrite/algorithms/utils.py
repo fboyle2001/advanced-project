@@ -54,10 +54,7 @@ class HashReplayBuffer:
         
         self.count -= 1
 
-    def add_to_buffer(self, img: torch.Tensor, label: Any) -> None:
-        img = img.detach().cpu()
-        label = label
-
+    def add_to_buffer(self, img: Any, label: Any) -> None:
         # If the label is not in the keys then add it
         if label not in self.memory.keys():
             self.memory[label] = []
@@ -93,7 +90,12 @@ class HashReplayBuffer:
                 data.append(item["sample"])
                 targets.append(clazz)
         
-        return CustomImageDataset(data, targets, transform=None)
+        return CustomImageDataset(data, targets, transform=torchvision.transforms.Compose([
+            torchvision.transforms.RandomCrop(32, padding=4),
+            torchvision.transforms.RandomHorizontalFlip(),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ]))
 
 
     

@@ -159,13 +159,12 @@ class VisionDataset(object):
         assert(len(trainidx) <= self.memory_size), "ERROR: Cannot exceed max. memory samples!"
 
         ds = CustomImageDataset(trainimgs, trainclz, transform=self.train_dataset.transform)
-
-        #self.cltrain_loader = DataLoader(dataset=ds, batch_size=16, num_workers=0, shuffle=True, pin_memory=True)
+        self.cltrain_loader = DataLoader(dataset=ds, batch_size=16, num_workers=0, shuffle=True, pin_memory=True)
 
         # This here actually does work
-        subset = Subset(self.train_dataset, trainidx)
+        # subset = Subset(self.train_dataset, trainidx)
 
-        self.cltrain_loader = DataLoader(subset, batch_size=16, num_workers=0, shuffle=True, pin_memory=True)
+        # self.cltrain_loader = DataLoader(subset, batch_size=16, num_workers=0, shuffle=True, pin_memory=True)
         # self.cltrain_loader = self.get_cl_loader(indices=trainidx, transforms=self.train_transforms, train=True)# , target_transforms=continual_target_transform)
         self.cltest_loader = self.get_cl_loader(indices=testidx, transforms=self.test_transforms, train=False)# , target_transforms=continual_target_transform)
 
@@ -226,7 +225,7 @@ class CustomImageDataset(torch.utils.data.Dataset):
         y = self.targets[index]
         
         if self.transform:
-            x = Image.fromarray(self.data[index].astype(np.uint8).transpose(1,2,0))
+            x = Image.fromarray(self.data[index].astype(np.uint8))
             x = self.transform(x)
         
         return x, y

@@ -104,6 +104,9 @@ class BaseCLDataset(abc.ABC):
 
         divided = {}
 
+        logger.info(f"ITER: {type(self.training_data[0][0])}")
+        logger.info(f"DIRECT: {type(self.training_data.data)}")
+
         # equiv to classwise_split
         for img, label in self.training_data: 
             if label not in divided.keys():
