@@ -88,19 +88,8 @@ class VisionDataset(object):
         # Sets classes to be 0 to n-1 if class order is not specified, else sets it to class order. To produce different effects tweak here.
         class_list = self.class_order if self.class_order is not None else list(range(self.opt.total_num_classes))
         assert(self.opt.num_tasks*self.opt.num_classes_per_task <= self.opt.total_num_classes), "num_classes lesser than classes_per_task * num_tasks"
-        pretrain_class_list = class_list[:self.opt.num_pretrain_classes]
         cl_class_list = class_list[:self.opt.num_classes_per_task*self.opt.num_tasks]
         if self.class_order is None: random.shuffle(cl_class_list) # Generates different class-to-task assignment
-        
-        if self.opt.num_pretrain_classes > 0:
-            pretrain_target_transform = ReorderTargets(pretrain_class_list) # Uses target_transforms to remap the class order according to class list
-            assert(len(pretrain_class_list)==self.opt.num_pretrain_classes), "Error in generating the pretraining list"
-            pretrainidx, pretestidx = [], []
-            for cl in pretrain_class_list: # Selects classes from the pretraining list and loads all indices, which are then passed to a subset sampler
-                pretrainidx += train_class_labels_dict[cl][:]
-                pretestidx += test_class_labels_dict[cl][:]
-            self.pretrain_loader = self.get_loader(indices=pretrainidx, transforms=self.train_transforms, train=True, target_transforms=pretrain_target_transform)
-            self.pretest_loader = self.get_loader(indices=pretestidx, transforms=self.test_transforms, train=False, target_transforms=pretrain_target_transform)
         
         self.class_mask = torch.from_numpy(np.kron(np.eye(self.opt.num_tasks,dtype=int),np.ones((self.opt.num_classes_per_task,self.opt.num_classes_per_task)))).cuda() #Generates equal num_classes for all tasks. 
         continual_target_transform = ReorderTargets(cl_class_list)  # Remaps the class order to a 0-n order, required for crossentropy loss using class list
@@ -158,79 +147,3 @@ def classwise_split(targets):
         else: class_labels_dict[targets[idx]] = [idx]
 
     return class_labels_dict
-
-def get_statistics(dataset):
-    '''
-    Returns statistics of the dataset given a string of dataset name. To add new dataset, please add required statistics here
-    '''
-    assert(dataset in ['MNIST', 'KMNIST', 'EMNIST', 'FashionMNIST', 'SVHN', 'CIFAR10', 'CIFAR100', 'CINIC10', 'ImageNet100', 'ImageNet', 'TinyImagenet'])
-    mean = {
-            'MNIST':(0.1307,),
-            'KMNIST':(0.1307,),
-            'EMNIST':(0.1307,),
-            'FashionMNIST':(0.1307,),
-            'SVHN':  (0.4377,  0.4438,  0.4728),
-            'CIFAR10':(0.4914, 0.4822, 0.4465),
-            'CIFAR100':(0.5071, 0.4867, 0.4408),
-            'CINIC10':(0.47889522, 0.47227842, 0.43047404),
-            'TinyImagenet':(0.4802, 0.4481, 0.3975),
-            'ImageNet100':(0.485, 0.456, 0.406),
-            'ImageNet':(0.485, 0.456, 0.406),
-        }
-
-    std = {
-            'MNIST':(0.3081,),
-            'KMNIST':(0.3081,),
-            'EMNIST':(0.3081,),
-            'FashionMNIST':(0.3081,),
-            'SVHN': (0.1969,  0.1999,  0.1958),
-            'CIFAR10':(0.2023, 0.1994, 0.2010),
-            'CIFAR100':(0.2675, 0.2565, 0.2761),
-            'CINIC10':(0.24205776, 0.23828046, 0.25874835),
-            'TinyImagenet':(0.2302, 0.2265, 0.2262),
-            'ImageNet100':(0.229, 0.224, 0.225),
-            'ImageNet':(0.229, 0.224, 0.225),
-        }
-
-    classes = {
-            'MNIST': 10,
-            'KMNIST': 10,
-            'EMNIST': 49,
-            'FashionMNIST': 10,
-            'SVHN': 10,
-            'CIFAR10': 10,
-            'CIFAR100': 100,
-            'CINIC10': 10,
-            'TinyImagenet':200,
-            'ImageNet100':100,
-            'ImageNet': 1000,
-        }
-
-    in_channels = {
-            'MNIST': 1,
-            'KMNIST': 1,
-            'EMNIST': 1,
-            'FashionMNIST': 1,
-            'SVHN': 3,
-            'CIFAR10': 3,
-            'CIFAR100': 3,
-            'CINIC10': 3,
-            'TinyImagenet':3,
-            'ImageNet100':3,
-            'ImageNet': 3,
-        }
-
-    inp_size = {
-            'MNIST': 28,
-            'KMNIST': 28,
-            'EMNIST': 28,
-            'FashionMNIST': 28,
-            'SVHN': 32,
-            'CIFAR10': 32,
-            'CIFAR100': 32,
-            'CINIC10': 32,
-            'TinyImagenet':64,
-            'ImageNet100':224,
-            'ImageNet': 224,
-        }
-    return mean[dataset], std[dataset], classes[dataset],  inp_size[dataset], in_channels[dataset]
