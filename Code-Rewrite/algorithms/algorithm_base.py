@@ -36,6 +36,9 @@ class BaseCLAlgorithm(abc.ABC):
 
         self.model = model_instance
         self.device: torch.device = next(self.model.parameters()).device
+        
+        if "cuda" not in self.device.type:
+            logger.warning("Not running on CUDA device")
 
         self.dataset = dataset_instance
         self.optimiser = optimiser_instance
@@ -141,8 +144,10 @@ class BaseCLAlgorithm(abc.ABC):
         with open(f"{self.directory}/{base_label}_accuracy_results.json", "w+") as fp:
             json.dump(class_eval, fp, indent=2)
 
+        overall_accuracy = total_correct / total
         logger.debug(f"Raw classification accuracy results saved to {self.directory}/{base_label}_accuracy_results.json")
-        logger.info(f"Correctly classified {total_correct} / {total} samples ({(100 * total_correct / total):.2f}% correct)")
+        logger.info(f"Correctly classified {total_correct} / {total} samples ({(100 * overall_accuracy):.2f}% correct)")
+        self.writer.add_scalar("Acc/Overall", overall_accuracy, task_no)
 
         accuracy_bar_figure = metrics.generate_accuracy_bar_chart(f"{base_name} Classification Accuracy", class_eval)
         self.writer.add_figure(f"Acc_Plots/{base_label}", accuracy_bar_figure)

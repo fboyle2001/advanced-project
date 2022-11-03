@@ -9,6 +9,7 @@ import torch
 from torch.utils.data import DataLoader
 import torch.utils.tensorboard
 import torch.optim as optim
+import pickle
 
 class GDumb(BaseCLAlgorithm):
     """
@@ -51,7 +52,7 @@ class GDumb(BaseCLAlgorithm):
         self.max_lr = max_lr
         self.min_lr = min_lr
         
-        self.replay_buffer = utils.HashReplayBuffer(max_memory_samples, "random_from_largest_class")
+        self.replay_buffer = utils.BalancedReplayBuffer(max_memory_samples)
 
     @staticmethod
     def get_algorithm_folder() -> str:
@@ -73,32 +74,29 @@ class GDumb(BaseCLAlgorithm):
         super().train()
         logger.info("Populating replay buffer")
 
-        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+        for index in range(len(self.dataset.training_data.data)): # type: ignore
+            img = self.dataset.training_data.data[index] # type: ignore
+            target = self.dataset.training_data.targets[index] # type: ignore
 
-            for batch_no, data in enumerate(task_dataloader, 0):
-                logger.debug(f"{batch_no + 1} / {len(task_dataloader)}")
-                inp, labels = data
-
-                for j in range(0, len(inp)):
-                    self.replay_buffer.add_to_buffer(inp[j], labels[j])
+            self.replay_buffer.add_sample(img, target)
         
         logger.info("Replay buffer populated")
-        logger.info(f"Buffer keys: {self.replay_buffer.memory.keys()}")
+        logger.info(f"Buffer keys: {self.replay_buffer.known_classes}")
 
-        for class_name in self.replay_buffer.memory.keys():
-            logger.info(f"{class_name} has {len(self.replay_buffer.memory[class_name])} samples")
+        for class_name in self.replay_buffer.known_classes:
+           logger.info(f"{class_name} has {len(self.replay_buffer.class_hash_pointers[class_name])} samples")
 
-        buffer_dataset = self.replay_buffer.to_torch_dataset()
+        buffer_dataset = self.replay_buffer.to_torch_dataset(transform=self.dataset.training_transform)
         buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
 
         logger.info("Training model for inference from buffer")
 
         lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=0.0005)
+        unique_imgs = set()
 
         for epoch in range(1, self.post_population_max_epochs + 1):
             logger.info(f"Starting epoch {epoch} / {self.post_population_max_epochs}")
+            logger.info(f"Unique images: {len(unique_imgs)}")
             running_loss = 0
 
             if epoch == 0:
@@ -117,6 +115,10 @@ class GDumb(BaseCLAlgorithm):
 
             for batch_no, data in enumerate(buffer_dataloader, 0):
                 inp, labels = data
+
+                for ix in inp:
+                    unique_imgs.add(hash(pickle.dumps(ix.detach().cpu())))
+
                 inp = inp.to(self.device)
                 labels = labels.to(self.device)
 
@@ -141,9 +143,11 @@ class GDumb(BaseCLAlgorithm):
             running_loss = 0
 
             if epoch > 0 and epoch % 10 == 0:
+                self.model.eval()
                 self.run_base_task_metrics(task_no=epoch)
+                self.model.train()
         
-        self.run_base_task_metrics(task_no=0)
+        self.run_base_task_metrics(task_no=self.post_population_max_epochs + 1)
         logger.info("Training completed")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:

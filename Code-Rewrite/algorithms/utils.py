@@ -1,97 +1,73 @@
-from typing import Any
+from typing import Dict, Any, List
 
 import random
 import pickle
 
+from loguru import logger
+
 import torch
 from datasets.utils import CustomImageDataset
 
-# TODO: Generate docstrings
-class HashReplayBuffer:
-    VALID_STRATEGIES = ["random_from_largest_class"]
+class BalancedReplayBuffer:
+    def __init__(self, max_memory_size: int, disable_warnings: bool = False):
+        self.max_memory_size = max_memory_size
+        self.disable_warnings = disable_warnings
 
-    def __init__(
-        self, 
-        max_size: int, 
-        max_strategy: str
-    ):
-        assert max_strategy in self.VALID_STRATEGIES, f"{max_strategy} is not a valid strategy"
-        
-        self.max_size = max_size
-        self.max_strategy = max_strategy
+        self.class_hash_pointers: Dict[Any, List[int]] = {}
+        self.hash_map: Dict[int, Any] = {}
 
-        """
-        Structure: 
-        {
-            "class_name": [
-                {
-                    "hash": "tensor_hash",
-                    "sample": Tensor
-                }, ...
-            ], ...
-        }
-        """
-        self.memory = {}
-        self.hashes = set()
-        self.count = 0
+    @property
+    def count(self):
+        return len(self.hash_map.keys())
 
-    def _remove_sample(self) -> None:
+    @property
+    def known_classes(self):
+        return self.class_hash_pointers.keys()
+
+    def _remove_sample(self):
         if self.count == 0:
             return
-
-        match self.max_strategy:
-            case "random_from_largest_class":
-                largest_class = max(self.memory.keys(), key=lambda c: len(self.memory[c]))
-                remove_index = random.randrange(0, len(self.memory[largest_class]))
-                item = self.memory[largest_class][remove_index]
-                item_hash = item["hash"]
-                self.hashes.remove(item_hash)
-                self.memory[largest_class].remove(self.memory[largest_class][remove_index])
-            case _:
-                assert False
         
-        self.count -= 1
+        largest_class = max(self.class_hash_pointers.keys(), key=lambda c: len(self.class_hash_pointers[c]))
+        remove_index = random.randrange(0, len(self.class_hash_pointers[largest_class]))
 
-    def add_to_buffer(self, img: torch.Tensor, label: Any) -> None:
-        img = img.detach().cpu()
-        label = label.detach().cpu().item()
+        # Remove from the hash map
+        data_hash = self.class_hash_pointers[largest_class][remove_index]
+        del self.hash_map[data_hash]
 
-        # If the label is not in the keys then add it
-        if label not in self.memory.keys():
-            self.memory[label] = []
-        
-        assert self.count <= self.max_size
+        # Remove from the class map
+        self.class_hash_pointers[largest_class].remove(data_hash)
 
-        # Need to remove a sample according to the strategy selected
-        if self.count == self.max_size:
+    def add_sample(self, data, target):
+        if not self.disable_warnings and type(data) is torch.Tensor:
+            logger.warning(f"Received data of type tensor")
+
+        if not self.disable_warnings and type(target) is torch.Tensor:
+            logger.warning(f"Received target of type tensor ({target})")
+
+        data_hash = hash(pickle.dumps(data))
+
+        self.hash_map[data_hash] = data
+
+        if target not in self.class_hash_pointers.keys():
+            self.class_hash_pointers[target] = []
+
+        self.class_hash_pointers[target].append(data_hash)
+
+        # Need to delete a sample now
+        if self.count > self.max_memory_size:
             self._remove_sample()
-        
-        # Prevent duplicates
-        tensor_hash = hash(pickle.dumps(img))
 
-        if tensor_hash in self.hashes:
-            return
-
-        self.hashes.add(tensor_hash)
-        self.memory[label].append({
-            "hash": tensor_hash,
-            "sample": img
-        })
-
-        self.count += 1
-
-    def to_torch_dataset(self) -> CustomImageDataset:
+    def to_torch_dataset(self, transform=None):
         data = []
         targets = []
 
-        for clazz in self.memory.keys():
-            clazz_items = self.memory[clazz]
+        for target in self.class_hash_pointers.keys():
+            for hash_pointer in self.class_hash_pointers[target]:
+                data.append(self.hash_map[hash_pointer])
+                targets.append(target)
 
-            for item in clazz_items:
-                data.append(item["sample"])
-                targets.append(clazz)
-        
-        return CustomImageDataset(data, targets)
+        return CustomImageDataset(data, targets, transform)
 
 
     

@@ -22,7 +22,8 @@ class BaseCLDataset(abc.ABC):
         dataset_class: Type[torchvision.datasets.VisionDataset], 
         training_dataset_parameters: dict,
         testing_dataset_parameters: dict,
-        transform: torchvision.transforms.Compose,
+        training_transform: torchvision.transforms.Compose,
+        testing_transform: torchvision.transforms.Compose,
         classes: List[Union[int, str]],
         disjoint: bool,
         classes_per_task: Union[int, None],
@@ -44,7 +45,8 @@ class BaseCLDataset(abc.ABC):
             dataset_class (Type[torchvision.datasets.VisionDataset]): The dataset class from torchvision
             training_dataset_parameters (dict): Parameters for the dataset for the training configurations
             testing_dataset_parameters (dict): _description_
-            transform (torchvision.transforms.Compose): _description_
+            training_transform (torchvision.transforms.Compose): _description_
+            testing_transform (torchvision.transforms.Compose): _description_
             classes (List[Union[int, str]]): _description_
             disjoint (bool, optional): _description_. Defaults to False.
             classes_per_task (Union[int, None], optional): _description_. Defaults to 0.
@@ -54,10 +56,12 @@ class BaseCLDataset(abc.ABC):
         self.dataset_class = dataset_class
         self.training_dataset_parameters = training_dataset_parameters
         self.testing_dataset_parameters = testing_dataset_parameters
-        self.transform = transform
 
-        self.training_data = dataset_class(root=folder, transform=transform, **training_dataset_parameters)
-        self.testing_data = dataset_class(root=folder, transform=transform, **testing_dataset_parameters)
+        self.training_transform = training_transform
+        self.testing_transform = testing_transform
+
+        self.training_data = dataset_class(root=folder, transform=training_transform, **training_dataset_parameters)
+        self.testing_data = dataset_class(root=folder, transform=testing_transform, **testing_dataset_parameters)
 
         self.classes = classes
 
@@ -147,7 +151,8 @@ class BaseCLDataset(abc.ABC):
             "dataset_class": f"{self.dataset_class.__module__}.{self.dataset_class.__qualname__}",
             "training_dataset_parameters": str(self.training_dataset_parameters),
             "testing_dataset_parameters": str(self.testing_dataset_parameters),
-            "transform": str(self.transform),
+            "training_transform": str(self.training_transform),
+            "testing_transform": str(self.testing_transform),
             "classes": ", ".join([str(clazz) for clazz in self.classes]),
             "disjoint": self.disjoint
         }

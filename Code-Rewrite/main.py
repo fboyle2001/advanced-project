@@ -10,6 +10,9 @@ import datasets
 import algorithms
 # import algorithms.metrics.metrics as metrics
 
+from models.cifar.resnet import ResNet
+from dotmap import DotMap
+
 import torch
 from torchvision.models import resnet18
 
@@ -93,12 +96,45 @@ def execute(algorithm_class, dataset_class, directory, writer):
     logger.info(f"Saving model to {model_save_loc}")
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
+def seed_everything(seed):
+    import random
+    import numpy as np
+    '''
+    Fixes the class-to-task assignments and most other sources of randomness, except CUDA training aspects.
+    '''
+    # Avoid all sorts of randomness for better replication
+    random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    if torch.cuda.is_available():
+        torch.backends.cudnn.benchmark = True # An exemption for speed :P
+
 if __name__ == "__main__":
+    seed_everything(0)
     algorithm_class = algorithms.GDumb
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
+
+    opt = {
+        "depth": 18,
+        "num_classes": 10,
+        "bn": True,
+        "preact": False,
+        "normtype": "BatchNorm",
+        "affine_bn": True, 
+        "bn_eps": 1e-6,
+        "activetype": "ReLU",
+        "in_channels": 3
+    }
+    
+    # model = ResNet(DotMap(opt))
+    # model.to(device)
+
     model = resnet18(weights=None)
+    model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
     model.to(device)
 
     directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
