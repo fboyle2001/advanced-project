@@ -1,11 +1,11 @@
 from typing import Dict, Any, List
+from loguru import logger
 
 import random
 import pickle
 
-from loguru import logger
-
 import torch
+import numpy as np
 from datasets.utils import CustomImageDataset
 
 class BalancedReplayBuffer:
@@ -24,7 +24,7 @@ class BalancedReplayBuffer:
     def known_classes(self):
         return self.class_hash_pointers.keys()
 
-    def _remove_sample(self):
+    def _remove_sample(self) -> None:
         if self.count == 0:
             return
         
@@ -38,7 +38,7 @@ class BalancedReplayBuffer:
         # Remove from the class map
         self.class_hash_pointers[largest_class].remove(data_hash)
 
-    def add_sample(self, data, target):
+    def add_sample(self, data: np.ndarray, target: Any) -> None:
         if not self.disable_warnings and type(data) is torch.Tensor:
             logger.warning(f"Received data of type tensor")
 
@@ -58,7 +58,7 @@ class BalancedReplayBuffer:
         if self.count > self.max_memory_size:
             self._remove_sample()
 
-    def to_torch_dataset(self, transform=None):
+    def to_torch_dataset(self, transform=None) -> CustomImageDataset:
         data = []
         targets = []
 

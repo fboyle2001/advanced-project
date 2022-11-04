@@ -10,9 +10,6 @@ import datasets
 import algorithms
 import utils
 
-from models.cifar.resnet import ResNet
-from dotmap import DotMap
-
 import torch
 from torchvision.models import resnet18
 
@@ -44,8 +41,8 @@ ALGORITHM_DEFAULTS = {
 
 DATASET_DEFAULTS = {
     datasets.CIFAR10: {
-        "disjoint": True,
-        "classes_per_task": 5
+        "disjoint": False,
+        "classes_per_task": 0
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -97,33 +94,20 @@ def execute(algorithm_class, dataset_class, directory, writer):
     logger.info(f"Saving model to {model_save_loc}")
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
-
-
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.ElasticWeightConsolidation
+    algorithm_class = algorithms.GDumb
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
 
-    opt = {
-        "depth": 18,
-        "num_classes": 10,
-        "bn": True,
-        "preact": False,
-        "normtype": "BatchNorm",
-        "affine_bn": True, 
-        "bn_eps": 1e-6,
-        "activetype": "ReLU",
-        "in_channels": 3
-    }
-    
-    # model = ResNet(DotMap(opt))
-    # model.to(device)
-
     model = resnet18(weights=None)
     model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
+
+    # Has higher performance, need to analyse why in the future
+    # model = utils.get_gdumb_resnet_impl()
+
     model.to(device)
 
     directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
