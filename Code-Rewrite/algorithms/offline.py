@@ -24,7 +24,7 @@ class OfflineTraining(BaseCLAlgorithm):
         batch_size: int
     ):
         super().__init__(
-            name="OfflineTraining",
+            name="Offline Training",
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,

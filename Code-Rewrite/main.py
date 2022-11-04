@@ -8,7 +8,7 @@ import atexit
 
 import datasets
 import algorithms
-# import algorithms.metrics.metrics as metrics
+import utils
 
 from models.cifar.resnet import ResNet
 from dotmap import DotMap
@@ -32,7 +32,8 @@ ALGORITHM_DEFAULTS = {
         "post_population_max_epochs": 256,
         "gradient_clip": 10,
         "max_lr": 0.05,
-        "min_lr": 0.0005
+        "min_lr": 0.0005,
+        "cutmix_probability": 0.5
     },
     algorithms.ElasticWeightConsolidation: {
         "max_epochs_per_task": 5,
@@ -43,8 +44,8 @@ ALGORITHM_DEFAULTS = {
 
 DATASET_DEFAULTS = {
     datasets.CIFAR10: {
-        "disjoint": False,
-        "classes_per_task": 0
+        "disjoint": True,
+        "classes_per_task": 5
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -96,24 +97,12 @@ def execute(algorithm_class, dataset_class, directory, writer):
     logger.info(f"Saving model to {model_save_loc}")
     torch.save(algorithm.model.state_dict(), model_save_loc)
 
-def seed_everything(seed):
-    import random
-    import numpy as np
-    '''
-    Fixes the class-to-task assignments and most other sources of randomness, except CUDA training aspects.
-    '''
-    # Avoid all sorts of randomness for better replication
-    random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    np.random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
-    if torch.cuda.is_available():
-        torch.backends.cudnn.benchmark = True # An exemption for speed :P
+
 
 if __name__ == "__main__":
-    seed_everything(0)
-    algorithm_class = algorithms.GDumb
+    utils.seed_everything(0)
+
+    algorithm_class = algorithms.ElasticWeightConsolidation
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")

@@ -1,73 +1,41 @@
-from typing import Dict, Any, List
-
-import random
-import pickle
-
-from loguru import logger
-
+# Cutmix, implemented by GDumb
+# https://github.com/drimpossible/GDumb/blob/ca38afcec332fa523ceff0cc8d3846e2bcf78697/src/utils.py
+# Taken from official implementation
+import numpy as np
 import torch
-from datasets.utils import CustomImageDataset
 
-class BalancedReplayBuffer:
-    def __init__(self, max_memory_size: int, disable_warnings: bool = False):
-        self.max_memory_size = max_memory_size
-        self.disable_warnings = disable_warnings
+def rand_bbox(size, lam):
+    W = size[2]
+    H = size[3]
+    cut_rat = np.sqrt(1. - lam)
+    cut_w = np.intc(W * cut_rat)
+    cut_h = np.intc(H * cut_rat)
 
-        self.class_hash_pointers: Dict[Any, List[int]] = {}
-        self.hash_map: Dict[int, Any] = {}
+    # uniform
+    cx = np.random.randint(W)
+    cy = np.random.randint(H)
 
-    @property
-    def count(self):
-        return len(self.hash_map.keys())
+    bbx1 = np.clip(cx - cut_w // 2, 0, W)
+    bby1 = np.clip(cy - cut_h // 2, 0, H)
+    bbx2 = np.clip(cx + cut_w // 2, 0, W)
+    bby2 = np.clip(cy + cut_h // 2, 0, H)
 
-    @property
-    def known_classes(self):
-        return self.class_hash_pointers.keys()
+    return bbx1, bby1, bbx2, bby2
 
-    def _remove_sample(self):
-        if self.count == 0:
-            return
-        
-        largest_class = max(self.class_hash_pointers.keys(), key=lambda c: len(self.class_hash_pointers[c]))
-        remove_index = random.randrange(0, len(self.class_hash_pointers[largest_class]))
+def cutmix_data(x, y, alpha=1.0, cutmix_prob=0.5, device="cuda:0"):
+    assert(alpha > 0)
+    # generate mixed sample
+    lam = np.random.beta(alpha, alpha)
 
-        # Remove from the hash map
-        data_hash = self.class_hash_pointers[largest_class][remove_index]
-        del self.hash_map[data_hash]
+    batch_size = x.size()[0]
+    index = torch.randperm(batch_size)
 
-        # Remove from the class map
-        self.class_hash_pointers[largest_class].remove(data_hash)
+    index = index.to(device)
 
-    def add_sample(self, data, target):
-        if not self.disable_warnings and type(data) is torch.Tensor:
-            logger.warning(f"Received data of type tensor")
+    y_a, y_b = y, y[index]
+    bbx1, bby1, bbx2, bby2 = rand_bbox(x.size(), lam)
+    x[:, :, bbx1:bbx2, bby1:bby2] = x[index, :, bbx1:bbx2, bby1:bby2]
 
-        if not self.disable_warnings and type(target) is torch.Tensor:
-            logger.warning(f"Received target of type tensor ({target})")
-
-        data_hash = hash(pickle.dumps(data))
-
-        self.hash_map[data_hash] = data
-
-        if target not in self.class_hash_pointers.keys():
-            self.class_hash_pointers[target] = []
-
-        self.class_hash_pointers[target].append(data_hash)
-
-        # Need to delete a sample now
-        if self.count > self.max_memory_size:
-            self._remove_sample()
-
-    def to_torch_dataset(self, transform=None):
-        data = []
-        targets = []
-
-        for target in self.class_hash_pointers.keys():
-            for hash_pointer in self.class_hash_pointers[target]:
-                data.append(self.hash_map[hash_pointer])
-                targets.append(target)
-
-        return CustomImageDataset(data, targets, transform)
-
-
-    
+    # adjust lambda to exactly match pixel ratio
+    lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (x.size()[-1] * x.size()[-2]))
+    return x, y_a, y_b, lam
