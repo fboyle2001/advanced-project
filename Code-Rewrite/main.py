@@ -25,7 +25,7 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.GDumb: {
         "batch_size": 16,
-        "max_memory_samples": 1000,
+        "max_memory_samples": 500,
         "post_population_max_epochs": 256,
         "gradient_clip": 10,
         "max_lr": 0.05,
@@ -36,13 +36,22 @@ ALGORITHM_DEFAULTS = {
         "max_epochs_per_task": 5,
         "batch_size": 64,
         "task_importance": 1000
-    }
+    },
+    algorithms.Rainbow: {
+        "batch_size": 16,
+        "max_memory_samples": 1000,
+        "epochs_per_task": 10,
+        "gradient_clip": 10,
+        "max_lr": 0.05,
+        "min_lr": 0.0005,
+        "cutmix_probability": 0.5
+    },
 }
 
 DATASET_DEFAULTS = {
     datasets.CIFAR10: {
-        "disjoint": False,
-        "classes_per_task": 0
+        "disjoint": True,
+        "classes_per_task": 2
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -97,16 +106,16 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.GDumb
+    algorithm_class = algorithms.Rainbow
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")
 
-    model = resnet18(weights=None)
-    model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
+    # model = resnet18(weights=None)
+    # model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
 
     # Has higher performance, need to analyse why in the future
-    # model = utils.get_gdumb_resnet_impl()
+    model = utils.get_gdumb_resnet_impl()
 
     model.to(device)
 

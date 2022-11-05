@@ -95,7 +95,10 @@ class BaseCLDataset(abc.ABC):
 
         divided = {}
 
-        for img, label in self.training_data: 
+        for idx in range(len(self.training_data.data)): # type: ignore
+            img = self.training_data.data[idx] # type: ignore
+            label = self.training_data.targets[idx] # type: ignore
+
             if label not in divided.keys():
                 divided[label] = []
             
@@ -122,7 +125,7 @@ class BaseCLDataset(abc.ABC):
                 data += divided[label]
                 targets += labelled_targets
             
-            task_dataset = utils.CustomImageDataset(data, targets)
+            task_dataset = utils.CustomImageDataset(data, targets, transform=self.training_transform)
             task_datasets.append(task_dataset)
             task_split.append(split)
 

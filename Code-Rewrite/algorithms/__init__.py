@@ -7,3 +7,4 @@ from .ewc import ElasticWeightConsolidation
 
 from .gdumb import GDumb
 from .icarl import iCaRL
+from .rainbow import Rainbow
