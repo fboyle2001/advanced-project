@@ -40,11 +40,21 @@ ALGORITHM_DEFAULTS = {
     algorithms.Rainbow: {
         "batch_size": 16,
         "max_memory_samples": 1000,
-        "epochs_per_task": 10,
+        "epochs_per_task": 1,
         "gradient_clip": 10,
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5
+    },
+    algorithms.RainbowOnline: {
+        "batch_size": 16,
+        "max_memory_samples": 1000,
+        "epochs_per_task": 50,
+        "gradient_clip": 10,
+        "max_lr": 0.05,
+        "min_lr": 0.0005,
+        "cutmix_probability": 0.5,
+        "sampling_strategy": ["diverse", "central", "edge", "random"][3] # change the index to 0, 1, 2, 3
     },
 }
 
@@ -106,7 +116,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.Rainbow
+    algorithm_class = algorithms.RainbowOnline
     dataset_class = datasets.CIFAR10
 
     device = torch.device("cuda:0")

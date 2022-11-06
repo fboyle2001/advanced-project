@@ -8,3 +8,4 @@ from .ewc import ElasticWeightConsolidation
 from .gdumb import GDumb
 from .icarl import iCaRL
 from .rainbow import Rainbow
+from .rainbow_online import RainbowOnline
