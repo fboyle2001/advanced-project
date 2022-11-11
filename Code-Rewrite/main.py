@@ -17,8 +17,12 @@ PARENT_DIRECTORY = "./store/models"
 
 ALGORITHM_DEFAULTS = {
     algorithms.OfflineTraining: {
-        "max_epochs_per_task": 100,
-        "batch_size": 64
+        "epochs_per_task": 256,
+        "batch_size": 64,
+        "gradient_clip": 10,
+        "apply_learning_rate_annealing": True,
+        "max_lr": 0.05,
+        "min_lr": 0.0005,
     },
     algorithms.Finetuning: {
         "batch_size": 64
@@ -54,8 +58,27 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["diverse", "central", "edge", "random"][3] # change the index to 0, 1, 2, 3
+        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][4] # change the index to 0, 1, 2, 3, 4 
     },
+    algorithms.RainbowOnlineExperimental: {
+        "batch_size": 16,
+        "max_memory_samples": 1000,
+        "epochs_per_task": 50,
+        "gradient_clip": 10,
+        "max_lr": 0.05,
+        "min_lr": 0.0005,
+        "cutmix_probability": 0.5,
+        "sampling_strategy": ["endpoint_peak", "midpoint_peak"][1] # change the index to 0, 1
+    },
+    algorithms.Mnemonics: {
+        "epochs_per_task": 50,
+        "batch_size": 16,
+        "gradient_clip": 10,
+        "apply_learning_rate_annealing": True,
+        "max_lr": 0.05,
+        "min_lr": 0.0005,
+        "cutmix_probability": 0
+    }
 }
 
 DATASET_DEFAULTS = {
@@ -69,12 +92,18 @@ DATASET_DEFAULTS = {
     }
 }
 
-def setup_files(algorithm_folder, dataset_class) -> Tuple[str, SummaryWriter]:
+def setup_files(algorithm_folder, dataset_class, experiment_name) -> Tuple[str, SummaryWriter]:
     directory = f"{PARENT_DIRECTORY}/{algorithm_folder}/{time.time()}_{dataset_class.__qualname__}"
+
+    if experiment_name is not None:
+        directory = f"{directory}_{experiment_name}"
+
     os.makedirs(directory, exist_ok=False)
 
     logger.add(f"{directory}/log.log", backtrace=True, diagnose=True)
     writer = SummaryWriter(log_dir=directory)
+
+    logger.info(f"Experiment Name: {experiment_name if experiment_name is not None else 'Not Set'}")
 
     return directory, writer
 
@@ -116,8 +145,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnline
+    algorithm_class = algorithms.RainbowOnlineExperimental
     dataset_class = datasets.CIFAR10
+    experiment_name = "ALL_OCCURRENCES_NORMAL_MIDPOINT"
 
     device = torch.device("cuda:0")
 
@@ -129,7 +159,7 @@ if __name__ == "__main__":
 
     model.to(device)
 
-    directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class)
+    directory, writer = setup_files(algorithm_class.get_algorithm_folder(), dataset_class, experiment_name)
 
     def close_tensorboard_writer():
         writer.flush()

@@ -1,4 +1,4 @@
-from typing import Dict, Union, Callable
+from typing import Dict, Union, Tuple
 from loguru import logger
 
 from .algorithm_base import BaseCLAlgorithm
@@ -17,15 +17,13 @@ from torch.utils.data import DataLoader
 
 from PIL import Image
 import math
+import numpy as np 
 
-class RainbowOnline(BaseCLAlgorithm):
+class RainbowOnlineExperimental(BaseCLAlgorithm):
     # random could have repeated samples
-    sample_idx_functions: Dict[str, Callable[[int, int, int], int]] = {
-        "diverse": lambda j, D, k: (j * D) // k,
-        "central": lambda j, D, k: j,
-        "edge": lambda j, D, k: D - j - 1,
-        "random": lambda j, D, k: 0,
-        "proportional": lambda j, D, k: 0,
+    sample_distribution_parameters: Dict[str, Tuple[float, float]] = {
+        "endpoint_peak": (0.5, 0.5),
+        "midpoint_peak": (2, 2)
     }
 
     def __init__(
@@ -45,7 +43,7 @@ class RainbowOnline(BaseCLAlgorithm):
         sampling_strategy: str
     ):
         super().__init__(
-            name="Rainbow Online",
+            name="Rainbow Online Experimental",
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
@@ -61,25 +59,23 @@ class RainbowOnline(BaseCLAlgorithm):
         self.min_lr = min_lr
 
         """
-        Four potential sampling techniques:
-        * diverse: **DEFAULT FOR RAINBOW** Sort by uncertainty and then select at evenly spaced interval from the list 
-        * central: Sort by uncertainty and then select the first n from the list 
-        * edge: Sort by uncertainty and then select the last n from the list 
-        * random: This is effectively GDumb, just pick any samples
-        * proportional: Sort by uncertainty, bin using uncertainties, draw by proportion from each uncertainty bin
+        Potential sampling techniques:
+        *
+        *
         """
         self.sampling_strategy = sampling_strategy
 
-        if self.sampling_strategy not in self.sample_idx_functions.keys():
-            logger.critical(f"Invalid sampling technique for Rainbow Online. Must select from {self.sample_idx_functions.keys()}")
-            assert self.sampling_strategy in self.sample_idx_functions.keys(), f"Must select a valid sampling technique from: {self.sample_idx_functions.keys()}"
+        if self.sampling_strategy not in self.sample_distribution_parameters:
+            logger.critical(f"Invalid strategy for Rainbow Online Experimental. Must select from {self.sample_distribution_parameters}")
+            assert self.sampling_strategy in self.sample_distribution_parameters, f"Must select a valid strategy from: {self.sample_distribution_parameters}"
         
-        self.calculate_sample_idx = self.sample_idx_functions[self.sampling_strategy]
+        self.beta_a, self.beta_b = self.sample_distribution_parameters[self.sampling_strategy]
+        
         self.cutmix_probability = cutmix_probability
 
     @staticmethod
     def get_algorithm_folder() -> str:
-        return "rainbow_online"
+        return "rainbow_online_experimental"
 
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         info: Dict[str, Union[str, int, float]] = {
@@ -194,12 +190,15 @@ class RainbowOnline(BaseCLAlgorithm):
             assert type(data) is not torch.Tensor
             class_segmented_samples[target].append(data)
 
+        unseen_classes = []
+
         for data, target in task_iter:
             if type(target) is torch.Tensor:
                 target = target.detach().cpu().item()
 
             if target not in class_segmented_samples.keys():
                 class_segmented_samples[target] = []
+                unseen_classes.append(target)
 
             assert type(data) is not torch.Tensor
             class_segmented_samples[target].append(data)
@@ -214,53 +213,64 @@ class RainbowOnline(BaseCLAlgorithm):
         next_memory_samples = []
         next_memory_targets = []
 
-        if self.sampling_strategy == "random":
-            for class_name in class_segmented_samples.keys():
-                num_class_samples = len(class_segmented_samples[class_name])
-                random_indices = random.sample(range(num_class_samples), k=memory_per_class)
-                logger.debug(f"Random indices for class {class_name}: {random_indices}")
-                count = 0
+        """
+        1. Sort by uncertainty
+        2. If this is the first time we have encountered the class:
+            a. 
+        3. Otherwise number of samples at each uncertainty level
+            a. Proportionally select samples based on the size of the bins
+        """
 
-                temp_samples_for_logging = []
-                sampled_indexes = []
+        for class_name in class_segmented_samples.keys():
+            logger.debug(f"Class {class_name} under sampling strategy {self.sampling_strategy}")
+            uncertainty_bins = {}
 
-                for j in random_indices:
-                    next_memory_samples.append(class_segmented_samples[class_name][j])
+            def proportional_sort_key(sample):
+                unscaled_uncertainty = self.calculate_sample_uncertainty(sample, scale=False)
+
+                if unscaled_uncertainty not in uncertainty_bins.keys():
+                    uncertainty_bins[unscaled_uncertainty] = 0
+                
+                uncertainty_bins[unscaled_uncertainty] += 1
+                return unscaled_uncertainty
+
+            sorted_class_segmented_samples[class_name] = sorted(class_segmented_samples[class_name], key=proportional_sort_key)
+            num_class_samples = len(sorted_class_segmented_samples[class_name])
+            start_idx = 0
+            count = 0
+
+            temp_samples_for_logging = []
+            sampled_indexes = []
+
+            if class_name in unseen_classes or True:
+                while len(sampled_indexes) < memory_per_class:
+                    sample_idx = round(num_class_samples * np.random.beta(a=2, b=2))
+
+                    if sample_idx < 0:
+                        logger.warning(f"{sample_idx} was less than 0")
+                        sample_idx = 0
+                    elif sample_idx >= num_class_samples:
+                        logger.warning(f"{sample_idx} was greater than max")
+                        sample_idx = num_class_samples - 1
+                    
+                    if sample_idx in sampled_indexes:
+                        logger.debug(f"Already seen idx {sample_idx}")
+                        continue
+                    
+                    sample = sorted_class_segmented_samples[class_name][sample_idx]
+
+                    next_memory_samples.append(sample)
                     next_memory_targets.append(class_name)
 
-                    temp_samples_for_logging.append(torchvision.transforms.ToTensor()(Image.fromarray(class_segmented_samples[class_name][j])))
-                    sampled_indexes.append(j)
+                    temp_samples_for_logging.append(torchvision.transforms.ToTensor()(Image.fromarray(sample)))
                     count += 1
-                
-                logging_img_tensors = torch.stack(temp_samples_for_logging)
-                img_grid = torchvision.utils.make_grid(logging_img_tensors, nrow=math.ceil(math.sqrt(len(logging_img_tensors))))
-                self.writer.add_image(f"Task {task_no} Exemplars ({self.sampling_strategy}: {len(logging_img_tensors)})/{self.dataset.classes[class_name]}", img_grid)
-
-                logger.debug(f"Indexes: {sampled_indexes}")
-                logger.info("Saved sample images to Tensorboard")
-                logger.info(f"There are {count} samples from class {class_name}")
-        elif self.sampling_strategy == "proportional":
-            for class_name in class_segmented_samples.keys():
-                logger.debug(f"Class {class_name} under sampling strategy {self.sampling_strategy}")
-                uncertainty_bins = {}
-
-                def proportional_sort_key(sample):
-                    unscaled_uncertainty = self.calculate_sample_uncertainty(sample, scale=False)
-
-                    if unscaled_uncertainty not in uncertainty_bins.keys():
-                        uncertainty_bins[unscaled_uncertainty] = 0
                     
-                    uncertainty_bins[unscaled_uncertainty] += 1
-                    return unscaled_uncertainty
+                    sampled_indexes.append(sample_idx)
 
-                sorted_class_segmented_samples[class_name] = sorted(class_segmented_samples[class_name], key=proportional_sort_key)
-                num_class_samples = len(sorted_class_segmented_samples[class_name])
-                start_idx = 0
-                count = 0
-
-                temp_samples_for_logging = []
-                sampled_indexes = []
-
+                # Just easier for logging
+                sampled_indexes = sorted(sampled_indexes)
+            else:
+                # Otherwise do it proportionally
                 for uncertainty_bin in sorted(uncertainty_bins.keys()):
                     bin_size = uncertainty_bins[uncertainty_bin]
                     proportional_sample_size = round(memory_per_class * bin_size / num_class_samples)
@@ -277,42 +287,14 @@ class RainbowOnline(BaseCLAlgorithm):
                         count += 1
 
                     start_idx += bin_size
-                
-                logging_img_tensors = torch.stack(temp_samples_for_logging)
-                img_grid = torchvision.utils.make_grid(logging_img_tensors, nrow=math.ceil(math.sqrt(len(logging_img_tensors))))
-                self.writer.add_image(f"Task {task_no} Exemplars ({self.sampling_strategy}: {len(logging_img_tensors)})/{self.dataset.classes[class_name]}", img_grid)
+            
+            logging_img_tensors = torch.stack(temp_samples_for_logging)
+            img_grid = torchvision.utils.make_grid(logging_img_tensors, nrow=math.ceil(math.sqrt(len(logging_img_tensors))))
+            self.writer.add_image(f"Task {task_no} Exemplars ({self.sampling_strategy}: {len(logging_img_tensors)})/{self.dataset.classes[class_name]}", img_grid)
 
-                logger.debug(f"Indexes: {sampled_indexes}")
-                logger.info("Saved sample images to Tensorboard")
-                logger.info(f"There are {count} samples from class {class_name}")
-        else:
-            for class_name in class_segmented_samples.keys():
-                logger.debug(f"Class {class_name} under sampling strategy {self.sampling_strategy}")
-                sorted_class_segmented_samples[class_name] = sorted(class_segmented_samples[class_name], key=self.calculate_sample_uncertainty)
-                num_class_samples = len(sorted_class_segmented_samples[class_name])
-                count = 0
-                
-                temp_samples_for_logging = []
-                sampled_indexes = []
-
-                for j in range(memory_per_class):
-                    sample_idx = self.calculate_sample_idx(j, num_class_samples, memory_per_class) # (num_class_samples * j) // memory_per_class#
-                    # logger.debug(f"j: {j}, k: {memory_per_class}, |D|: {num_class_samples}, ~i: {j * memory_per_class // num_class_samples} ~~i: {(num_class_samples * j) // memory_per_class}")
-                    # logger.debug(f"idx: {sample_idx} with score {self.calculate_sample_uncertainty(sorted_class_segmented_samples[class_name][sample_idx])}")
-                    next_memory_samples.append(sorted_class_segmented_samples[class_name][sample_idx])
-                    next_memory_targets.append(class_name)
-
-                    temp_samples_for_logging.append(torchvision.transforms.ToTensor()(Image.fromarray(sorted_class_segmented_samples[class_name][sample_idx])))
-                    sampled_indexes.append(sample_idx)
-                    count += 1
-
-                logging_img_tensors = torch.stack(temp_samples_for_logging)
-                img_grid = torchvision.utils.make_grid(logging_img_tensors, nrow=math.ceil(math.sqrt(len(logging_img_tensors))))
-                self.writer.add_image(f"Task {task_no} Exemplars ({self.sampling_strategy}: {len(logging_img_tensors)})/{self.dataset.classes[class_name]}", img_grid)
-
-                logger.debug(f"Indexes: {sampled_indexes}")
-                logger.info("Saved sample images to Tensorboard")
-                logger.info(f"There are {count} samples from class {class_name}")
+            logger.debug(f"Indexes: {sampled_indexes}")
+            logger.info("Saved sample images to Tensorboard")
+            logger.info(f"There are {count} samples from class {class_name}")
 
         logger.info("Generated next exemplar buffer")
 

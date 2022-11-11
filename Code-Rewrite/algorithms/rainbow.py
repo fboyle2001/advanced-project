@@ -229,7 +229,7 @@ class Rainbow(BaseCLAlgorithm):
                 logger.info("Not using memory buffer on this task")
 
             non_exemplar_dataloader = DataLoader(self.dataset.task_datasets[task_no], batch_size=non_exemplar_batch_size, shuffle=True)
-            lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=0.0005)
+            lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
 
             # Train on this task
             for epoch in range(1, self.epochs_per_task + 1):

@@ -100,7 +100,7 @@ class GDumb(BaseCLAlgorithm):
 
         logger.info("Training model for inference from buffer")
 
-        lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=0.0005)
+        lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
         # unique_imgs = set()
 
         for epoch in range(1, self.post_population_max_epochs + 1):
