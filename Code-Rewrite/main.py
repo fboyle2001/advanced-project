@@ -68,16 +68,8 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["endpoint_peak", "midpoint_peak"][1] # change the index to 0, 1
-    },
-    algorithms.Mnemonics: {
-        "epochs_per_task": 50,
-        "batch_size": 16,
-        "gradient_clip": 10,
-        "apply_learning_rate_annealing": True,
-        "max_lr": 0.05,
-        "min_lr": 0.0005,
-        "cutmix_probability": 0
+        "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][2], # change the index to 0, 1, 2
+        "all_occurrences": False
     }
 }
 
@@ -147,7 +139,7 @@ if __name__ == "__main__":
 
     algorithm_class = algorithms.RainbowOnlineExperimental
     dataset_class = datasets.CIFAR10
-    experiment_name = "ALL_OCCURRENCES_NORMAL_MIDPOINT"
+    experiment_name = "FIRST_OCCURRENCE_EDGE_SKEW_1"
 
     device = torch.device("cuda:0")
 

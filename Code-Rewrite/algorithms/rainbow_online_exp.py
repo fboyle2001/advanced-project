@@ -16,14 +16,17 @@ from datasets import CustomImageDataset
 from torch.utils.data import DataLoader
 
 from PIL import Image
+
 import math
-import numpy as np 
+import matplotlib.pyplot as plt
+import scipy.stats as stats
 
 class RainbowOnlineExperimental(BaseCLAlgorithm):
     # random could have repeated samples
     sample_distribution_parameters: Dict[str, Tuple[float, float]] = {
         "endpoint_peak": (0.5, 0.5),
-        "midpoint_peak": (2, 2)
+        "midpoint_peak": (2, 2),
+        "edge_skewed_1": (5, 3)
     }
 
     def __init__(
@@ -40,7 +43,8 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
         max_lr: float,
         min_lr: float,
         cutmix_probability: float,
-        sampling_strategy: str
+        sampling_strategy: str,
+        all_occurrences: bool
     ):
         super().__init__(
             name="Rainbow Online Experimental",
@@ -64,6 +68,7 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
         *
         """
         self.sampling_strategy = sampling_strategy
+        self.all_occurrences = all_occurrences
 
         if self.sampling_strategy not in self.sample_distribution_parameters:
             logger.critical(f"Invalid strategy for Rainbow Online Experimental. Must select from {self.sample_distribution_parameters}")
@@ -86,7 +91,10 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
             "max_lr": self.max_lr,
             "min_lr": self.min_lr,
             "cutmix_probability": self.cutmix_probability,
-            "sampling_technique": self.sampling_strategy
+            "sampling_technique": self.sampling_strategy,
+            "all_occurrences": self.all_occurrences,
+            "beta_a": self.beta_a,
+            "beta_b": self.beta_b
         }
 
         return info
@@ -242,9 +250,9 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
             temp_samples_for_logging = []
             sampled_indexes = []
 
-            if class_name in unseen_classes or True:
+            if class_name in unseen_classes or self.all_occurrences:
                 while len(sampled_indexes) < memory_per_class:
-                    sample_idx = round(num_class_samples * np.random.beta(a=2, b=2))
+                    sample_idx = round(num_class_samples * np.random.beta(a=self.beta_a, b=self.beta_b))
 
                     if sample_idx < 0:
                         logger.warning(f"{sample_idx} was less than 0")
@@ -303,6 +311,9 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
         exemplar_data, exemplar_targets = [], []
+
+        # Start by plotting the beta distribution
+        self.plot_beta()
 
         for task_no in range(len(self.dataset.task_datasets)):
             logger.info(f"Starting Task {task_no + 1} / {len(self.dataset.task_datasets)}")
@@ -396,6 +407,33 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         return super().classify(batch)
+
+    def plot_beta(self) -> None:
+        samples = 100
+        xs = np.linspace(0, 1, samples)
+
+        pdf_ys = stats.beta.pdf(xs, self.beta_a, self.beta_b)
+        cdf_ys = stats.beta.cdf(xs, self.beta_a, self.beta_b)
+
+        pdf_fig, pdf_ax = plt.subplots()
+
+        pdf_ax.scatter(xs, pdf_ys)
+        pdf_ax.set_title("Beta PDF")
+        pdf_ax.set_xlabel("Density")
+        pdf_ax.set_ylabel("PDF")
+
+        self.writer.add_figure("Beta Sampling Distribution/PDF", pdf_fig)
+
+        cdf_fig, cdf_ax = plt.subplots()
+
+        cdf_ax.scatter(xs, cdf_ys)
+        cdf_ax.set_title("Beta CDF")
+        cdf_ax.set_xlabel("Cumulative Probability")
+        cdf_ax.set_ylabel("CDF")
+
+        self.writer.add_figure("Beta Sampling Distribution/CDF", cdf_fig)
+
+        logger.info(f"Plotted beta distribution PDF and CDF on to Tensorboard with a={self.beta_a}, b={self.beta_b} over {samples} samples")
 
 """
 Implementation from https://github.com/clovaai/rainbow-memory/blob/cccc8b0a08cbcb0245c361c6fd0988e4efd2fb36/utils/augment.py#L266
