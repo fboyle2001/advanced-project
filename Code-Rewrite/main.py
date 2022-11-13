@@ -17,7 +17,7 @@ PARENT_DIRECTORY = "./store/models"
 
 ALGORITHM_DEFAULTS = {
     algorithms.OfflineTraining: {
-        "epochs_per_task": 256,
+        "epochs_per_task": 1,
         "batch_size": 64,
         "gradient_clip": 10,
         "apply_learning_rate_annealing": True,
@@ -68,8 +68,18 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][2], # change the index to 0, 1, 2
-        "all_occurrences": False
+        "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][0], # change the index to 0, 1, 2
+        "all_occurrences": True
+    },
+    algorithms.HindsightAnchor: {
+        "batch_size": 16,
+        "max_memory_per_class": 5,
+        "epochs_per_task": 1,
+        "gradient_clip": 10,
+        "apply_learning_rate_annealing": False,
+        "max_lr": 1e-3,
+        "min_lr": 1e-3,
+        "cutmix_probability": 0,
     }
 }
 
@@ -121,7 +131,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     algorithm = algorithm_class(
         model=model,
         dataset=dataset,
-        optimiser=torch.optim.SGD(model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
+        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
         loss_criterion=torch.nn.CrossEntropyLoss(),
         writer=writer,
         **ALGORITHM_DEFAULTS[algorithm_class]
@@ -137,9 +147,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnlineExperimental
+    algorithm_class = algorithms.HindsightAnchor
     dataset_class = datasets.CIFAR10
-    experiment_name = "FIRST_OCCURRENCE_EDGE_SKEW_1"
+    experiment_name = "INITIAL_DEBUGGING"
 
     device = torch.device("cuda:0")
 

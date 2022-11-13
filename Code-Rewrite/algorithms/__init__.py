@@ -9,4 +9,5 @@ from .gdumb import GDumb
 from .icarl import iCaRL
 from .rainbow import Rainbow
 from .rainbow_online import RainbowOnline
-from.rainbow_online_exp import RainbowOnlineExperimental
+from .rainbow_online_exp import RainbowOnlineExperimental
+from .hindsight_anchor import HindsightAnchor

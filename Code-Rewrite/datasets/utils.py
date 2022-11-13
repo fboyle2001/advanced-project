@@ -22,6 +22,18 @@ class CustomImageDataset(Dataset):
             x = self.transform(x)
         
         return x, y
+
+    def get_transformed_data(self):
+        assert self.transform is not None
+
+        xs = []
+
+        for index in range(len(self.data)):
+            x = Image.fromarray(self.data[index].astype(np.uint8))#.transpose(1,2,0))
+            x = self.transform(x)
+            xs.append(x.unsqueeze(0))
+
+        return torch.cat(xs)
     
     def __len__(self):
         return len(self.data)

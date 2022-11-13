@@ -1,8 +1,15 @@
 # Cutmix, implemented by GDumb
 # https://github.com/drimpossible/GDumb/blob/ca38afcec332fa523ceff0cc8d3846e2bcf78697/src/utils.py
 # Taken from official implementation
+from loguru import logger
+from typing import Union
+import copy
+
 import numpy as np
 import torch
+
+import torchvision.models
+import models.cifar.resnet
 
 def rand_bbox(size, lam):
     W = size[2]
@@ -39,3 +46,25 @@ def cutmix_data(x, y, alpha=1.0, cutmix_prob=0.5, device="cuda:0"):
     # adjust lambda to exactly match pixel ratio
     lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (x.size()[-1] * x.size()[-2]))
     return x, y_a, y_b, lam
+
+
+def strip_to_feature_extractor(model: Union[models.cifar.resnet.ResNet, torchvision.models.ResNet], copy_model: bool):
+    if type(model) is models.cifar.resnet.ResNet:
+        logger.debug(f"Model type is models.cifar.resnet.ResNet")
+
+        if copy:
+            model = copy.deepcopy(model)
+        
+        model.final = torch.nn.Identity() # type: ignore
+        return model
+    elif type(model) is torchvision.models.ResNet:
+        # https://stackoverflow.com/a/52548419
+        logger.debug(f"Model type is torchvision.models.ResNet")
+
+        if copy:
+            model = copy.deepcopy(model)
+
+        return torch.nn.Sequential(*(list(model.children())[:-1]))
+    else:
+        logger.critical(f"Invalid model type {type(model)}")
+        assert 1==0
