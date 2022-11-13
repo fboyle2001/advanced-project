@@ -9,7 +9,7 @@ import datasets
 import torch.utils.tensorboard
 import torch.optim as optim
 import torch.utils.data
-import torch.nn
+import torch.nn as nn
 import torchvision
 
 import random
@@ -91,7 +91,8 @@ class HindsightAnchor(BaseCLAlgorithm):
 
         # Targets = index
         anchors = torch.zeros([10, 3, 32, 32])
-        averaging_alpha = 0.9
+        next_anchors = torch.zeros([10, 3, 32, 32])
+        averaging_beta = 0.9
 
         seen_classes = set()
 
@@ -105,7 +106,7 @@ class HindsightAnchor(BaseCLAlgorithm):
 
             # Reset the average image vectors
             ### Discard phi_t step
-            average_class_vectors = torch.zeros([10, 512]).to(self.device) # Remove hardcoded values
+            average_mean_embedding = torch.zeros([512]).to(self.device) # Remove hardcoded values
 
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
@@ -169,6 +170,8 @@ class HindsightAnchor(BaseCLAlgorithm):
                         logger.info(f"{batch_no}: {rl / 40}")
                         rl = 0
                 else:
+                    if batch_no == 0:
+                        logger.debug("Anchored training for a single epoch")
                     # Train the model with anchors
                     # Firstly we have to do a temporary update to the model parameters
                     temp_learning_rate = self.optimiser.param_groups[0]['lr']
@@ -232,6 +235,10 @@ class HindsightAnchor(BaseCLAlgorithm):
                     loss += anchor_weighting * total_anchor_loss
 
                     loss.backward()
+
+                    if self.gradient_clip is not None:
+                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+
                     self.optimiser.step()
 
                     rl += loss.item()
@@ -245,16 +252,30 @@ class HindsightAnchor(BaseCLAlgorithm):
                 frozen_feature_extractor = copy.deepcopy(self.model)
                 frozen_feature_extractor.final = torch.nn.Identity()
 
-                for sample, target in zip(inp, targets):
-                    arr_idx = target.detach().cpu().item()
-                    feature_sample = frozen_feature_extractor(sample.unsqueeze(0).to(self.device)).squeeze(0).to(self.device)
+                # for sample, target in zip(inp, targets): #raw inp!
+                #     arr_idx = target.detach().cpu().item()
+                #     feature_sample = frozen_feature_extractor(sample.unsqueeze(0).to(self.device)).squeeze(0).to(self.device)
 
-                    updated = average_class_vectors[arr_idx] - (1 - averaging_alpha) * (average_class_vectors[arr_idx] - feature_sample)
-                    average_class_vectors[arr_idx] = updated.detach() # detach needed to prevent unlimited memory growth
+                #     updated = averaging_beta * average_class_vectors[arr_idx] + (1 - averaging_beta) * ()
 
-                    if task_no == 0:
-                        # Randomly update the anchors if first task
-                        anchors[target] = sample.to(self.device)
+                #     updated = average_class_vectors[arr_idx] - (1 - averaging_alpha) * ( - feature_sample)
+                #     average_class_vectors[arr_idx] = updated.detach() # detach needed to prevent unlimited memory growth
+
+                #     if task_no == 0:
+                #         # Randomly update the anchors if first task
+                #         anchors[target] = sample.to(self.device)
+
+                task_only_transformed_inp = inp[:len(raw_inp)]
+
+                # Prepopulate the next anchors
+                for sample, target in zip(task_only_transformed_inp, raw_inp_targets):
+                    next_anchors[target.detach().cpu().item()] = sample.detach()#.to(self.device)
+
+                ## Update phi_t
+                feature_samples = frozen_feature_extractor(task_only_transformed_inp)
+
+                for fs in feature_samples:
+                    average_mean_embedding = (averaging_beta * average_mean_embedding + (1 - averaging_beta) * fs).detach()
                 
                 if batch_no == 0:
                     logger.info("Updated average class vectors")
@@ -265,12 +286,13 @@ class HindsightAnchor(BaseCLAlgorithm):
 
                 if batch_no % 40 == 0:
                     logger.debug(f"FIFO Keys: {self.fifo_buffer.known_classes}")
+                    self.fifo_buffer.log_debug()
             
             self.model.eval()
             self.run_base_task_metrics(task_no=2*task_no)
             self.model.train()
 
-            if task_no != 0 or True:
+            if task_no != self.dataset.task_count:
                 logger.info("Starting anchor hindsight update")
 
                 # Update the anchors with the hindsight update
@@ -292,48 +314,89 @@ class HindsightAnchor(BaseCLAlgorithm):
 
                         mem_loss = self.loss_criterion(mem_predictions, mem_targets)
                         mem_loss.backward()
+
+                        if self.gradient_clip is not None:
+                            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+
                         mem_opt.step()
+
+                logger.info("Finetuned on episodic memory")
+                logger.info("Starting anchor update")
 
                 # Now update the anchors
                 anchor_epochs = 100
                 frozen_feature_extractor = copy.deepcopy(self.model)
                 frozen_feature_extractor.final = torch.nn.Identity()
 
-                # anchors = [torch.nn.Parameter(anchor) if type(anchor) is not torch.nn.Parameter else anchor for anchor in anchors]
-
                 mem_model.eval()
                 self.model.eval()
 
+                anchors = next_anchors
+                next_anchors = torch.zeros([10, 3, 32, 32])
+
                 anchor_update_alpha = 1e-3
 
+                __copied_anchors = copy.deepcopy(anchors)
+
+                updatable_anchors = nn.ParameterList()
+                updatable_anchors_classes = []
+
+                for class_name in range(len(anchors)):
+                    if class_name not in seen_classes:
+                        continue 
+
+                    updatable_anchors.append(nn.Parameter(anchors[class_name].unsqueeze(0))) # type: ignore
+                    updatable_anchors_classes.append(class_name)
+                
+                logger.debug(f"There are {len(updatable_anchors)} updatable anchors")
+                
+                updatable_anchors.to(self.device)
+                anchor_opt = optim.SGD(updatable_anchors, lr=anchor_update_alpha)
+
                 for anchor_epoch in range(anchor_epochs):
-                    for anchor_param in anchors:
-                        anchor_param.grad = None
+                    anchor_opt.zero_grad()
+                    anc_loss = 0
+                    
+                    for updatable_anchor_idx in range(len(updatable_anchors)):
+                        if anchor_epoch == 0:
+                            logger.debug(f"First update for {updatable_anchor_idx}")
 
-                    for class_name in range(len(anchors)):
-                        if class_name not in seen_classes:
-                            continue
-
-                        class_anchor = torch.nn.Parameter(anchors[class_name].unsqueeze(0), requires_grad=True).to(self.device).requires_grad_(True)
-                        class_target = torch.LongTensor([class_name]).to(self.device)
+                        class_anchor = updatable_anchors[updatable_anchor_idx]
+                        class_target = torch.LongTensor([updatable_anchors_classes[updatable_anchor_idx]]).to(self.device)
                         
                         mem_anchor_pred = mem_model(class_anchor)
                         anchor_loss = self.loss_criterion(mem_anchor_pred, class_target)
                         real_anchor_pred = self.model(class_anchor)#.detach()
                         anchor_loss -= self.loss_criterion(real_anchor_pred, class_target)
                         anchor_eta = 0.1
-                        anchor_feature_diff = (frozen_feature_extractor(class_anchor) - average_class_vectors[class_name]).mean().square()
+                        anchor_feature_diff = (frozen_feature_extractor(class_anchor) - average_mean_embedding).mean().square()
                         anchor_loss -= anchor_eta * anchor_feature_diff
+                        anc_loss += anchor_loss
 
-                        anchor_loss.backward(retain_graph=True)
-                        anchors[class_name] = anchors[class_name] - anchor_update_alpha * class_anchor.grad
+                    anc_loss *= -1 / len(updatable_anchors)
+                    anc_loss.backward()
 
-                        ## Never actually update?
-                        # Need to fix this
-                        # Also look at L175, do they have more anchors the older a task is?
+                    if self.gradient_clip is not None:
+                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+
+                    anchor_opt.step()
+
+                    logger.debug(f"AL {anchor_epoch}: {anc_loss.item()}")
+                    # Also look at L175, do they have more anchors the older a task is?
                 
+                anchors = torch.zeros([10, 3, 32, 32])
+
+                for anch, targ in zip(updatable_anchors, updatable_anchors_classes):
+                    anchors[targ] = anch.detach()
+                    
                 mem_model.train()
                 self.model.train()
+
+                logger.info("Finished anchor updates")
+
+                logger.critical(f"Does anch eq: {torch.all(__copied_anchors.eq(anchors))}")
+
+            
 
             # Test the model
             self.model.eval()

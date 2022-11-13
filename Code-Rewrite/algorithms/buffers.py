@@ -121,3 +121,9 @@ class FIFORingReplayBuffer:
                 targets.append(target)
 
         return CustomImageDataset(data, targets, transform)
+
+    def log_debug(self):
+        logger.debug("Buffer Class Hashes:")
+
+        for class_name in self.known_classes:
+            logger.debug(f"{class_name}: {self.class_hash_pointers[class_name].queue}")
