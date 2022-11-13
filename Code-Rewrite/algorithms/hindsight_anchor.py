@@ -172,6 +172,7 @@ class HindsightAnchor(BaseCLAlgorithm):
         ### START OF PARAMETERS 
         # batch_size = 16 (see self.batch_size)
         episodic_memory_size = 5 * 5 * 10 # mem_size * num_tasks * total_classes
+        feature_embedding_moving_beta = 0.9
         ### END OF PARAMETERS
 
         # Get the raw, untransformed data and their targets
@@ -183,6 +184,10 @@ class HindsightAnchor(BaseCLAlgorithm):
         }
 
         for task_no in range(self.dataset.task_count):
+            # Store the mean feature embedding for each class
+            mean_feature_embeddings = torch.zeros([10, 512]).to(self.device)
+            forced_real_feature_embeddings = {}
+
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(self.dataset.task_splits[task_no])}")
 
@@ -224,7 +229,40 @@ class HindsightAnchor(BaseCLAlgorithm):
                 else:
                     sys.exit(0)
 
+                # Update the mean embedding
+                frozen_feature_extractor = copy.deepcopy(self.model)
+                frozen_feature_extractor.final = torch.nn.Identity()
+
+                # Experiment with transformed vs untransformed
+                for transformed_sample, target in zip(B, B_targets):
+                    target = target.detach().cpu().item()
+                    sample_features = frozen_feature_extractor(transformed_sample.unsqueeze(0).to(self.device)).squeeze(0).to(self.device)
+
+                    ## TEMP
+                    if target not in forced_real_feature_embeddings.keys():
+                        forced_real_feature_embeddings[target] = []
+                    
+                    forced_real_feature_embeddings[target].append(sample_features.detach().cpu())
+                    ## END TEMP
+
+                    mean_feature_embeddings[target] = (feature_embedding_moving_beta * mean_feature_embeddings[target] + (1 - feature_embedding_moving_beta) * sample_features).detach() #type: ignore
+
+                # Update the episodic memory FIFO buffer
                 self._update_fifo_buffer(B_untransformed, B_targets)
+            
+            # Look at the mean feature extractions
+            for target in range(mean_feature_embeddings.shape[0]):
+                eval_mean = mean_feature_embeddings[target].mean()
+                loss_to_nought = eval_mean.square()
+                
+                if target in forced_real_feature_embeddings.keys():
+                    real_mean = torch.stack(forced_real_feature_embeddings[target])
+                    logger.debug(f"Real shape {real_mean.shape}")
+                    real_mean = real_mean.mean()
+                    diff = (real_mean - mean_feature_embeddings[target]).square().mean()
+                    logger.info(f"Target {target}: EM: {eval_mean}, L2N: {loss_to_nought}, RM: {real_mean}, D: {diff}")
+                else:
+                    logger.info(f"Target* {target}: EM: {eval_mean}, L2N: {loss_to_nought}")
 
             # Once the model has been updated, we finetune on the episodic memory
             finetuned_model = self._finetune_model()
