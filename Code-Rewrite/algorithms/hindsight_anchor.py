@@ -1,4 +1,4 @@
-from typing import Dict, Union, Optional
+from typing import Dict, Union, Optional, Tuple
 from loguru import logger
 
 from . import utils, buffers
@@ -16,6 +16,8 @@ import random
 import copy
 import numpy as np
 import sys
+from PIL import Image
+import time
 
 class HindsightAnchor(BaseCLAlgorithm):
     def __init__(
@@ -45,7 +47,7 @@ class HindsightAnchor(BaseCLAlgorithm):
 
         self.epochs_per_task = epochs_per_task
         assert self.epochs_per_task == 1
-        self.batch_size = batch_size
+        self.batch_size = 16
         self.gradient_clip = gradient_clip
 
         self.apply_learning_rate_annealing = apply_learning_rate_annealing
@@ -54,12 +56,13 @@ class HindsightAnchor(BaseCLAlgorithm):
 
         self.cutmix_probability = cutmix_probability
 
-        self.max_memory_per_class = max_memory_per_class
+        self.max_memory_per_class = 5
         self.fifo_buffer = buffers.FIFORingReplayBuffer(max_memory_per_class=self.max_memory_per_class)
+        self.finetuning_epochs = 50
 
     @staticmethod
     def get_algorithm_folder() -> str:
-        return "hindsight_anchor"
+        return "hindsight_anchor_rew"
 
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         info: Dict[str, Union[str, int, float]] = {
@@ -76,87 +79,136 @@ class HindsightAnchor(BaseCLAlgorithm):
         return info
 
     def _update_fifo_buffer(self, inp: torch.Tensor, targets: torch.Tensor) -> None:
+        """
+        Pass NON-TRANSFORMED inputs to the buffer
+        """
         for idx in range(len(inp)):
             raw_sample = inp[idx].detach().cpu().numpy()
             raw_target = targets[idx].detach().cpu().numpy().item()
 
             self.fifo_buffer.add_sample(raw_sample, raw_target)
 
+    def _preprocess_data(
+        self, 
+        B_untransformed: torch.Tensor,
+        B_targets: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor], torch.Tensor]:
+        B_M_untransformed, B_M_targets = self.fifo_buffer.draw_sample(self.batch_size, transform=None)
+        A_untransformed = torch.cat((B_untransformed, B_M_untransformed), dim=0)
+        A_targets = torch.cat((B_targets, B_M_targets), dim=0).long()
+
+        # logger.debug(f"B_untransformed: {B_untransformed.shape}, B_targets: {B_targets.shape}")
+        # logger.debug(f"B_M_untransformed: {B_M_untransformed.shape}, B_M_targets: {B_M_targets.shape})")
+        # logger.debug(f"A_untransformed: {A_untransformed.shape}, A_targets: {A_targets.shape})")
+        
+        B = torch.stack([self.dataset.training_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in B_untransformed]) # type: ignore
+        B_M = None
+        
+        if B_M_untransformed.shape[0] != 0:
+            B_M = torch.stack([self.dataset.training_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in B_M_untransformed]) # type: ignore
+        
+        A = torch.stack([self.dataset.training_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in A_untransformed]) # type: ignore
+        
+        # logger.debug(f"B_untransformed: {B.shape}")
+
+        # if B_M is not None:
+        #     logger.debug(f"B_M_untransformed: {B_M.shape}")
+
+        # logger.debug(f"A_untransformed: {A.shape}")
+        
+        B_untransformed = B_untransformed.to(self.device)
+        B_targets = B_targets.to(self.device)
+        B_M_untransformed = B_M_untransformed.to(self.device)
+        B_M_targets = B_M_targets.to(self.device)
+        A_untransformed = A_untransformed.to(self.device)
+        A_targets = A_targets.to(self.device)
+
+        B = B.to(self.device)
+
+        if B_M is not None:
+            B_M = B_M.to(self.device)
+
+        A = A.to(self.device)
+
+        return B_untransformed, B_targets, B_M_untransformed, B_M_targets, A_untransformed, A_targets, B, B_M, A
+
+    def _finetune_model(self):
+        finetuned_model = copy.deepcopy(self.model).to(self.device)
+        finetuned_model_opt = optim.SGD(finetuned_model.parameters(), lr=1e-3)
+        M_dataloader = torch.utils.data.DataLoader(
+            dataset=self.fifo_buffer.to_torch_dataset(transform=self.dataset.training_transform),
+            batch_size=self.batch_size,
+            shuffle=True
+        )
+
+        for finetuning_epoch in range(self.finetuning_epochs):
+            finetuning_running_loss = 0
+
+            for finetuning_batch_no, (B_M, B_M_targets) in enumerate(M_dataloader):
+                B_M = B_M.to(self.device)
+                B_M_targets = B_M_targets.to(self.device)
+
+                finetuned_model_opt.zero_grad()
+                finetuned_predictions = finetuned_model(B_M)
+                finetuned_loss = self.loss_criterion(finetuned_predictions, B_M_targets)
+                finetuned_loss.backward()
+
+                # Clip gradients
+                if self.gradient_clip is not None:
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+                
+                finetuned_model_opt.step()
+                finetuning_running_loss += finetuned_loss.item()
+
+            if finetuning_epoch % 10 == 0 and finetuning_epoch != 0:
+                logger.debug(f"Finetuning Epoch {finetuning_epoch}, RL: {finetuning_running_loss / 40}")
+                finetuning_running_loss = 0
+        
+        return finetuned_model
+
     def train(self) -> None:
         super().train()
 
-        anchors_per_class = 1
-        raw_data_batch_size = 16
-        max_exemplar_batch_size = 16
+        ### START OF PARAMETERS 
+        # batch_size = 16 (see self.batch_size)
+        episodic_memory_size = 5 * 5 * 10 # mem_size * num_tasks * total_classes
+        ### END OF PARAMETERS
 
-        # Targets = index
-        anchors = torch.zeros([10, 3, 32, 32])
-        next_anchors = torch.zeros([10, 3, 32, 32])
-        averaging_beta = 0.9
+        # Get the raw, untransformed data and their targets
+        untransformed_task_datasets = {
+            task_no: { 
+                "data": self.dataset.task_datasets[task_no].data, # type: ignore
+                "targets": self.dataset.task_datasets[task_no].targets # type: ignore
+            } for task_no in range(len(self.dataset.task_datasets))
+        }
 
-        seen_classes = set()
-
-        bct = torchvision.transforms.Compose([
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-        ])
-
-        for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
-            seen_classes |= set(self.dataset.task_splits[task_no])
-
-            # Reset the average image vectors
-            ### Discard phi_t step
-            average_mean_embedding = torch.zeros([512]).to(self.device) # Remove hardcoded values
-
+        for task_no in range(self.dataset.task_count):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
-            logger.info(f"Classes seen so far: {seen_classes}")
+            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(self.dataset.task_splits[task_no])}")
 
-            raw_task_dataset = datasets.CustomImageDataset(self.dataset.task_datasets[task_no].data, self.dataset.task_datasets[task_no].targets, transform=None) # type: ignore
-            raw_task_dataloader = torch.utils.data.DataLoader(raw_task_dataset, batch_size=raw_data_batch_size, shuffle=True)
+            untransformed_task_dataset = datasets.CustomImageDataset(
+                data=untransformed_task_datasets[task_no]["data"],
+                targets=untransformed_task_datasets[task_no]["targets"],
+                transform=None
+            )
 
-            logger.debug("Raw task dataset and dataloader prepared")
+            untransformed_task_dataloader = torch.utils.data.DataLoader(
+                dataset=untransformed_task_dataset,
+                batch_size=self.batch_size,
+                shuffle=True
+            )
 
-            rl = 0
+            running_loss = 0
 
-            for batch_no, data in enumerate(raw_task_dataloader):
-                raw_inp, raw_inp_targets = data
+            for batch_no, (B_untransformed, B_targets) in enumerate(untransformed_task_dataloader):
+                # Preprocess the data into B, B_M, and A. Put all on the correct device.
+                B_untransformed, B_targets, B_M_untransformed, B_M_targets, A_untransformed, A_targets, B, B_M, A = self._preprocess_data(B_untransformed, B_targets)
 
-                ### START: Sample B_M step from the algorithm
-                # Pull some random exemplars here --> can merge like we did in a previous method
-                exemplar_dataset = self.fifo_buffer.to_torch_dataset(transform=None)
-                exemplar_batch_size = min(max_exemplar_batch_size, len(exemplar_dataset))
-                exemplar_idxs = random.sample(range(len(exemplar_dataset)), k=exemplar_batch_size)
-                exemplar_inp = torch.Tensor(np.array([exemplar_dataset.data[idx] for idx in exemplar_idxs]))
-                exemplar_targets = torch.LongTensor(np.array([exemplar_dataset.targets[idx] for idx in exemplar_idxs]))
-
-                if batch_no == 0:
-                    logger.debug(f"Sampled exemplars, shapes: inp: {exemplar_inp.shape}, targets: {exemplar_targets.shape}")
-
-                # Merge to form a whole batch
-                inp_arr = [x.detach().numpy() for x in raw_inp] + [x.detach().numpy() for x in exemplar_inp] #  torch.concat((raw_inp, exemplar_inp), dim=0).to(self.device)
-                targets_arr = [y for y in raw_inp_targets] + [y for y in exemplar_targets] # torch.concat((raw_inp_targets, exemplar_targets), dim=0).to(self.device)
-                batch_ds = datasets.CustomImageDataset(inp_arr, targets_arr, transform=bct)
-
-                inp = batch_ds.get_transformed_data().to(self.device)
-                targets = batch_ds.targets.to(self.device)
-
-                # logger.info(f"Inp: {inp.shape}")
-
-                if batch_no == 0:
-                    logger.debug(f"Concat shapes: inp: {inp.shape}, targets: {targets.shape}")
-
-                ### END: SAMPLE B_M step from the algorithm
-
-                if task_no == 0:
-                    if batch_no == 0:
-                        logger.debug("Normal training for a single epoch")
-
-                    # Train the model without anchors (i.e. normal training)
+                # There are no anchors to train on for the first task!
+                if task_no == 0: 
                     self.optimiser.zero_grad()
-                    predictions = self.model(inp)
-
-                    loss = self.loss_criterion(predictions, targets)
+                    predictions = self.model(A)
+                    loss = self.loss_criterion(predictions, A_targets) # / A.shape[0]
                     loss.backward()
 
                     # Clip gradients
@@ -164,246 +216,22 @@ class HindsightAnchor(BaseCLAlgorithm):
                         torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
 
                     self.optimiser.step()
-                    rl += loss.item()
+                    running_loss += loss.item()
 
-                    if batch_no % 40 == 0:
-                        logger.info(f"{batch_no}: {rl / 40}")
-                        rl = 0
+                    if batch_no % 40 == 0 and batch_no != 0:
+                        logger.debug(f"Batch {batch_no}, RL: {running_loss / 40}")
+                        running_loss = 0
                 else:
-                    if batch_no == 0:
-                        logger.debug("Anchored training for a single epoch")
-                    # Train the model with anchors
-                    # Firstly we have to do a temporary update to the model parameters
-                    temp_learning_rate = self.optimiser.param_groups[0]['lr']
-                    temp_model = copy.deepcopy(self.model).to(self.device)
-                    temp_opt = torch.optim.SGD(temp_model.parameters(), lr=temp_learning_rate) # Assumes SGD
-                    temp_opt.zero_grad()
+                    sys.exit(0)
 
-                    temp_inp, temp_targets = copy.deepcopy(inp).to(self.device), copy.deepcopy(targets).to(self.device)
-                    temp_predictions = temp_model(temp_inp)
+                self._update_fifo_buffer(B_untransformed, B_targets)
 
-                    temp_loss = self.loss_criterion(temp_predictions, temp_targets)
-                    temp_loss.backward()
-                    temp_opt.step()
+            # Once the model has been updated, we finetune on the episodic memory
+            finetuned_model = self._finetune_model()
 
-                    # Now do the real update
-                    self.optimiser.zero_grad()
-                    predictions = self.model(inp)
-                    loss = self.loss_criterion(predictions, targets)
-
-                    total_anchor_loss = None
-                    if batch_no == 0:
-                        logger.debug(f"Whole anchor shape: {len(anchors)}")
-
-                    # Disable batch norm layers
-                    self.model.eval()
-                    temp_model.eval()
-
-                    for class_name in range(len(anchors)):
-                        if class_name not in seen_classes:
-                            if batch_no == 0:
-                                logger.debug(f"Not seen {self.dataset.classes[class_name]}")
-                            continue
-
-                        # Don't optimise on this tasks anchors as they haven't been updated yet
-                        if class_name in self.dataset.task_splits[task_no]:
-                            continue
-
-                        class_anchor = anchors[class_name].unsqueeze(0).to(self.device)
-                        
-                        if batch_no == 0:
-                            logger.debug(f"Class Anchor shape: {class_anchor.shape}")
-
-                        model_out = self.model(class_anchor)
-                        temp_out = temp_model(class_anchor)
-
-                        if batch_no == 0:
-                            logger.debug(f"Out shapes: model: {model_out.shape}, temp: {temp_out.shape}")
-
-                        anchor_loss = (model_out - temp_out).mean().square()
-
-                        if total_anchor_loss is None:
-                            total_anchor_loss = anchor_loss
-                        else:
-                            total_anchor_loss += anchor_loss
-                    
-                    self.model.train()
-                    temp_model.train()
-
-                    assert total_anchor_loss is not None, "No anchor loss"
-                    anchor_weighting = 0.1
-                    loss += anchor_weighting * total_anchor_loss
-
-                    loss.backward()
-
-                    if self.gradient_clip is not None:
-                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
-
-                    self.optimiser.step()
-
-                    rl += loss.item()
-
-                    if batch_no % 40 == 0:
-                        logger.info(f"{batch_no}: {rl / 40}")
-                        rl = 0
-            
-                # Update average image vectors, only uses the raw data
-                ### Update phi_t step
-                frozen_feature_extractor = copy.deepcopy(self.model)
-                frozen_feature_extractor.final = torch.nn.Identity()
-
-                # for sample, target in zip(inp, targets): #raw inp!
-                #     arr_idx = target.detach().cpu().item()
-                #     feature_sample = frozen_feature_extractor(sample.unsqueeze(0).to(self.device)).squeeze(0).to(self.device)
-
-                #     updated = averaging_beta * average_class_vectors[arr_idx] + (1 - averaging_beta) * ()
-
-                #     updated = average_class_vectors[arr_idx] - (1 - averaging_alpha) * ( - feature_sample)
-                #     average_class_vectors[arr_idx] = updated.detach() # detach needed to prevent unlimited memory growth
-
-                #     if task_no == 0:
-                #         # Randomly update the anchors if first task
-                #         anchors[target] = sample.to(self.device)
-
-                task_only_transformed_inp = inp[:len(raw_inp)]
-
-                # Prepopulate the next anchors
-                for sample, target in zip(task_only_transformed_inp, raw_inp_targets):
-                    next_anchors[target.detach().cpu().item()] = sample.detach()#.to(self.device)
-
-                ## Update phi_t
-                feature_samples = frozen_feature_extractor(task_only_transformed_inp)
-
-                for fs in feature_samples:
-                    average_mean_embedding = (averaging_beta * average_mean_embedding + (1 - averaging_beta) * fs).detach()
-                
-                if batch_no == 0:
-                    logger.info("Updated average class vectors")
-
-                # Update FIFO buffer with the training data
-                ### Update M by adding B to the FIFO Buffer
-                self._update_fifo_buffer(raw_inp, raw_inp_targets)
-
-                if batch_no % 40 == 0:
-                    logger.debug(f"FIFO Keys: {self.fifo_buffer.known_classes}")
-                    self.fifo_buffer.log_debug()
-            
             self.model.eval()
-            self.run_base_task_metrics(task_no=2*task_no)
+            self.run_base_task_metrics(task_no=task_no)
             self.model.train()
-
-            if task_no != self.dataset.task_count:
-                logger.info("Starting anchor hindsight update")
-
-                # Update the anchors with the hindsight update
-                # Finetune the model
-                mem_learning_rate = self.optimiser.param_groups[0]['lr']
-                mem_model = copy.deepcopy(self.model).to(self.device)
-                mem_opt = torch.optim.SGD(mem_model.parameters(), lr=mem_learning_rate) # Assumes SGD
-
-                mem_epochs = 50
-                mem_dataloader = torch.utils.data.DataLoader(self.fifo_buffer.to_torch_dataset(transform=bct), batch_size=16, shuffle=True)
-
-                for mem_epoch in range(mem_epochs):
-                    for mem_batch_no, mem_data in enumerate(mem_dataloader):
-                        mem_inp, mem_targets = mem_data
-                        mep_inp, mem_targets = mem_inp.to(self.device), mem_targets.to(self.device)
-
-                        mem_opt.zero_grad()
-                        mem_predictions = mem_model(mep_inp)
-
-                        mem_loss = self.loss_criterion(mem_predictions, mem_targets)
-                        mem_loss.backward()
-
-                        if self.gradient_clip is not None:
-                            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
-
-                        mem_opt.step()
-
-                logger.info("Finetuned on episodic memory")
-                logger.info("Starting anchor update")
-
-                # Now update the anchors
-                anchor_epochs = 100
-                frozen_feature_extractor = copy.deepcopy(self.model)
-                frozen_feature_extractor.final = torch.nn.Identity()
-
-                mem_model.eval()
-                self.model.eval()
-
-                anchors = next_anchors
-                next_anchors = torch.zeros([10, 3, 32, 32])
-
-                anchor_update_alpha = 1e-3
-
-                __copied_anchors = copy.deepcopy(anchors)
-
-                updatable_anchors = nn.ParameterList()
-                updatable_anchors_classes = []
-
-                for class_name in range(len(anchors)):
-                    if class_name not in seen_classes:
-                        continue 
-
-                    updatable_anchors.append(nn.Parameter(anchors[class_name].unsqueeze(0))) # type: ignore
-                    updatable_anchors_classes.append(class_name)
-                
-                logger.debug(f"There are {len(updatable_anchors)} updatable anchors")
-                
-                updatable_anchors.to(self.device)
-                anchor_opt = optim.SGD(updatable_anchors, lr=anchor_update_alpha)
-
-                for anchor_epoch in range(anchor_epochs):
-                    anchor_opt.zero_grad()
-                    anc_loss = 0
-                    
-                    for updatable_anchor_idx in range(len(updatable_anchors)):
-                        if anchor_epoch == 0:
-                            logger.debug(f"First update for {updatable_anchor_idx}")
-
-                        class_anchor = updatable_anchors[updatable_anchor_idx]
-                        class_target = torch.LongTensor([updatable_anchors_classes[updatable_anchor_idx]]).to(self.device)
-                        
-                        mem_anchor_pred = mem_model(class_anchor)
-                        anchor_loss = self.loss_criterion(mem_anchor_pred, class_target)
-                        real_anchor_pred = self.model(class_anchor)#.detach()
-                        anchor_loss -= self.loss_criterion(real_anchor_pred, class_target)
-                        anchor_eta = 0.1
-                        anchor_feature_diff = (frozen_feature_extractor(class_anchor) - average_mean_embedding).mean().square()
-                        anchor_loss -= anchor_eta * anchor_feature_diff
-                        anc_loss += anchor_loss
-
-                    anc_loss *= -1 / len(updatable_anchors)
-                    anc_loss.backward()
-
-                    if self.gradient_clip is not None:
-                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
-
-                    anchor_opt.step()
-
-                    logger.debug(f"AL {anchor_epoch}: {anc_loss.item()}")
-                    # Also look at L175, do they have more anchors the older a task is?
-                
-                anchors = torch.zeros([10, 3, 32, 32])
-
-                for anch, targ in zip(updatable_anchors, updatable_anchors_classes):
-                    anchors[targ] = anch.detach()
-                    
-                mem_model.train()
-                self.model.train()
-
-                logger.info("Finished anchor updates")
-
-                logger.critical(f"Does anch eq: {torch.all(__copied_anchors.eq(anchors))}")
-
-            
-
-            # Test the model
-            self.model.eval()
-            self.run_base_task_metrics(task_no=2*task_no + 1)
-            self.model.train()
-                    
-        logger.info("Training complete")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         return super().classify(batch)

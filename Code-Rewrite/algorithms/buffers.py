@@ -111,6 +111,27 @@ class FIFORingReplayBuffer:
         self._remove_sample_from_class(target)
         self.class_hash_pointers[target].put(data_hash)
 
+    def draw_sample(self, max_batch_size, transform=None):
+        if self.count == 0:
+            return torch.tensor([]), torch.tensor([])
+
+        batch_size = max_batch_size
+
+        if max_batch_size > self.count:
+            batch_size = self.count
+        
+        sample_indexes = random.sample(range(self.count), k=batch_size)
+        dataset = self.to_torch_dataset(transform=transform)
+
+        data = []
+        targets = []
+
+        for idx in sample_indexes:
+            data.append(torch.Tensor(dataset.data[idx].astype(np.uint8)) if transform is None else dataset.data[idx])
+            targets.append(dataset.targets[idx])
+
+        return torch.stack(data), torch.stack(targets).long()
+
     def to_torch_dataset(self, transform=None) -> CustomImageDataset:
         data = []
         targets = []
