@@ -61,7 +61,7 @@ class HindsightAnchor(BaseCLAlgorithm):
         self.finetuning_epochs = 50
         self.feature_embedding_moving_beta = 0.9 # Beta
         self.regularisation_strength = 1.0 # This is lambda
-        self.gamma = 0.1 # No idea for the correct value
+        self.gamma = 1.0 # No idea for the correct value
         self.anchor_epochs = 100
 
         self.mean_feature_embeddings = None
@@ -220,10 +220,10 @@ class HindsightAnchor(BaseCLAlgorithm):
 
         if anchor_data is None:
             assert anchor_classes is None
-            return new_anchors.to(self.device), new_anchor_classes.long().to(self.device)
+            return new_anchors.requires_grad_().to(self.device), new_anchor_classes.long().to(self.device)
         else:
             assert anchor_classes is not None
-            return torch.cat([anchor_data, new_anchors], dim=0).to(self.device), torch.cat([anchor_classes, new_anchor_classes], dim=0).long().to(self.device)
+            return torch.cat([anchor_data, new_anchors], dim=0).requires_grad_().to(self.device), torch.cat([anchor_classes, new_anchor_classes], dim=0).long().to(self.device)
 
     def train(self) -> None:
         super().train()
@@ -285,7 +285,7 @@ class HindsightAnchor(BaseCLAlgorithm):
                     # There are no anchors to train on for the first task!
                     self.optimiser.zero_grad()
                     predictions = self.model(A)
-                    loss = self.loss_criterion(predictions, A_targets) # / A.shape[0]
+                    loss = self.loss_criterion(predictions, A_targets)
                     loss.backward()
 
                     # Clip gradients
@@ -305,7 +305,7 @@ class HindsightAnchor(BaseCLAlgorithm):
 
                     self.optimiser.zero_grad()
                     traditional_predictions = self.model(A)
-                    traditional_loss = self.loss_criterion(traditional_predictions, A_targets) # / A.shape[0]
+                    traditional_loss = self.loss_criterion(traditional_predictions, A_targets)
                     overall_loss += traditional_loss
 
                     future_anchor_predictions = future_model(anchor_data)
@@ -345,8 +345,16 @@ class HindsightAnchor(BaseCLAlgorithm):
             ## ANCHOR TRAINING
             # Once the model has been updated, we finetune on the episodic memory
             finetuned_model = self._finetune_model()
-            anchor_parameters = nn.ParameterList([nn.parameter.Parameter(anchor) for anchor in anchor_data])
-            anchor_opt = optim.SGD(anchor_parameters, lr=1e-3)
+            # anchor_parameters = nn.ParameterList([nn.parameter.Parameter(anchor, requires_grad=True) for anchor in anchor_data])
+
+            # for anchor in anchor_data:
+            #     anchor.requires_grad = True
+
+            self.model.eval()
+            self.run_base_task_metrics(task_no=-1*task_no)
+            self.model.train()
+
+            anchor_opt = optim.SGD([anchor_data], lr=0.05)
 
             frozen_feature_extractor = copy.deepcopy(self.model)
             frozen_feature_extractor.final = torch.nn.Identity()
@@ -354,15 +362,18 @@ class HindsightAnchor(BaseCLAlgorithm):
             anchor_running_loss = 0
 
             for anchor_epoch in range(self.anchor_epochs):
+                # logger.debug(f"---AE: {anchor_epoch}")
                 anchor_opt.zero_grad()
 
                 overall_loss = 0
                 anchor_finetuned_predictions = finetuned_model(anchor_data)
                 anchor_finetuned_loss = self.loss_criterion(anchor_finetuned_predictions, anchor_classes.squeeze())
+                # logger.debug(f"A FINE Loss: {anchor_finetuned_loss.item()}")
                 overall_loss += anchor_finetuned_loss
 
                 anchor_actual_predictions = self.model(anchor_data)
                 anchor_actual_loss = self.loss_criterion(anchor_actual_predictions, anchor_classes.squeeze())
+                # logger.debug(f"A REAL Loss: {anchor_finetuned_loss.item()}")
                 overall_loss += anchor_actual_loss
 
                 anchor_features = frozen_feature_extractor(anchor_data)
@@ -372,14 +383,16 @@ class HindsightAnchor(BaseCLAlgorithm):
                     individual_feature_loss = anchor_feature - self.mean_feature_embeddings[anchor_classes[idx]]
                     individual_feature_loss = individual_feature_loss.mean().sum()
                     feature_loss += individual_feature_loss
+
+                # logger.debug(f"A FEAT Loss: {feature_loss.item()}")
                 
                 overall_loss += feature_loss
                 overall_loss = -overall_loss # Want gradient ascent not descent
                 overall_loss.backward()
                 
                 # Clip gradients
-                if self.gradient_clip is not None:
-                    torch.nn.utils.clip_grad_norm_(anchor_parameters, self.gradient_clip) # type: ignore
+                # if self.gradient_clip is not None:
+                #     torch.nn.utils.clip_grad_norm_(anchor_data, self.gradient_clip) # type: ignore
 
                 anchor_opt.step()
                 anchor_running_loss += overall_loss
@@ -388,6 +401,10 @@ class HindsightAnchor(BaseCLAlgorithm):
                     logger.debug(f"Batch {anchor_epoch}, RL: {anchor_running_loss / 10}")
                     anchor_running_loss = 0
                     logger.debug(f"Reset: {anchor_running_loss}")
+                elif anchor_epoch == 0:
+                    anchor_running_loss = 0
+
+            anchor_data.detach_()
 
             self.model.eval()
             self.run_base_task_metrics(task_no=task_no)
