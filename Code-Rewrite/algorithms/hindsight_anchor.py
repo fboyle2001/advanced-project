@@ -250,9 +250,6 @@ class HindsightAnchor(BaseCLAlgorithm):
         current_task_anchors = None
 
         for task_no in range(self.dataset.task_count):
-            if task_no > 0:
-                break
-
             current_task_anchors = torch.zeros([10, 3, 32, 32])
 
             if anchor_data is not None:
@@ -348,81 +345,70 @@ class HindsightAnchor(BaseCLAlgorithm):
             ## ANCHOR TRAINING
             # Once the model has been updated, we finetune on the episodic memory
             finetuned_model = self._finetune_model()
-
-            self.model.eval()
-            self.run_base_task_metrics(task_no=99)
-            self.model.train()
-            # # anchor_parameters = nn.ParameterList([nn.parameter.Parameter(anchor, requires_grad=True) for anchor in anchor_data])
-
-            # # for anchor in anchor_data:
-            # #     anchor.requires_grad = True
+            pre_opt_anchors = copy.deepcopy(anchor_data)
 
             # self.model.eval()
-            # self.run_base_task_metrics(task_no=-1*task_no)
+            # self.run_base_task_metrics(task_no=100-task_no)
             # self.model.train()
 
-            pre_opt_anchors = copy.deepcopy(anchor_data)
-            torchvision.utils.save_image(anchor_data.detach().cpu(), f"pre_opt.png")
-            anchor_opt = optim.SGD([anchor_data], lr=0.05)
+            torchvision.utils.save_image(anchor_data.detach().cpu(), f"pre_opt_{task_no}.png")
+            # anchor_opt = optim.SGD([anchor_data], lr=0.05)
 
             frozen_feature_extractor = copy.deepcopy(self.model)
             frozen_feature_extractor.final = torch.nn.Identity()
             frozen_model = copy.deepcopy(self.model).to(self.device)
+            frozen_model.eval()
+            finetuned_model.eval()
 
-
-            anchor_running_loss = 0
+            optimisable_anchors = [anchor.detach().clone().to(self.device).requires_grad_() for anchor in anchor_data]
+            anchor_optimisers = [optim.SGD([anchor], lr=0.05) for anchor in optimisable_anchors]
+            running_avg_anch_loss = 0
 
             for anchor_epoch in range(self.anchor_epochs):
-                # logger.debug(f"---AE: {anchor_epoch}")
-                anchor_opt.zero_grad()
+                epoch_loss = 0
+                # extracted_features = frozen_feature_extractor(torch.stack(optimisable_anchors, dim=0))
 
-                overall_loss = 0
-                anchor_finetuned_predictions = finetuned_model(anchor_data)
-                anchor_finetuned_loss = self.loss_criterion(anchor_finetuned_predictions, anchor_classes.squeeze())
-                # logger.debug(f"A FINE Loss: {anchor_finetuned_loss.item()}")
-                overall_loss += anchor_finetuned_loss
+                for anchor_idx, anchor in enumerate(optimisable_anchors):
+                    anchor_opt = anchor_optimisers[anchor_idx]
+                    anchor_class = anchor_classes[anchor_idx]#.squeeze()
+                    individual_loss = 0
 
-                anchor_actual_predictions = frozen_model(anchor_data)
-                anchor_actual_loss = self.loss_criterion(anchor_actual_predictions, anchor_classes.squeeze())
-                # logger.debug(f"A REAL Loss: {anchor_finetuned_loss.item()}")
-                overall_loss += anchor_actual_loss
+                    finetuned_prediction = finetuned_model(anchor.unsqueeze(0))
+                    finetuned_loss = self.loss_criterion(finetuned_prediction, anchor_class)
+                    individual_loss += finetuned_loss
 
-                anchor_features = frozen_feature_extractor(anchor_data)
-                feature_loss = 0
+                    actual_prediction = frozen_model(anchor.unsqueeze(0))
+                    actual_loss = self.loss_criterion(actual_prediction, anchor_class)
+                    individual_loss -= actual_loss
 
-                for idx, anchor_feature in enumerate(anchor_features):
-                    individual_feature_loss = anchor_feature - self.mean_feature_embeddings[anchor_classes[idx]]
-                    individual_feature_loss = individual_feature_loss.mean().sum()
-                    feature_loss += individual_feature_loss
+                    extracted_feature = frozen_feature_extractor(anchor.unsqueeze(0)).squeeze(0)
+                    feature_loss = extracted_feature - self.mean_feature_embeddings[anchor_class]
+                    feature_loss = feature_loss.square().mean()
+                    individual_loss -= feature_loss
 
-                # logger.debug(f"A FEAT Loss: {feature_loss.item()}")
+                    (-individual_loss).backward()
+                    anchor_opt.step()
+                    epoch_loss += individual_loss.item()
                 
-                overall_loss += feature_loss
-                overall_loss = -overall_loss # Want gradient ascent not descent
-                overall_loss.backward()
-                
-                # Clip gradients
-                # if self.gradient_clip is not None:
-                #     torch.nn.utils.clip_grad_norm_(anchor_data, self.gradient_clip) # type: ignore
+                running_avg_anch_loss += epoch_loss / len(optimisable_anchors)
 
-                anchor_opt.step()
-                anchor_running_loss += overall_loss
-
-                if anchor_epoch % 10 == 0 and anchor_epoch != 0:
-                    logger.debug(f"Batch {anchor_epoch}, RL: {anchor_running_loss / 10}")
-                    anchor_running_loss = 0
-                    logger.debug(f"Reset: {anchor_running_loss}")
+                if anchor_epoch % 10 == 0:
+                    logger.debug(f"Epoch {anchor_epoch}: {running_avg_anch_loss / 10}")
+                    running_avg_anch_loss = 0
                 elif anchor_epoch == 0:
-                    anchor_running_loss = 0
+                    running_avg_anch_loss = 0
 
-            anchor_data.detach_()
-            torchvision.utils.save_image(anchor_data.detach().cpu(), f"post_opt.png")
+            detached_anchors = [optimised_anchor.detach().clone().to(self.device) for optimised_anchor in optimisable_anchors]
+            anchor_data = torch.stack(detached_anchors).to(self.device)
+
+            # anchor_data.detach_()
+            torchvision.utils.save_image(anchor_data.detach().cpu(), f"post_opt_{task_no}.png")
 
             for idx in range(anchor_data.shape[0]):
-                logger.critical(f"{idx} match: {torch.all(torch.eq(anchor_data[idx], pre_opt_anchors[idx]))}")
+               logger.critical(f"{idx} match: {torch.all(torch.eq(anchor_data[idx], pre_opt_anchors[idx]))}")
 
             self.model.eval()
-            self.run_base_task_metrics(task_no=100)
+            self.run_base_task_metrics(task_no=task_no)
             self.model.train()
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
