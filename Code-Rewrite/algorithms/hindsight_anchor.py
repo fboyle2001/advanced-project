@@ -250,6 +250,9 @@ class HindsightAnchor(BaseCLAlgorithm):
         current_task_anchors = None
 
         for task_no in range(self.dataset.task_count):
+            if task_no > 0:
+                break
+
             current_task_anchors = torch.zeros([10, 3, 32, 32])
 
             if anchor_data is not None:
@@ -338,26 +341,34 @@ class HindsightAnchor(BaseCLAlgorithm):
                 # Populate the unfilled anchors
                 for sample, target in zip(B, B_targets): # B or B_untransformed?
                     current_task_anchors[target] = sample #.permute(2, 0, 1)
-            
+
             # Save the newly selected anchors
             anchor_data, anchor_classes = self._confirm_new_anchors(current_task_anchors, anchor_data, anchor_classes)
 
             ## ANCHOR TRAINING
             # Once the model has been updated, we finetune on the episodic memory
             finetuned_model = self._finetune_model()
-            # anchor_parameters = nn.ParameterList([nn.parameter.Parameter(anchor, requires_grad=True) for anchor in anchor_data])
-
-            # for anchor in anchor_data:
-            #     anchor.requires_grad = True
 
             self.model.eval()
-            self.run_base_task_metrics(task_no=-1*task_no)
+            self.run_base_task_metrics(task_no=99)
             self.model.train()
+            # # anchor_parameters = nn.ParameterList([nn.parameter.Parameter(anchor, requires_grad=True) for anchor in anchor_data])
 
+            # # for anchor in anchor_data:
+            # #     anchor.requires_grad = True
+
+            # self.model.eval()
+            # self.run_base_task_metrics(task_no=-1*task_no)
+            # self.model.train()
+
+            pre_opt_anchors = copy.deepcopy(anchor_data)
+            torchvision.utils.save_image(anchor_data.detach().cpu(), f"pre_opt.png")
             anchor_opt = optim.SGD([anchor_data], lr=0.05)
 
             frozen_feature_extractor = copy.deepcopy(self.model)
             frozen_feature_extractor.final = torch.nn.Identity()
+            frozen_model = copy.deepcopy(self.model).to(self.device)
+
 
             anchor_running_loss = 0
 
@@ -371,7 +382,7 @@ class HindsightAnchor(BaseCLAlgorithm):
                 # logger.debug(f"A FINE Loss: {anchor_finetuned_loss.item()}")
                 overall_loss += anchor_finetuned_loss
 
-                anchor_actual_predictions = self.model(anchor_data)
+                anchor_actual_predictions = frozen_model(anchor_data)
                 anchor_actual_loss = self.loss_criterion(anchor_actual_predictions, anchor_classes.squeeze())
                 # logger.debug(f"A REAL Loss: {anchor_finetuned_loss.item()}")
                 overall_loss += anchor_actual_loss
@@ -405,9 +416,13 @@ class HindsightAnchor(BaseCLAlgorithm):
                     anchor_running_loss = 0
 
             anchor_data.detach_()
+            torchvision.utils.save_image(anchor_data.detach().cpu(), f"post_opt.png")
+
+            for idx in range(anchor_data.shape[0]):
+                logger.critical(f"{idx} match: {torch.all(torch.eq(anchor_data[idx], pre_opt_anchors[idx]))}")
 
             self.model.eval()
-            self.run_base_task_metrics(task_no=task_no)
+            self.run_base_task_metrics(task_no=100)
             self.model.train()
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
