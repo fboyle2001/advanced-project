@@ -147,7 +147,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.HindsightAnchor
+    algorithm_class = algorithms.RainbowOnline
     dataset_class = datasets.CIFAR10
     experiment_name = "CHECK"
 
