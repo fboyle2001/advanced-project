@@ -58,7 +58,7 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][4] # change the index to 0, 1, 2, 3, 4 
+        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][0] # change the index to 0, 1, 2, 3, 4 
     },
     algorithms.RainbowOnlineExperimental: {
         "batch_size": 16,
@@ -69,7 +69,7 @@ ALGORITHM_DEFAULTS = {
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
         "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][0], # change the index to 0, 1, 2
-        "all_occurrences": True
+        "all_occurrences": False
     },
     algorithms.HindsightAnchor: {
         "batch_size": 16,
@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
     algorithm_class = algorithms.HindsightAnchor
     dataset_class = datasets.CIFAR10
-    experiment_name = "INITIAL_DEBUGGING"
+    experiment_name = "CHECK"
 
     device = torch.device("cuda:0")
 

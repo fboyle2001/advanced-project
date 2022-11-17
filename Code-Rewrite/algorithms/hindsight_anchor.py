@@ -19,6 +19,8 @@ import sys
 from PIL import Image
 import time
 
+import other_utils
+
 class HindsightAnchor(BaseCLAlgorithm):
     def __init__(
         self,
@@ -199,31 +201,17 @@ class HindsightAnchor(BaseCLAlgorithm):
 
     def _confirm_new_anchors(
         self,
-        current_task_anchors: torch.Tensor, 
-        anchor_data: Optional[torch.Tensor], 
+        detached_new_anchor_data: torch.Tensor, 
+        anchor_data: Optional[torch.Tensor],
+        new_anchor_classes: torch.Tensor,
         anchor_classes: Optional[torch.Tensor]
     ) -> Tuple[torch.Tensor, torch.Tensor]:
-        # Save the new anchors
-        new_anchors = []
-        new_anchor_classes = []
-
-        for new_anchor_class, new_anchor in enumerate(current_task_anchors):
-            # Skip those that are all zero i.e. classes that never appeared
-            if torch.all(torch.eq(new_anchor, torch.zeros_like(new_anchor))):
-                continue
-                
-            new_anchors.append(new_anchor)
-            new_anchor_classes.append(torch.LongTensor([new_anchor_class]))
-
-        new_anchors = torch.stack(new_anchors).to(self.device)
-        new_anchor_classes = torch.stack(new_anchor_classes).to(self.device)
-
         if anchor_data is None:
             assert anchor_classes is None
-            return new_anchors.requires_grad_().to(self.device), new_anchor_classes.long().to(self.device)
+            return detached_new_anchor_data.to(self.device), new_anchor_classes.long().to(self.device)
         else:
             assert anchor_classes is not None
-            return torch.cat([anchor_data, new_anchors], dim=0).requires_grad_().to(self.device), torch.cat([anchor_classes, new_anchor_classes], dim=0).long().to(self.device)
+            return torch.cat([anchor_data, detached_new_anchor_data], dim=0).to(self.device), torch.cat([anchor_classes, new_anchor_classes], dim=0).long().to(self.device)
 
     def train(self) -> None:
         super().train()
@@ -250,6 +238,7 @@ class HindsightAnchor(BaseCLAlgorithm):
         current_task_anchors = None
 
         for task_no in range(self.dataset.task_count):
+            self.model.train()
             current_task_anchors = torch.zeros([10, 3, 32, 32])
 
             if anchor_data is not None:
@@ -312,7 +301,7 @@ class HindsightAnchor(BaseCLAlgorithm):
                     current_anchor_predictions = self.model(anchor_data)
 
                     anchor_loss = (current_anchor_predictions - future_anchor_predictions).square().mean(dim=1).sum()
-                    running_anchor_loss += anchor_loss.item()
+                    running_anchor_loss += self.regularisation_strength * anchor_loss.item()
                     overall_loss += self.regularisation_strength * anchor_loss
 
                     overall_loss.backward()
@@ -339,19 +328,37 @@ class HindsightAnchor(BaseCLAlgorithm):
                 for sample, target in zip(B, B_targets): # B or B_untransformed?
                     current_task_anchors[target] = sample #.permute(2, 0, 1)
 
-            # Save the newly selected anchors
-            anchor_data, anchor_classes = self._confirm_new_anchors(current_task_anchors, anchor_data, anchor_classes)
+                    if batch_no == 0:
+                        logger.debug(f"S: {sample.shape}, {sample.square().mean()}")
+
+            # Just get the anchors for this task
+            new_anchors = []
+            new_anchor_classes = []
+
+            for new_anchor_class, new_anchor in enumerate(current_task_anchors):
+                # Skip those that are all zero i.e. classes that never appeared
+                if torch.all(torch.eq(new_anchor, torch.zeros_like(new_anchor))):
+                    continue
+                    
+                new_anchors.append(new_anchor)
+                new_anchor_classes.append(torch.LongTensor([new_anchor_class]))
+
+            new_anchors = torch.stack(new_anchors).to(self.device)
+            new_anchor_classes = torch.stack(new_anchor_classes).to(self.device)
 
             ## ANCHOR TRAINING
             # Once the model has been updated, we finetune on the episodic memory
             finetuned_model = self._finetune_model()
-            pre_opt_anchors = copy.deepcopy(anchor_data)
 
             # self.model.eval()
             # self.run_base_task_metrics(task_no=100-task_no)
             # self.model.train()
 
-            torchvision.utils.save_image(anchor_data.detach().cpu(), f"pre_opt_{task_no}.png")
+            if anchor_data is not None:
+                pre_opt_anchors = copy.deepcopy(anchor_data)
+                torchvision.utils.save_image(pre_opt_anchors.detach().cpu(), f"pre_opt_{task_no}.png")
+            else:
+                pre_opt_anchors = None
             # anchor_opt = optim.SGD([anchor_data], lr=0.05)
 
             frozen_feature_extractor = copy.deepcopy(self.model)
@@ -360,7 +367,8 @@ class HindsightAnchor(BaseCLAlgorithm):
             frozen_model.eval()
             finetuned_model.eval()
 
-            optimisable_anchors = [anchor.detach().clone().to(self.device).requires_grad_() for anchor in anchor_data]
+            optimisable_anchors = [anchor.detach().clone().to(self.device).requires_grad_() for anchor in new_anchors]
+            logger.critical(f"OPT ANCHORS: {len(optimisable_anchors)}")
             anchor_optimisers = [optim.SGD([anchor], lr=0.05) for anchor in optimisable_anchors]
             running_avg_anch_loss = 0
 
@@ -370,7 +378,7 @@ class HindsightAnchor(BaseCLAlgorithm):
 
                 for anchor_idx, anchor in enumerate(optimisable_anchors):
                     anchor_opt = anchor_optimisers[anchor_idx]
-                    anchor_class = anchor_classes[anchor_idx]#.squeeze()
+                    anchor_class = new_anchor_classes[anchor_idx]#.squeeze()
                     individual_loss = 0
 
                     finetuned_prediction = finetuned_model(anchor.unsqueeze(0))
@@ -399,17 +407,37 @@ class HindsightAnchor(BaseCLAlgorithm):
                     running_avg_anch_loss = 0
 
             detached_anchors = [optimised_anchor.detach().clone().to(self.device) for optimised_anchor in optimisable_anchors]
-            anchor_data = torch.stack(detached_anchors).to(self.device)
+            detached_new_anchor_data = torch.stack(detached_anchors).to(self.device)
+            
+            # Save the newly selected anchors
+            anchor_data, anchor_classes = self._confirm_new_anchors(detached_new_anchor_data, anchor_data, new_anchor_classes, anchor_classes)
+
+            for anchor in anchor_data:
+                logger.debug(f"A: {anchor.shape}, {anchor.square().mean()}")
 
             # anchor_data.detach_()
             torchvision.utils.save_image(anchor_data.detach().cpu(), f"post_opt_{task_no}.png")
 
-            for idx in range(anchor_data.shape[0]):
-               logger.critical(f"{idx} match: {torch.all(torch.eq(anchor_data[idx], pre_opt_anchors[idx]))}")
-
             self.model.eval()
             self.run_base_task_metrics(task_no=task_no)
             self.model.train()
+
+        logger.info("Completed tasks, now training a model just on the anchors?")
+
+        m = other_utils.get_gdumb_resnet_impl().to(self.device)
+        m.train()
+        o = optim.SGD(m.parameters(), lr=1e-3)
+
+        for epoch in range(5):
+            o.zero_grad()
+            pr = m(anchor_data)
+            ls = self.loss_criterion(pr, anchor_classes.squeeze())
+            ls.backward()
+            o.step()
+
+        self.model = m
+        self.model.eval()
+        self.run_base_task_metrics(task_no=10)
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         return super().classify(batch)
