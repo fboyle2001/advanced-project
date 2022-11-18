@@ -131,7 +131,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     algorithm = algorithm_class(
         model=model,
         dataset=dataset,
-        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
+        optimiser=torch.optim.SGD(model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-6), #torch.optim.Adam(model.parameters())
         loss_criterion=torch.nn.CrossEntropyLoss(),
         writer=writer,
         **ALGORITHM_DEFAULTS[algorithm_class]
@@ -147,9 +147,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnline
+    algorithm_class = algorithms.HindsightAnchor
     dataset_class = datasets.CIFAR10
-    experiment_name = "CHECK"
+    experiment_name = "GENERALLY_POOR"
 
     device = torch.device("cuda:0")
 

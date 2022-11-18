@@ -61,9 +61,9 @@ class HindsightAnchor(BaseCLAlgorithm):
         self.max_memory_per_class = 5
         self.fifo_buffer = buffers.FIFORingReplayBuffer(max_memory_per_class=self.max_memory_per_class)
         self.finetuning_epochs = 50
-        self.feature_embedding_moving_beta = 0.9 # Beta
+        self.feature_embedding_moving_beta = 0.5 # Beta
         self.regularisation_strength = 1.0 # This is lambda
-        self.gamma = 1.0 # No idea for the correct value
+        self.gamma = 0.1 # No idea for the correct value
         self.anchor_epochs = 100
 
         self.mean_feature_embeddings = None
@@ -142,7 +142,7 @@ class HindsightAnchor(BaseCLAlgorithm):
 
     def _finetune_model(self):
         finetuned_model = copy.deepcopy(self.model).to(self.device)
-        finetuned_model_opt = optim.SGD(finetuned_model.parameters(), lr=1e-3)
+        finetuned_model_opt = optim.SGD(finetuned_model.parameters(), lr=0.05)
         M_dataloader = torch.utils.data.DataLoader(
             dataset=self.fifo_buffer.to_torch_dataset(transform=self.dataset.training_transform),
             batch_size=self.batch_size,
@@ -189,7 +189,7 @@ class HindsightAnchor(BaseCLAlgorithm):
     def _future_model_update(self, A, A_targets):
         # Copy the copy for a temporary update first
         future_model = copy.deepcopy(self.model).to(self.device)
-        future_model_opt = optim.SGD(future_model.parameters(), lr=1e-3)
+        future_model_opt = optim.SGD(future_model.parameters(), lr=0.05)
 
         future_model_opt.zero_grad()
         future_predictions = future_model(A)
@@ -269,6 +269,10 @@ class HindsightAnchor(BaseCLAlgorithm):
             for batch_no, (B_untransformed, B_targets) in enumerate(untransformed_task_dataloader):
                 # Preprocess the data into B, B_M, and A. Put all on the correct device.
                 B_untransformed, B_targets, B_M_untransformed, B_M_targets, A_untransformed, A_targets, B, B_M, A = self._preprocess_data(B_untransformed, B_targets)
+
+                # # Disable EPS_MEM
+                # A = B
+                # A_targets = B_targets
 
                 if task_no == 0: 
                     # There are no anchors to train on for the first task!
@@ -426,11 +430,16 @@ class HindsightAnchor(BaseCLAlgorithm):
 
         m = other_utils.get_gdumb_resnet_impl().to(self.device)
         m.train()
-        o = optim.SGD(m.parameters(), lr=1e-3)
+        o = optim.SGD(m.parameters(), lr=0.05)
+
+        logger.debug(f"ANCHOR SHAPE: {anchor_data.shape}")
+        logger.debug(f"ANCHOR CLASS SHAPE: {anchor_classes.squeeze().shape}")
 
         for epoch in range(5):
             o.zero_grad()
             pr = m(anchor_data)
+            logger.info(f"pr={pr.detach().cpu()}")
+            logger.info(f"ac: {anchor_classes.detach().cpu().squeeze()}")
             ls = self.loss_criterion(pr, anchor_classes.squeeze())
             ls.backward()
             o.step()
