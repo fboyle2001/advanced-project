@@ -58,7 +58,7 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][4] # change the index to 0, 1, 2, 3, 4 
+        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][0] # change the index to 0, 1, 2, 3, 4 
     },
     algorithms.RainbowOnlineExperimental: {
         "batch_size": 16,
@@ -137,9 +137,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnlineExperimental
+    algorithm_class = algorithms.RainbowOnline
     dataset_class = datasets.CIFAR10
-    experiment_name = "FIRST_OCCURRENCE_EDGE_SKEW_1"
+    experiment_name = "CHECK"
 
     device = torch.device("cuda:0")
 
