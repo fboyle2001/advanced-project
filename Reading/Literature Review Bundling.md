@@ -203,3 +203,109 @@ Information about each technique so they can be bundled together for the literat
 * Episodic - formulate replay buffer population
 * Online
 * TO FINISH
+
+## Co2L
+* Need to do in-depth review
+* Offline
+* Class-IL
+* Episodic > Other
+* CIFAR-10 / Tiny-ImageNet
+
+## Learning to Learn with Feedback and Local Plasticity
+* Meta-learning > Feedback Connections and Local Plasticity
+* Optimises the feedback weights in the outer loop
+* Online
+* Not sure? Class-IL?
+* Different datasets to normal
+
+## MERLIN
+* Meta-learning
+* Online
+* CIFAR-100 / ImageNet
+* Class-IL
+
+## La-MAML
+* Meta-learning
+* Online
+* Uncertain if it is Task-IL appears to be both but maybe Task-IL on harder datasets
+* CIFAR100 / Tiny-ImageNet
+
+## Reinforced Continual Learning
+* Other > Dynamic Architecture
+* CIFAR-100
+* Offline
+* Unclear if Task-IL
+
+## Semantic Drift
+* Class-IL
+* Offline
+* Trick rather than a technique?
+* CIFAR-100 / ImageNet-Subset
+
+## REMIND
+* Episodic -> Representations 
+* Class-IL
+* Online?
+* ImageNet / CORe50
+
+## A-GEM
+* Online
+* Class-IL 
+* Episodic
+* CIFAR-100
+
+## Gradient based Sample Selection
+* Online
+* Episodic
+* Class-IL
+* CIFAR-10
+
+## Meta-Experience Replay
+* Episodic + Meta-learning
+* Online?
+* Class-IL
+* MNIST
+
+## FearNet 
+* Episodic -> Dual Memory System
+* CIFAR-100
+* Offline
+* Unsure if Class-IL
+
+## Elastic Weight Consolidation
+* Regularisation
+* Offline
+* Task-IL? Unsure
+* MNIST
+
+## iCaRL
+* Episodic?
+* Offline
+* Don't think it is Class-IL?
+* CIFAR-100
+
+## LUCIR
+* Other
+* CIFAR-100 / ImageNet
+* Offline
+* Class-IL?
+
+## Learning without Forgetting
+* Regularisation
+* CUB dataset
+* Offline
+* Not sure if Task-IL
+
+## End-to-End Incremental Learning
+* CIFAR-100 / ImageNet
+* Episodic + disillation
+* Offline
+* Not sure if Task-IL
+
+## Maximally Intefered Retrieval
+* Online
+* Episodic
+* CIFAR-10 / MiniImageNet
+* Class-IL
+
+
