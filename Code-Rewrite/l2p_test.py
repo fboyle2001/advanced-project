@@ -36,8 +36,8 @@ vit = create_model()
 
 # Embeddings then encoder
 
+B = img.shape[0]
 embeddings = vit.enc.transformer.embeddings(img)
-print(embeddings.shape)
 # At this point, incorporate the prompts
 # Like this since we have to have class token at index 0, prompts, remaining
 # x = torch.cat((
@@ -45,21 +45,24 @@ print(embeddings.shape)
 #                 self.prompt_dropout(self.prompt_proj(self.prompt_embeddings).expand(B, -1, -1)),
 #                 x[:, 1:, :]
 #             ), dim=1)
-prompts = torch.randn(4, 5, 768)
-print(prompts.shape)
+prompt = torch.randn(5, 5, 768).reshape((-1, 768)).unsqueeze(0)
+print(embeddings.shape)
+print(prompt.shape)
 # Has class token at the front
-prompt_prepended_embeddings = torch.cat([embeddings[:, :1, :], prompts, embeddings[:, 1:, :]], dim=1)
+prompt_prepended_embeddings = torch.cat([embeddings[:, :1, :], prompt, embeddings[:, 1:, :]], dim=1)
 print(prompt_prepended_embeddings.shape)
 
 encoded, attn_weights = vit.enc.transformer.encoder(prompt_prepended_embeddings)
-p = encoded[:, 0:6]
+p = encoded[:, 0:26]
 print(p.shape)
 
-pool = torch.nn.AvgPool2d(kernel_size=6)
-pooled = pool(p).squeeze()
+# pool = torch.nn.AvgPool2d(kernel_size=7)
+# pooled = pool(p).squeeze()
+
+pooled = p.mean(dim=1)
 print(pooled.shape)
 
-classifier = torch.nn.Linear(in_features=128, out_features=10)
+classifier = torch.nn.Linear(in_features=768, out_features=10)
 c = classifier(pooled)
 print(c, c.shape)
 

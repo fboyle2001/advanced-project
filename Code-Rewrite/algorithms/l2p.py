@@ -50,7 +50,8 @@ class LearningToPrompt(BaseCLAlgorithm):
         self.pretrained_vit = vit.vit_models.create_model().to(self.device)
         self.D = self.pretrained_vit.feat_dim # number of features
         self.D_k = self.D
-        self.N = 5 # prompt subset length
+        self.N = 5 # prompt selection length
+        self.L_p = 5 # prompt token length
         self.M = 10 # total number of prompts
         self.g_phi = AvgPoolClassifier(self.N, self.D, 10).to(self.device)
         self.balancing_lambda = 0.5
@@ -66,7 +67,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         ]
 
         self.prompts = [
-            torch.nn.parameter.Parameter(torch.randn(self.D).to(self.device), requires_grad=True)
+            torch.nn.parameter.Parameter(torch.randn(self.D).to(self.device), requires_grad=True) # maybe should be upping this to L_p, D instead? -> yes!
             for _ in range(self.M)
         ]
 
@@ -118,6 +119,7 @@ class LearningToPrompt(BaseCLAlgorithm):
     def f_r(self, embedding, prompts): 
         # f_r is the self-attention layers
         # input should have the format [0, 1:prompts, prompts+1:]
+        # prompts = prompts.reshape(-1, self.D)
         prompt_prepended_embeddings = torch.cat([embedding[:1, :], prompts, embedding[1:, :]], dim=0)
         prompt_prepended_embeddings = prompt_prepended_embeddings.unsqueeze(0)
         encoded, attn_weights = self.pretrained_vit.enc.transformer.encoder(prompt_prepended_embeddings)
@@ -135,8 +137,15 @@ class LearningToPrompt(BaseCLAlgorithm):
                 logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
                 running_loss = 0
                 short_running_loss = 0
+                ce_l = 0
+                ky_l = 0
 
                 for batch_no, data in enumerate(task_dataloader, 0):
+                    if task_no == 2 and batch_no == 1:
+                        self.run_base_task_metrics(99)
+                        import sys
+                        sys.exit(0)
+
                     inp, labels = data
 
                     inp = inp.to(self.device)
@@ -159,12 +168,19 @@ class LearningToPrompt(BaseCLAlgorithm):
                         x_p = x_p[:, 0:(self.N + 1)]
                         prediction = self.g_phi(x_p)
                         ce_loss = self.loss_criterion(prediction, labels[i].unsqueeze(0))
-                        loss_x = ce_loss + self.balancing_lambda * self.gamma(img, torch.cat([x.unsqueeze(0) for x in top_N_keys], dim=0)).sum()
+                        key_loss = self.balancing_lambda * self.gamma(img, torch.cat([x.unsqueeze(0) for x in top_N_keys], dim=0)).sum()
+                        loss_x = ce_loss + key_loss
                         batch_loss += loss_x
+                        ce_l += ce_loss.item()
+                        ky_l += key_loss.item()
+
 
                     running_loss += batch_loss.item() # type: ignore
                     short_running_loss += batch_loss.item() # type: ignore
                     
+                    copied_keys = {i: self.prompt_keys[i].detach().clone() for i in selected_key_indices}
+                    copied_prompts = {i: self.prompts[i].detach().clone() for i in selected_key_indices}
+
                     # Update phi
                     g_phi_opt.zero_grad()
 
@@ -185,12 +201,23 @@ class LearningToPrompt(BaseCLAlgorithm):
                     # Update phi
                     g_phi_opt.step()
 
+                    # for seen_key in selected_key_indices:
+                    #     logger.debug(f"K {seen_key}: {not torch.all(torch.eq(copied_keys[seen_key], self.prompt_keys[seen_key]))}")
+                    #     logger.debug(f"P {seen_key}: {not torch.all(torch.eq(copied_prompts[seen_key], self.prompts[seen_key]))}")
+
                     if batch_no % 40 == 0 and batch_no != 0:
                         logger.info(f"{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
+                        logger.info(f"KL: {ky_l / 40}, CE: {ce_l / 40}")
                         short_running_loss = 0
+                        ce_l = 0
+                        ky_l = 0
+                    
+                    # logger.debug(f"Keys: {sorted(selected_key_indices)}")
 
                 epoch_offset = self.epochs_per_task * task_no
-                self.run_base_task_metrics(epoch)
+
+                if task_no > 0:
+                    self.run_base_task_metrics(epoch_offset + epoch)
 
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
@@ -198,7 +225,8 @@ class LearningToPrompt(BaseCLAlgorithm):
                 self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
                 running_loss = 0
         
-            self.run_base_task_metrics(task_no)
+            if task_no == 0:
+                self.run_base_task_metrics(task_no)
         
         logger.info("Training complete")
 
