@@ -161,7 +161,6 @@ class ViT(nn.Module):
 
     def forward(self, x, return_feature=False):
         if self.side is not None:
-            print("Side is not None")
             side_output = self.side(x)
             side_output = side_output.view(side_output.size(0), -1)
             side_output = self.side_projection(side_output)
@@ -169,7 +168,6 @@ class ViT(nn.Module):
         if self.froze_enc and self.enc.training:
             self.enc.eval()
         x = self.enc(x)  # batch_size x self.feat_dim
-        print(x.shape)
 
         if self.side is not None:
             alpha_squashed = torch.sigmoid(self.side_alpha)
@@ -178,7 +176,6 @@ class ViT(nn.Module):
         if return_feature:
             return x, x
         x = self.head(x)
-        print(x.shape)
 
         return x
     

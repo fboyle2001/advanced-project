@@ -70,20 +70,18 @@ class PromptedTransformer(Transformer):
             raise ValueError("Other initiation scheme is not supported")
 
     def incorporate_prompt(self, x):
-        print("Incorporate Prompt")
         # combine prompt embeddings with image-patch embeddings
         B = x.shape[0]
-        print("x", x.shape)
         # after CLS token, all before image patches
         x = self.embeddings(x)  # (batch_size, 1 + n_patches, hidden_dim)
-        print("x", x.shape)
-        x = torch.cat((
-                x[:, :1, :],
-                self.prompt_dropout(self.prompt_proj(self.prompt_embeddings).expand(B, -1, -1)),
-                x[:, 1:, :]
-            ), dim=1)
-        print("x", x.shape)
-        # (batch_size, cls_token + n_prompt + n_patches, hidden_dim)
+        # Don't include the prompt from the model
+        # x = torch.cat((
+        #         x[:, :1, :],
+        #         self.prompt_dropout(self.prompt_proj(self.prompt_embeddings).expand(B, -1, -1)),
+        #         x[:, 1:, :]
+        #     ), dim=1)
+        # print("x", x.shape)
+        # (batch_size, cls_token + n_patches, hidden_dim)
 
         return x
 

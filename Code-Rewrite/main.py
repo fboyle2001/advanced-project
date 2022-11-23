@@ -70,6 +70,15 @@ ALGORITHM_DEFAULTS = {
         "cutmix_probability": 0.5,
         "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][2], # change the index to 0, 1, 2
         "all_occurrences": False
+    },
+    algorithms.LearningToPrompt: {
+        "epochs_per_task": 5,
+        "batch_size": 16,
+        "gradient_clip": None,
+        "apply_learning_rate_annealing": False,
+        "max_lr": 0.03,
+        "min_lr": 0.03,
+        "cutmix_probability": 0
     }
 }
 
@@ -137,7 +146,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnline
+    algorithm_class = algorithms.LearningToPrompt
     dataset_class = datasets.CIFAR10
     experiment_name = "CHECK"
 

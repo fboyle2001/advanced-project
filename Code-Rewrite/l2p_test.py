@@ -45,15 +45,29 @@ print(embeddings.shape)
 #                 self.prompt_dropout(self.prompt_proj(self.prompt_embeddings).expand(B, -1, -1)),
 #                 x[:, 1:, :]
 #             ), dim=1)
-prompts = torch.randn(1, 5, 768)
+prompts = torch.randn(4, 5, 768)
 print(prompts.shape)
 # Has class token at the front
 prompt_prepended_embeddings = torch.cat([embeddings[:, :1, :], prompts, embeddings[:, 1:, :]], dim=1)
 print(prompt_prepended_embeddings.shape)
 
 encoded, attn_weights = vit.enc.transformer.encoder(prompt_prepended_embeddings)
-print(encoded.shape)
+p = encoded[:, 0:6]
+print(p.shape)
 
-torch._assert(not torch.all(torch.eq(prompt_prepended_embeddings, encoded)), "Equal")
+pool = torch.nn.AvgPool2d(kernel_size=6)
+pooled = pool(p).squeeze()
+print(pooled.shape)
+
+classifier = torch.nn.Linear(in_features=128, out_features=10)
+c = classifier(pooled)
+print(c, c.shape)
+
+
+# torch._assert(not torch.all(torch.eq(prompt_prepended_embeddings, encoded)), "Equal")
+# print("Here")
+# x, _ = vit.enc.transformer(img)
+# x = x[:, 0]
+# print(x.shape)
 
 # print("Features:", x.shape)
