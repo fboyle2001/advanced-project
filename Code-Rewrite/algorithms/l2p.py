@@ -50,14 +50,15 @@ class LearningToPrompt(BaseCLAlgorithm):
         self.pretrained_vit = vit.vit_models.create_model().to(self.device)
         self.D = self.pretrained_vit.feat_dim # number of features
         self.D_k = self.D
-        self.N = 5 # prompt selection length
+        self.N = 2 # prompt selection length
         self.L_p = 5 # prompt token length
         self.M = 10 # total number of prompts
-        self.g_phi = AvgPoolClassifier(self.N, self.D, 10).to(self.device)
+        self.g_phi = AvgPoolClassifier(self.D, 10).to(self.device)
         self.balancing_lambda = 0.5
+        self.prompt_frequency = torch.zeros(self.M).to(self.device)
 
         self.prompt_keys = [
-            torch.nn.parameter.Parameter(torch.randn(self.D).to(self.device), requires_grad=True)
+            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.D) + 0.0625).to(self.device), requires_grad=True)
             for _ in range(self.M)
         ]
 
@@ -67,7 +68,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         ]
 
         self.prompts = [
-            torch.nn.parameter.Parameter(torch.randn(self.D).to(self.device), requires_grad=True) # maybe should be upping this to L_p, D instead? -> yes!
+            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.L_p, self.D) + 0.0625).to(self.device), requires_grad=True) # maybe should be upping this to L_p, D instead? -> yes!
             for _ in range(self.M)
         ]
 
@@ -100,12 +101,12 @@ class LearningToPrompt(BaseCLAlgorithm):
         sim_calc = torch.nn.CosineSimilarity()
         return 1 - sim_calc(query_features, compare)
 
-    def calculate_top_N_keys(self, sample):
+    def calculate_top_N_keys(self, sample, weights):
         # qf should be 1x768
         # k should be Mx768
         compare = torch.cat([x.unsqueeze(0) for x in self.prompt_keys], dim=0)
         # print("C", compare.shape)
-        distance = self.gamma(sample, compare)
+        distance = self.gamma(sample, compare) * weights
         indices = [i for i in range(self.M)]
         argmin = sorted(indices, key=lambda i: distance[i])[:self.N]
         top_N_keys = [self.prompt_keys[i] for i in argmin] # type: ignore
@@ -120,6 +121,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         # f_r is the self-attention layers
         # input should have the format [0, 1:prompts, prompts+1:]
         # prompts = prompts.reshape(-1, self.D)
+        prompts = prompts.reshape((-1, self.D))
         prompt_prepended_embeddings = torch.cat([embedding[:1, :], prompts, embedding[1:, :]], dim=0)
         prompt_prepended_embeddings = prompt_prepended_embeddings.unsqueeze(0)
         encoded, attn_weights = self.pretrained_vit.enc.transformer.encoder(prompt_prepended_embeddings)
@@ -127,11 +129,20 @@ class LearningToPrompt(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
+        torch.set_printoptions(sci_mode=False)
         g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=0.03, betas=(0.9, 0.999))
 
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+
+            previous_prompt_freq = torch.ones_like(self.prompt_frequency).to(self.device)
+
+            if task_no > 0:
+                ppf_min = torch.min(self.prompt_frequency)
+                ppf_max = torch.max(self.prompt_frequency)
+
+                previous_prompt_freq = (self.prompt_frequency - ppf_min) / (ppf_max - ppf_min)
 
             for epoch in range(1, self.epochs_per_task + 1):
                 logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
@@ -141,11 +152,6 @@ class LearningToPrompt(BaseCLAlgorithm):
                 ky_l = 0
 
                 for batch_no, data in enumerate(task_dataloader, 0):
-                    if task_no == 2 and batch_no == 1:
-                        self.run_base_task_metrics(99)
-                        import sys
-                        sys.exit(0)
-
                     inp, labels = data
 
                     inp = inp.to(self.device)
@@ -159,13 +165,17 @@ class LearningToPrompt(BaseCLAlgorithm):
 
                     for i, img in enumerate(inp):
                         img = img.unsqueeze(0)
-                        top_N_indices, top_N_keys = self.calculate_top_N_keys(img)
+                        top_N_indices, top_N_keys = self.calculate_top_N_keys(img, previous_prompt_freq)
                         selected_key_indices |= set(top_N_indices)
 
                         # x_p = torch.cat([xs_e[i, :1, :], self.prompts[top_N_keys], xs_e[i, 1:, :]], dim=1)
                         selected_prompts = torch.cat([self.prompts[i].unsqueeze(0) for i in top_N_indices], dim=0)
+
+                        for prompt_index in top_N_indices:
+                            self.prompt_frequency[prompt_index] += 1
+
                         x_p = self.f_r(xs_e[i], selected_prompts)
-                        x_p = x_p[:, 0:(self.N + 1)]
+                        x_p = x_p[:, 0:(self.L_p * self.N + 1)]
                         prediction = self.g_phi(x_p)
                         ce_loss = self.loss_criterion(prediction, labels[i].unsqueeze(0))
                         key_loss = self.balancing_lambda * self.gamma(img, torch.cat([x.unsqueeze(0) for x in top_N_keys], dim=0)).sum()
@@ -208,6 +218,8 @@ class LearningToPrompt(BaseCLAlgorithm):
                     if batch_no % 40 == 0 and batch_no != 0:
                         logger.info(f"{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
                         logger.info(f"KL: {ky_l / 40}, CE: {ce_l / 40}")
+                        logger.info(f"Prev Freq: {previous_prompt_freq}")
+                        logger.info(f"Freq: {self.prompt_frequency}")
                         short_running_loss = 0
                         ce_l = 0
                         ky_l = 0
@@ -216,17 +228,13 @@ class LearningToPrompt(BaseCLAlgorithm):
 
                 epoch_offset = self.epochs_per_task * task_no
 
-                if task_no > 0:
-                    self.run_base_task_metrics(epoch_offset + epoch)
-
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
                 self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
                 running_loss = 0
         
-            if task_no == 0:
-                self.run_base_task_metrics(task_no)
+            self.run_base_task_metrics(task_no)
         
         logger.info("Training complete")
 
@@ -234,29 +242,34 @@ class LearningToPrompt(BaseCLAlgorithm):
         predictions = []
         xs_e = self.f_e(batch)
 
+        weights = torch.ones(self.M).to(self.device)
+        prompt_occurs = torch.zeros(10)
+
         for i, img in enumerate(batch):
             img = img.unsqueeze(0)
-            top_N_indices, top_N_keys = self.calculate_top_N_keys(img)
+            top_N_indices, top_N_keys = self.calculate_top_N_keys(img, weights)
+
+            for index in top_N_indices:
+                prompt_occurs[index] += 1
 
             # x_p = torch.cat([xs_e[i, :1, :], self.prompts[top_N_keys], xs_e[i, 1:, :]], dim=1)
             selected_prompts = torch.cat([self.prompts[i].unsqueeze(0) for i in top_N_indices], dim=0)
             x_p = self.f_r(xs_e[i], selected_prompts)
-            x_p = x_p[:, 0:(self.N + 1)]
+            x_p = x_p[:, 0:(self.L_p * self.N + 1)]
             _, prediction = torch.max(self.g_phi(x_p), 1)
             predictions.append(prediction)
         
+        logger.debug(f"Selected prompts: {prompt_occurs}")
         return torch.cat(predictions, dim=0)
 
 import torch.nn as nn
 
 class AvgPoolClassifier(nn.Module):
-    def __init__(self, prompt_size, feature_size, classes):
+    def __init__(self, feature_size, classes):
         super().__init__()
-        out_f = feature_size // (prompt_size + 1)
-        self.pool = nn.AvgPool2d(kernel_size=prompt_size + 1)
-        self.classifier = nn.Linear(in_features=out_f, out_features=classes)
+        self.classifier = nn.Linear(in_features=feature_size, out_features=classes)
 
     def forward(self, x):
-        x = self.pool(x)
+        x = x.mean(dim=1)
         x = self.classifier(x)
         return x.squeeze(dim=1)
