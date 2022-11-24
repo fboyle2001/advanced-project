@@ -56,14 +56,15 @@ class LearningToPrompt(BaseCLAlgorithm):
         self.g_phi = AvgPoolClassifier(self.D, 10).to(self.device)
         self.balancing_lambda = 0.5
         self.prompt_frequency = torch.zeros(self.M).to(self.device)
+        self.prompt_frequency_strategy = ["minmax", "scaled_frequency"][0]
 
         self.prompt_keys = [
-            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.D) + 0.0625).to(self.device), requires_grad=True)
+            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.D_k) + 0.0625).to(self.device), requires_grad=True)
             for _ in range(self.M)
         ]
 
         self.K_opts = [
-            optim.Adam([K], lr=0.03, betas=(0.9, 0.999))
+            optim.Adam([K], lr=1e-3, betas=(0.9, 0.999))
             for K in self.prompt_keys
         ]
 
@@ -73,7 +74,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         ]
 
         self.P_opts = [
-            optim.Adam([P], lr=0.03, betas=(0.9, 0.999))
+            optim.Adam([P], lr=1e-3, betas=(0.9, 0.999))
             for P in self.prompts
         ]
 
@@ -130,7 +131,7 @@ class LearningToPrompt(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
         torch.set_printoptions(sci_mode=False)
-        g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=0.03, betas=(0.9, 0.999))
+        g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=1e-3, betas=(0.9, 0.999))
 
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
@@ -139,10 +140,15 @@ class LearningToPrompt(BaseCLAlgorithm):
             previous_prompt_freq = torch.ones_like(self.prompt_frequency).to(self.device)
 
             if task_no > 0:
-                ppf_min = torch.min(self.prompt_frequency)
-                ppf_max = torch.max(self.prompt_frequency)
+                if self.prompt_frequency_strategy == "minmax":
+                    ppf_min = torch.min(self.prompt_frequency)
+                    ppf_max = torch.max(self.prompt_frequency)
 
-                previous_prompt_freq = (self.prompt_frequency - ppf_min) / (ppf_max - ppf_min)
+                    previous_prompt_freq = (self.prompt_frequency - ppf_min) / (ppf_max - ppf_min)
+                elif self.prompt_frequency_strategy == "scaled_frequency":
+                    previous_prompt_freq = self.prompt_frequency / self.prompt_frequency.sum()
+                else:
+                    assert False, ""
 
             for epoch in range(1, self.epochs_per_task + 1):
                 logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
@@ -196,9 +202,9 @@ class LearningToPrompt(BaseCLAlgorithm):
 
                     for seen_key in selected_key_indices:
                         # Update K
-                        self.K_opts[seen_key].step()
+                        self.K_opts[seen_key].zero_grad()
                         # Update P 
-                        self.P_opts[seen_key].step()
+                        self.P_opts[seen_key].zero_grad()
 
                     batch_loss.backward() # type: ignore
                     
