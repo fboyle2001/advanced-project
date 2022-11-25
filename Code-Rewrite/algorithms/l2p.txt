@@ -1,0 +1,38 @@
+ViT: f_r composed with f_e (r is self-attention layers, e is embedding layers)
+Reshape images to a squence of flattened 2D patches HxWxC -> Lx(S^2 * C)
+    - L is token length, i.e. no. of patches
+    - S is the patch size
+    - C is the number of channels
+f_e: Lx(S^2*C) -> LxD where D is embedding dimension
+x_e = f_e(x)
+Idea is to prepend learnable parameters P_e in L_p x D 
+x_p = [P_e; x_e]
+f_r(x_p)
+
+M = total number of prompts
+L_p = token length
+D = embedding dimension
+Prompts are of the size L_p x D
+P = {P_1, P_2, ..., P_M} where P_j is a single prompt of token length L_p
+x is the input
+x_e = f_e(x) is the corresponding embedding feature
+{s_i} subset of [1, M] for 1 <= i <= N
+x_p = [P_s_1; ...; P_s_N; x_e] where ; is concat along token dimension
+
+Each prompt is associated with a learnable key:
+D_k is the dimension of the key
+{(k_1, P_1), (k_2, P_2), ..., (k_M, P_M)} where k_i in R^(D_k)}
+P = set of all keys {k_i}
+q is the query function
+q: R^{HxWxC} -> R^{D_k}
+q is deterministic and has no learnable parameters
+q encodes x to the same dimension as the key
+Use the whole pre-trained model as a frozen feature extractor
+q(x) = f(x)[0, :] where we use the featue vector corresponding to [class]
+gamma: R^{D_k} -> R^{D_k} denotes score match between query and prompt key using cosine distance
+given input x, use q(x) to lookup the top-N keys by solving eq 3
+    i.e find the N keys that are closest by cosine similarity to q(x)
+K_x represents the top-N keys 
+# Optional way to increase prompt diversity too
+
+Loss function is somewhat straight-forward

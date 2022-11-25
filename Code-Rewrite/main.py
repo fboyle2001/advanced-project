@@ -58,7 +58,7 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][0] # change the index to 0, 1, 2, 3, 4 
+        "sampling_strategy": ["diverse", "central", "edge", "random", "proportional"][0]
     },
     algorithms.RainbowOnlineExperimental: {
         "batch_size": 16,
@@ -68,17 +68,20 @@ ALGORITHM_DEFAULTS = {
         "max_lr": 0.05,
         "min_lr": 0.0005,
         "cutmix_probability": 0.5,
-        "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][2], # change the index to 0, 1, 2
+        "sampling_strategy": ["endpoint_peak", "midpoint_peak", "edge_skewed_1"][2],
         "all_occurrences": False
     },
     algorithms.LearningToPrompt: {
-        "epochs_per_task": 5,
+        "epochs_per_task": 1,
         "batch_size": 16,
-        "gradient_clip": None,
-        "apply_learning_rate_annealing": False,
-        "max_lr": 0.03,
-        "min_lr": 0.03,
-        "cutmix_probability": 0
+        "K_lr": 1e-3,
+        "P_lr": 1e-3,
+        "g_phi_lr": 1e-3,
+        "N": 2,
+        "L_p": 5,
+        "M": 10,
+        "balancing_lambda": 0.5,
+        "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
     }
 }
 
@@ -137,18 +140,18 @@ def execute(algorithm_class, dataset_class, directory, writer):
     )
 
     algorithm.train()
-
     model_save_loc = f"{directory}/model.pth"
 
-    logger.info(f"Saving model to {model_save_loc}")
-    torch.save(algorithm.model.state_dict(), model_save_loc)
+    if algorithm.model is not None:
+        logger.info(f"Saving model to {model_save_loc}")
+        torch.save(algorithm.model.state_dict(), model_save_loc)
 
 if __name__ == "__main__":
     utils.seed_everything(0)
 
     algorithm_class = algorithms.LearningToPrompt
     dataset_class = datasets.CIFAR10
-    experiment_name = "CHECK"
+    experiment_name = "PARAM_EXPERIMENTS"
 
     device = torch.device("cuda:0")
 

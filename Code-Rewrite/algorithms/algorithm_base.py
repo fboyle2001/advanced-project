@@ -79,11 +79,11 @@ class BaseCLAlgorithm(abc.ABC):
         """
         info = {
             "name": f"{self.__class__.__module__}.{self.__class__.__qualname__}",
-            "model_class": f"{self.model.__class__.__module__}.{self.model.__class__.__qualname__}",
+            "model_class": f"{self.model.__class__.__module__}.{self.model.__class__.__qualname__}" if self.model is not None else "Ignored",
             "device": str(self.device),
             "dataset_class": f"{self.dataset.__class__.__module__}.{self.dataset.__class__.__qualname__}",
-            "optimiser_class": f"{self.optimiser.__class__.__module__}.{self.optimiser.__class__.__qualname__}",
-            "loss_criterion_class": f"{self.loss_criterion.__class__.__module__}.{self.loss_criterion.__class__.__qualname__}",
+            "optimiser_class": f"{self.optimiser.__class__.__module__}.{self.optimiser.__class__.__qualname__}" if self.optimiser is not None else "Ignored",
+            "loss_criterion_class": f"{self.loss_criterion.__class__.__module__}.{self.loss_criterion.__class__.__qualname__}" if self.loss_criterion is not None else "Ignored",
         }
 
         info = {**info, **self.get_unique_information()}
@@ -97,9 +97,10 @@ class BaseCLAlgorithm(abc.ABC):
         """
         Internal method called to prepare the model for training
         """
-        self.model.to(self.device)
-        self.model.train()
-        logger.debug(f"Model moved to {self.device} and set to train mode")
+        if self.model is not None:
+            self.model.to(self.device)
+            self.model.train()
+            logger.debug(f"Model moved to {self.device} and set to train mode")
 
     @abc.abstractmethod
     def train(self) -> None:

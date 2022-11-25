@@ -1,19 +1,19 @@
-from typing import Dict, Union, Optional
+from typing import Dict, Union, List
 from loguru import logger
 
-from . import utils
 from .algorithm_base import BaseCLAlgorithm
+import datasets
 
 import torch
-import datasets
+import torch.nn as nn
 import torch.utils.tensorboard
 import torch.optim as optim
 
 import vit.vit_models
 
-import random
-
 class LearningToPrompt(BaseCLAlgorithm):
+    valid_prompt_freq_strategies: List[str] = ["disabled", "minmax", "scaled_frequency"]
+
     def __init__(
         self,
         model: torch.nn.Module,
@@ -23,11 +23,14 @@ class LearningToPrompt(BaseCLAlgorithm):
         writer: torch.utils.tensorboard.writer.SummaryWriter,
         epochs_per_task: int,
         batch_size: int,
-        gradient_clip: Optional[float],
-        apply_learning_rate_annealing: bool,
-        max_lr: Optional[float],
-        min_lr: Optional[float],
-        cutmix_probability: float
+        K_lr: float,
+        P_lr: float,
+        g_phi_lr: float,
+        N: int,
+        L_p: int,
+        M: int,
+        balancing_lambda: float,
+        prompt_frequency_strategy: str
     ):
         super().__init__(
             name="L2P",
@@ -38,25 +41,27 @@ class LearningToPrompt(BaseCLAlgorithm):
             writer=writer
         )
 
-        self.epochs_per_task = 1
+        self.optimiser = None
+        self.model = None
+
+        self.epochs_per_task = epochs_per_task
         self.batch_size = batch_size
-        self.gradient_clip = gradient_clip
 
-        self.apply_learning_rate_annealing = apply_learning_rate_annealing
-        self.max_lr = max_lr
-        self.min_lr = min_lr
+        self.K_lr = K_lr
+        self.P_lr = P_lr
+        self.g_phi_lr = g_phi_lr
 
-        self.cutmix_probability = cutmix_probability
         self.pretrained_vit = vit.vit_models.create_model().to(self.device)
         self.D = self.pretrained_vit.feat_dim # number of features
         self.D_k = self.D
-        self.N = 2 # prompt selection length
-        self.L_p = 5 # prompt token length
-        self.M = 10 # total number of prompts
-        self.g_phi = AvgPoolClassifier(self.D, 10).to(self.device)
-        self.balancing_lambda = 0.5
+        self.N = N # prompt selection length
+        self.L_p = L_p # prompt token length
+        self.M = M # total number of prompts
+        self.g_phi = AvgPoolClassifier(self.D, len(self.dataset.classes)).to(self.device)
+        self.balancing_lambda = balancing_lambda
         self.prompt_frequency = torch.zeros(self.M).to(self.device)
-        self.prompt_frequency_strategy = ["minmax", "scaled_frequency"][0]
+        assert prompt_frequency_strategy in self.valid_prompt_freq_strategies, "Invalid prompt frequency strategy"
+        self.prompt_frequency_strategy = prompt_frequency_strategy
 
         self.prompt_keys = [
             torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.D_k) + 0.0625).to(self.device), requires_grad=True)
@@ -64,7 +69,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         ]
 
         self.K_opts = [
-            optim.Adam([K], lr=1e-3, betas=(0.9, 0.999))
+            optim.Adam([K], lr=self.K_lr, betas=(0.9, 0.999))
             for K in self.prompt_keys
         ]
 
@@ -74,7 +79,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         ]
 
         self.P_opts = [
-            optim.Adam([P], lr=1e-3, betas=(0.9, 0.999))
+            optim.Adam([P], lr=self.P_lr, betas=(0.9, 0.999))
             for P in self.prompts
         ]
 
@@ -86,11 +91,16 @@ class LearningToPrompt(BaseCLAlgorithm):
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
             "batch_size": self.batch_size,
-            "apply_learning_rate_annealing": self.apply_learning_rate_annealing,
-            "gradient_clip": self.gradient_clip if self.gradient_clip is not None else "disabled",
-            "max_lr": str(self.max_lr),
-            "min_lr": str(self.min_lr),
-            "cutmix_probability": self.cutmix_probability
+            "K_lr": self.K_lr,
+            "P_lr": self.P_lr,
+            "g_phi_lr": self.g_phi_lr,
+            "D": self.D,
+            "D_k": self.D_k,
+            "N": self.N,
+            "L_p": self.L_p,
+            "M": self.M,
+            "balancing_lambda": self.balancing_lambda,
+            "prompt_frequency_strategy": self.prompt_frequency_strategy
         }
 
         return info
@@ -131,7 +141,7 @@ class LearningToPrompt(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
         torch.set_printoptions(sci_mode=False)
-        g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=1e-3, betas=(0.9, 0.999))
+        g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=self.g_phi_lr, betas=(0.9, 0.999))
 
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
@@ -139,7 +149,7 @@ class LearningToPrompt(BaseCLAlgorithm):
 
             previous_prompt_freq = torch.ones_like(self.prompt_frequency).to(self.device)
 
-            if task_no > 0:
+            if task_no > 0 and self.prompt_frequency_strategy != "disabled":
                 if self.prompt_frequency_strategy == "minmax":
                     ppf_min = torch.min(self.prompt_frequency)
                     ppf_max = torch.max(self.prompt_frequency)
@@ -226,6 +236,25 @@ class LearningToPrompt(BaseCLAlgorithm):
                         logger.info(f"KL: {ky_l / 40}, CE: {ce_l / 40}")
                         logger.info(f"Prev Freq: {previous_prompt_freq}")
                         logger.info(f"Freq: {self.prompt_frequency}")
+
+                        for i, key in enumerate(self.prompt_keys):
+                            detached = key.detach().clone().cpu()
+                            k_mean = detached.mean().item()
+                            k_min = detached.min().item()
+                            k_max = detached.max().item()
+                            k_sum = detached.sum().item()
+
+                            logger.debug(f"Key {i} (mean, min, max, sum): {k_mean}, {k_min}, {k_max}, {k_sum}")
+
+                        for i, prompt in enumerate(self.prompts):
+                            detached = prompt.detach().clone().cpu()
+                            p_mean = detached.mean().item()
+                            p_min = detached.min().item()
+                            p_max = detached.max().item()
+                            p_sum = detached.sum().item()
+
+                            logger.debug(f"Prompt {i} (mean, min, max, sum): {p_mean}, {p_min}, {p_max}, {p_sum}")
+
                         short_running_loss = 0
                         ce_l = 0
                         ky_l = 0
@@ -268,9 +297,10 @@ class LearningToPrompt(BaseCLAlgorithm):
         logger.debug(f"Selected prompts: {prompt_occurs}")
         return torch.cat(predictions, dim=0)
 
-import torch.nn as nn
-
 class AvgPoolClassifier(nn.Module):
+    """
+    Final classification head, 1D Avg Pool followed by Linear layer
+    """
     def __init__(self, feature_size, classes):
         super().__init__()
         self.classifier = nn.Linear(in_features=feature_size, out_features=classes)
