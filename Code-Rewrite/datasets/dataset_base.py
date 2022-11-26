@@ -125,7 +125,7 @@ class BaseCLDataset(abc.ABC):
                 data += divided[label]
                 targets += labelled_targets
             
-            task_dataset = utils.CustomImageDataset(data, targets, transform=self.training_transform)
+            task_dataset = utils.CustomImageDataset(data, targets)#, transform=self.training_transform)
             task_datasets.append(task_dataset)
             task_split.append(split)
 
