@@ -9,4 +9,6 @@ from .gdumb import GDumb
 from .icarl import iCaRL
 from .rainbow import Rainbow
 from .rainbow_online import RainbowOnline
-from.rainbow_online_exp import RainbowOnlineExperimental
+from .rainbow_online_exp import RainbowOnlineExperimental
+from .l2p import LearningToPrompt
+from .l2p_memory import LearningToPromptWithMemory
