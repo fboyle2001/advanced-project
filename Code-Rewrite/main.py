@@ -94,6 +94,10 @@ ALGORITHM_DEFAULTS = {
         "M": 10,
         "balancing_lambda": 0.5,
         "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
+    },
+    algorithms.SupervisedContrastiveReplay: {
+        "epochs_per_task": 1,
+        "batch_size": 16
     }
 }
 
@@ -161,9 +165,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.LearningToPrompt
+    algorithm_class = algorithms.SupervisedContrastiveReplay
     dataset_class = datasets.CIFAR10
-    experiment_name = "PARAM_EXPERIMENTS"
+    experiment_name = "INITIAL_EXP"
 
     device = torch.device("cuda:0")
 
@@ -171,7 +175,8 @@ if __name__ == "__main__":
     # model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
 
     # Has higher performance, need to analyse why in the future
-    model = utils.get_gdumb_resnet_impl()
+    reduced = algorithm_class == algorithms.SupervisedContrastiveReplay
+    model = utils.get_gdumb_resnet_impl(reduced=reduced)
 
     model.to(device)
 

@@ -27,7 +27,7 @@ class BaseCLDataset(abc.ABC):
         classes: List[Union[int, str]],
         disjoint: bool,
         classes_per_task: Union[int, None],
-        folder: str = "./store/data",
+        folder: str = "./store/data"
     ):
         """
         For each dataset it is important to consider the scenarios that can arise:
@@ -71,24 +71,25 @@ class BaseCLDataset(abc.ABC):
 
         self.task_splits: List[List[int]] = [[i for i in range(len(self.classes))]]
         self.task_datasets: List[torch.utils.data.Dataset] = [self.training_data]
+        self.raw_task_datasets: List[torch.utils.data.Dataset] = [utils.CustomImageDataset(self.training_data.data, self.training_data.targets)] # type: ignore
 
         if self.disjoint:
             assert classes_per_task is not None, "In disjoint mode, classes_per_task cannot be None"
             assert len(classes) % classes_per_task == 0, "In disjoint mode, classes_per_task must divide the number of classes"
             self.task_count = len(classes) // classes_per_task
             logger.info(f"Using disjoint tasks with {self.classes_per_task} ({self.task_count} tasks) with a randomised split")
-            self.task_splits, self.task_datasets = self._setup_task_datasets()
+            self.task_splits, self.task_datasets, self.raw_task_datasets = self._setup_task_datasets()
 
         self.current_task: int = 1
 
         logger.info(self)
 
-    def _setup_task_datasets(self) -> Tuple[List[List[int]], List[torch.utils.data.Dataset]]:
+    def _setup_task_datasets(self) -> Tuple[List[List[int]], List[torch.utils.data.Dataset], List[torch.utils.data.Dataset]]:
         """
         Internal method to split the dataset into tasks
 
         Returns:
-            Tuple[List[List[int]], List[torch.utils.data.Dataset]]: List of tasks and their datasets
+            Tuple[List[List[int]], List[torch.utils.data.Dataset], List[torch.utils.data.Dataset]]: List of tasks and their datasets
         """
         assert self.classes_per_task is not None
         logger.debug(f"Splitting dataset into {self.task_count} disjoint tasks")
@@ -111,6 +112,7 @@ class BaseCLDataset(abc.ABC):
 
         task_datasets = []
         task_split = []
+        raw_task_datasets = []
 
         for i in range(len(self.classes) // self.classes_per_task):
             data = []
@@ -127,9 +129,10 @@ class BaseCLDataset(abc.ABC):
             
             task_dataset = utils.CustomImageDataset(data, targets, transform=self.training_transform)
             task_datasets.append(task_dataset)
+            raw_task_datasets.append(utils.CustomImageDataset(data, targets))
             task_split.append(split)
 
-        return task_split, task_datasets
+        return task_split, task_datasets, raw_task_datasets
 
     def resolve_class_indexes(self, indexes: List[int]) -> List[str]:
         """

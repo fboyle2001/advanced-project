@@ -7,6 +7,7 @@ import pickle
 import torch
 import numpy as np
 from datasets.utils import CustomImageDataset
+from PIL import Image
 
 class BalancedReplayBuffer:
     def __init__(self, max_memory_size: int, disable_warnings: bool = False):
@@ -57,6 +58,42 @@ class BalancedReplayBuffer:
         # Need to delete a sample now
         if self.count > self.max_memory_size:
             self._remove_sample()
+
+    def draw_sample(self, batch_size, device, transform=None):
+        indices = sorted(random.sample(range(self.count), k=batch_size))
+        seen = 0
+        indice_index = 0
+        next_index = indices[indice_index]
+        apply_transform = lambda x: x
+
+        if transform is not None:
+            apply_transform = lambda x: transform(Image.fromarray(x.astype(np.uint8)))
+
+        samples = []
+        targets = []
+
+        for target in self.class_hash_pointers.keys():
+            length = len(self.class_hash_pointers[target])
+
+            while next_index < seen + length:
+                # print(next_index, seen, length, seen + length, next_index < seen + length)
+                # print(seen + length - next_index)
+                samples.append(self.hash_map[self.class_hash_pointers[target][next_index - seen]])
+                targets.append(target)
+
+                indice_index += 1
+                if indice_index >= len(indices): 
+                    next_index = None
+                    break
+                else:
+                    next_index = indice_index
+
+            seen += length
+
+            if next_index is None:
+                break
+        
+        return torch.stack([apply_transform(x) for x in samples]).to(device), torch.LongTensor(targets).to(device)
 
     def to_torch_dataset(self, transform=None) -> CustomImageDataset:
         data = []
