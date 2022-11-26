@@ -82,6 +82,18 @@ ALGORITHM_DEFAULTS = {
         "M": 10,
         "balancing_lambda": 0.5,
         "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
+    },
+    algorithms.LearningToPromptWithMemory: {
+        "epochs_per_task": 1,
+        "batch_size": 32,
+        "K_lr": 1e-3,
+        "P_lr": 1e-3,
+        "g_phi_lr": 1e-3,
+        "N": 2,
+        "L_p": 5,
+        "M": 10,
+        "balancing_lambda": 0.5,
+        "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
     }
 }
 
