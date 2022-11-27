@@ -1,10 +1,9 @@
-from typing import Dict, Union, Optional
+from typing import Dict, Union
 from loguru import logger
 
-from . import utils
 from .algorithm_base import BaseCLAlgorithm
 from . import buffers
-from . import scr_resnet
+from models import scr_resnet
 
 import torch
 import datasets
@@ -15,10 +14,8 @@ import torch.nn as nn
 
 from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, ColorJitter, RandomGrayscale
 
-import random
 import numpy as np
 from PIL import Image
-import torchvision.transforms
 
 class SupervisedContrastiveReplay(BaseCLAlgorithm):
     def __init__(
@@ -29,7 +26,10 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         loss_criterion: torch.nn.modules.loss._Loss,
         writer: torch.utils.tensorboard.writer.SummaryWriter,
         epochs_per_task: int,
-        batch_size: int
+        batch_size: int,
+        max_memory_samples: int, # 2000
+        memory_batch_size: int, # 100
+        temperature: float # 0.07
     ):
         super().__init__(
             name="Supervised Contrastive Replay",
@@ -42,20 +42,16 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
 
         self.epochs_per_task = epochs_per_task
         self.batch_size = batch_size
+        self.max_memory_samples = max_memory_samples
 
-        self.buffer = buffers.BalancedReplayBuffer(2000)
-
-        self.model = None
-        # self.model = encoder
-        #self.model.final = nn.Identity()
-        #assert self.model.reduced
+        self.buffer = buffers.BalancedReplayBuffer(max_memory_samples)
         
-        self.resnet = scr_resnet.SupConResNet().to(self.device)  #self.model.to(self.device)
-        # self.feature_dim = self.resnet.feat_dim
-        # self.projection = ProjectionNetwork(self.feature_dim, 128).to(self.device)
-        self.memory_iterations = 1
-        self.memory_batch_size = 100
-        self.tau = 0.07 # temperature
+        # Use the reduced model from the official repo
+        self.model = scr_resnet.SupConResNet().to(self.device)  #self.model.to(self.device)
+        self.optimiser = optim.SGD(self.model.parameters(), lr=0.1)
+
+        self.memory_batch_size = memory_batch_size
+        self.tau = temperature
 
         # Taken directly from https://github.com/RaptorMai/online-continual-learning/blob/6175ca034e56435acd82b8f17ff59f920f0bc45e/agents/scr.py
         self.augment = nn.Sequential(
@@ -68,8 +64,6 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         self.require_mean_calculation = True
         self.mean_embeddings = {}
 
-        self.loss_criterion = SupConLoss(temperature=self.tau)
-
     @staticmethod
     def get_algorithm_folder() -> str:
         return "scr"
@@ -78,6 +72,9 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
             "batch_size": self.batch_size,
+            "max_memory_samples": self.max_memory_samples,
+            "memory_batch_size": self.memory_batch_size,
+            "tau (temperature)": self.tau
         }
 
         return info
@@ -108,21 +105,13 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
             summed = torch.log(numerator_terms / denom).sum()
             loss += (-1 / len(P_i)) * summed
 
-        return loss
+        return loss / batch.shape[0]
 
     def train(self) -> None:
         super().train()
 
-        # encoder_opt = optim.SGD(self.encoder.parameters(), lr=0.1)
-        # projection_opt = optim.SGD(self.projection.parameters(), lr=0.1)
-
-        resnet_opt = optim.SGD(self.resnet.parameters(), lr=0.1)
-
         for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
-            #self.encoder.train()
-            #self.model.train()
-            #self.projection.train()
-            self.resnet.train()
+            self.model.train()
 
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
@@ -137,12 +126,6 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                 short_running_loss = 0
 
                 for batch_no, data in enumerate(task_dataloader, 0):
-                    if batch_no == 41:
-                        logger.debug("Current sample stats:")
-
-                        for class_name in self.buffer.known_classes:
-                            logger.debug(f"{class_name} has {len(self.buffer.class_hash_pointers[class_name])} samples")
-
                     raw_inp, raw_labels = data
 
                     if self.buffer.count >= self.memory_batch_size:
@@ -151,12 +134,12 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                         
                         buffer_data, buffer_targets = self.buffer.draw_sample(self.memory_batch_size, self.device, transform=self.dataset.training_transform)
 
-                        tags = {x: [0 if x not in self.buffer.known_classes else len(self.buffer.class_hash_pointers[x]), 0] for x in range(10)}
+                        # tags = {x: [0 if x not in self.buffer.known_classes else len(self.buffer.class_hash_pointers[x]), 0] for x in range(10)}
 
-                        for t in buffer_targets:
-                            tags[t.item()][1] += 1 # type: ignore
+                        # for t in buffer_targets:
+                        #     tags[t.item()][1] += 1 # type: ignore
 
-                        logger.debug(tags)
+                        # logger.debug(tags)
 
                         inp = torch.cat([inp, buffer_data], dim=0)
                         labels = torch.cat([labels, buffer_targets], dim=0)
@@ -166,24 +149,12 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                         inp = torch.cat([inp, augmented], dim=0)
                         labels = torch.cat([labels, labels], dim=0)
 
-                        # encoded = torch.nn.functional.normalize(self.encoder(inp))
-                        # projected = torch.nn.functional.normalize(self.projection(encoded))
+                        features = self.model.forward(inp)
+                        loss = self.scl_loss(features, labels) 
 
-                        features = self.resnet.forward(inp).unsqueeze(1)
-                        # logger.debug(f"F Shape: {features.shape}")
-
-                        # loss = self.scl_loss(features, labels) # / inp.shape[0]
-                        loss = self.loss_criterion(features, labels)
-
-                        # encoder_opt.zero_grad()
-                        # projection_opt.zero_grad()
-
-                        resnet_opt.zero_grad()
+                        self.optimiser.zero_grad()
                         loss.backward()
-                        resnet_opt.step()
-
-                        # encoder_opt.step()
-                        # projection_opt.step()
+                        self.optimiser.step()
 
                         running_loss += loss.item()
                         short_running_loss += loss.item()
@@ -194,6 +165,11 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                     if batch_no % 40 == 0 and batch_no != 0:
                         logger.info(f"{task_no}:{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
                         short_running_loss = 0
+                
+                logger.debug("Current sample stats:")
+
+                for class_name in self.buffer.known_classes:
+                    logger.debug(f"{class_name} has {len(self.buffer.class_hash_pointers[class_name])} samples")
 
                 epoch_offset = self.epochs_per_task * task_no
 
@@ -209,10 +185,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         logger.info("Training complete")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
-        #self.model.eval()
-        # self.encoder.eval()
-        # self.projection.eval()
-        self.resnet.eval()
+        self.model.eval()
 
         if self.require_mean_calculation:
             logger.info("Generating fresh mean embedding vectors")
@@ -225,8 +198,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                 for hash_key in self.buffer.class_hash_pointers[target]:
                     count += 1
                     sample = self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[hash_key].astype(np.uint8))).unsqueeze(0).to(self.device) # type: ignore
-                    # encoded = torch.nn.functional.normalize(self.encoder(sample)).squeeze(0)
-                    encoded = self.resnet.features(sample).detach().clone().squeeze(0)
+                    encoded = self.model.features(sample).detach().clone().squeeze(0)
                     encoded = encoded / encoded.norm()
                     total_embed.append(encoded)
                 
@@ -242,7 +214,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         batch = batch.to(self.device)
 
         for sample in batch:
-            encoded_sample = self.resnet.features(sample.unsqueeze(0)).squeeze(0)
+            encoded_sample = self.model.features(sample.unsqueeze(0)).squeeze(0)
             encoded_sample = encoded_sample / encoded_sample.norm()
             closest_target = None
             closest_value = None
@@ -257,103 +229,3 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
             predictions.append(torch.tensor([closest_target]))
 
         return torch.cat(predictions, dim=0)
-
-class ProjectionNetwork(nn.Module):
-    def __init__(self, feature_dim, out_dim):
-        super().__init__()
-
-        self.first = nn.Linear(feature_dim, feature_dim)
-        self.act = nn.ReLU()
-        self.final = nn.Linear(feature_dim, out_dim)
-
-    def forward(self, x):
-        x = self.first(x)
-        x = self.act(x)
-        x = self.final(x)
-        return x
-
-class SupConLoss(nn.Module):
-    """Supervised Contrastive Learning: https://arxiv.org/pdf/2004.11362.pdf.
-    It also supports the unsupervised contrastive loss in SimCLR"""
-    def __init__(self, temperature=0.07, contrast_mode='all'):
-        super(SupConLoss, self).__init__()
-        self.temperature = temperature
-        self.contrast_mode = contrast_mode
-
-    def forward(self, features, labels=None, mask=None):
-        """Compute loss for model. If both `labels` and `mask` are None,
-        it degenerates to SimCLR unsupervised loss:
-        https://arxiv.org/pdf/2002.05709.pdf
-        Args:
-            features: hidden vector of shape [bsz, n_views, ...].
-            labels: ground truth of shape [bsz].
-            mask: contrastive mask of shape [bsz, bsz], mask_{i,j}=1 if sample j
-                has the same class as sample i. Can be asymmetric.
-        Returns:
-            A loss scalar.
-        """
-        device = (torch.device('cuda')
-                  if features.is_cuda
-                  else torch.device('cpu'))
-
-        if len(features.shape) < 3:
-            raise ValueError('`features` needs to be [bsz, n_views, ...],'
-                             'at least 3 dimensions are required')
-        if len(features.shape) > 3:
-            features = features.view(features.shape[0], features.shape[1], -1)
-
-        batch_size = features.shape[0]
-        if labels is not None and mask is not None:
-            raise ValueError('Cannot define both `labels` and `mask`')
-        elif labels is None and mask is None:
-            mask = torch.eye(batch_size, dtype=torch.float32).to(device)
-        elif labels is not None:
-            labels = labels.contiguous().view(-1, 1)
-            if labels.shape[0] != batch_size:
-                raise ValueError('Num of labels does not match num of features')
-            mask = torch.eq(labels, labels.T).float().to(device)
-        else:
-            mask = mask.float().to(device) # type: ignore
-
-        contrast_count = features.shape[1]
-        contrast_feature = torch.cat(torch.unbind(features, dim=1), dim=0)
-        if self.contrast_mode == 'one':
-            anchor_feature = features[:, 0]
-            anchor_count = 1
-        elif self.contrast_mode == 'all':
-            anchor_feature = contrast_feature
-            anchor_count = contrast_count
-        else:
-            raise ValueError('Unknown mode: {}'.format(self.contrast_mode))
-
-        # compute logits
-        anchor_dot_contrast = torch.div(
-            torch.matmul(anchor_feature, contrast_feature.T),
-            self.temperature)
-        # for numerical stability
-        logits_max, _ = torch.max(anchor_dot_contrast, dim=1, keepdim=True)
-        logits = anchor_dot_contrast - logits_max.detach()
-
-        # tile mask
-        mask = mask.repeat(anchor_count, contrast_count)
-        # mask-out self-contrast cases
-        logits_mask = torch.scatter(
-            torch.ones_like(mask),
-            1,
-            torch.arange(batch_size * anchor_count).view(-1, 1).to(device),
-            0
-        )
-        mask = mask * logits_mask
-
-        # compute log_prob
-        exp_logits = torch.exp(logits) * logits_mask
-        log_prob = logits - torch.log(exp_logits.sum(1, keepdim=True))
-
-        # compute mean of log-likelihood over positive
-        mean_log_prob_pos = (mask * log_prob).sum(1) / mask.sum(1)
-
-        # loss
-        loss = -1 * mean_log_prob_pos
-        loss = loss.view(anchor_count, batch_size).mean()
-
-        return loss
