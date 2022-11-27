@@ -21,7 +21,7 @@ def seed_everything(seed):
     if torch.cuda.is_available():
         torch.backends.cudnn.benchmark = True # type: ignore
 
-def get_gdumb_resnet_impl():
+def get_gdumb_resnet_impl(reduced=False):
     opt = {
         "depth": 18,
         "num_classes": 10,
@@ -34,5 +34,5 @@ def get_gdumb_resnet_impl():
         "in_channels": 3
     }
     
-    model = ResNet(DotMap(opt))
+    model = ResNet(DotMap(opt), reduced=reduced)
     return model

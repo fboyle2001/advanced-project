@@ -63,8 +63,9 @@ class ResidualBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, opt):
+    def __init__(self, opt, reduced=False):
         super(ResNet, self).__init__()
+        self.reduced = reduced
         depth = opt.depth
         if depth in [20, 32, 44, 56, 110, 1202]:
             blocktype, self.nettype = 'BasicBlock', 'cifar'
@@ -90,7 +91,10 @@ class ResNet(nn.Module):
             assert (depth in [18, 34])
             num_blocks = [2, 2, 2, 2] if depth == 18 else [3, 4, 6, 3]
             block = BasicBlock
-            in_planes, out_planes = 64, 512 #20, 160
+            if reduced:
+                in_planes, out_planes = 20, 160
+            else:
+                in_planes, out_planes = 64, 512 #20, 160
         elif blocktype  == 'BottleneckBlock' and self.nettype == 'imagenet':
             assert (depth in [50, 101, 152])
             if depth == 50: num_blocks = [3, 4, 6, 3]
@@ -108,10 +112,16 @@ class ResNet(nn.Module):
             self.group2 = ResidualBlock(opt, block, 16*block.expansion, 32, n, stride=2)
             self.group3 = ResidualBlock(opt, block, 32*block.expansion, 64, n, stride=2)
         elif self.nettype == 'imagenet':
-            self.group1 = ResidualBlock(opt, block, 64, 64, num_blocks[0], stride=1) #For ResNet-S, convert this to 20,20
-            self.group2 = ResidualBlock(opt, block, 64*block.expansion, 128, num_blocks[1], stride=2) #For ResNet-S, convert this to 20,40
-            self.group3 = ResidualBlock(opt, block, 128*block.expansion, 256, num_blocks[2], stride=2) #For ResNet-S, convert this to 40,80
-            self.group4 = ResidualBlock(opt, block, 256*block.expansion, 512, num_blocks[3], stride=2) #For ResNet-S, convert this to 80,160
+            if reduced:
+                self.group1 = ResidualBlock(opt, block, 20, 20, num_blocks[0], stride=1) #For ResNet-S, convert this to 20,20
+                self.group2 = ResidualBlock(opt, block, 20, 40, num_blocks[1], stride=2) #For ResNet-S, convert this to 20,40
+                self.group3 = ResidualBlock(opt, block, 40, 80, num_blocks[2], stride=2) #For ResNet-S, convert this to 40,80
+                self.group4 = ResidualBlock(opt, block, 80, 160, num_blocks[3], stride=2) #For ResNet-S, convert this to 80,160
+            else:
+                self.group1 = ResidualBlock(opt, block, 64, 64, num_blocks[0], stride=1) #For ResNet-S, convert this to 20,20
+                self.group2 = ResidualBlock(opt, block, 64*block.expansion, 128, num_blocks[1], stride=2) #For ResNet-S, convert this to 20,40
+                self.group3 = ResidualBlock(opt, block, 128*block.expansion, 256, num_blocks[2], stride=2) #For ResNet-S, convert this to 40,80
+                self.group4 = ResidualBlock(opt, block, 256*block.expansion, 512, num_blocks[3], stride=2) #For ResNet-S, convert this to 80,160
         else:
             assert(1==2)
         self.pool = nn.AdaptiveAvgPool2d(1)
