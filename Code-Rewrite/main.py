@@ -97,7 +97,7 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.SupervisedContrastiveReplay: {
         "epochs_per_task": 1,
-        "batch_size": 16
+        "batch_size": 10
     }
 }
 
@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     algorithm_class = algorithms.SupervisedContrastiveReplay
     dataset_class = datasets.CIFAR10
-    experiment_name = "INITIAL_EXP"
+    experiment_name = "AUTHOR_CODE"
 
     device = torch.device("cuda:0")
 

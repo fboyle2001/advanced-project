@@ -61,6 +61,8 @@ class BalancedReplayBuffer:
 
     def draw_sample(self, batch_size, device, transform=None):
         indices = sorted(random.sample(range(self.count), k=batch_size))
+        # logger.debug(f"{self.count}, {indices}")
+
         seen = 0
         indice_index = 0
         next_index = indices[indice_index]
@@ -86,7 +88,7 @@ class BalancedReplayBuffer:
                     next_index = None
                     break
                 else:
-                    next_index = indice_index
+                    next_index = indices[indice_index]
 
             seen += length
 
