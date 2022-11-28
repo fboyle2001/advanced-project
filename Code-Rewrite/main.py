@@ -104,6 +104,13 @@ ALGORITHM_DEFAULTS = {
         "max_memory_samples": 1000,
         "memory_batch_size": 100,
         "temperature": 0.07
+    },
+    algorithms.DarkExperiencePlusPlus: {
+        "epochs_per_task": 1,
+        "batch_size": 16,
+        "max_memory_samples": 1000,
+        "alpha": 0.5,
+        "beta": 0.5
     }
 }
 
@@ -175,10 +182,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.LearningToPrompt
-    dataset_class = datasets.CIFAR100
+    algorithm_class = algorithms.DarkExperiencePlusPlus
+    dataset_class = datasets.CIFAR10
 
-    experiment_name = None
+    experiment_name = "INITIAL_EXPERIMENTS"
 
     device = torch.device("cuda:0")
 
@@ -187,7 +194,7 @@ if __name__ == "__main__":
 
     # Has higher performance, need to analyse why in the future
     reduced = algorithm_class == algorithms.SupervisedContrastiveReplay
-    model = utils.get_gdumb_resnet_32_impl(reduced=reduced)
+    model = utils.get_gdumb_resnet_18_impl(reduced=reduced)
 
     model.to(device)
 
