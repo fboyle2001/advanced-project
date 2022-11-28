@@ -48,6 +48,10 @@ class BalancedReplayBuffer:
 
         data_hash = hash(pickle.dumps(data))
 
+        if data_hash in self.hash_map.keys():
+            logger.warning(f"Duplicate hash: {data_hash}")
+            return
+
         self.hash_map[data_hash] = data
 
         if target not in self.class_hash_pointers.keys():

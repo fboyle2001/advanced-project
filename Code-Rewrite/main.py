@@ -13,6 +13,9 @@ import utils
 import torch
 from torchvision.models import resnet18
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 PARENT_DIRECTORY = "./store/models"
 
 ALGORITHM_DEFAULTS = {
@@ -28,8 +31,8 @@ ALGORITHM_DEFAULTS = {
         "batch_size": 64
     },
     algorithms.GDumb: {
-        "batch_size": 16,
-        "max_memory_samples": 500,
+        "batch_size": 32,
+        "max_memory_samples": 5000,
         "post_population_max_epochs": 256,
         "gradient_clip": 10,
         "max_lr": 0.05,
@@ -109,6 +112,10 @@ DATASET_DEFAULTS = {
         "disjoint": True,
         "classes_per_task": 2
     },
+    datasets.CIFAR100: {
+        "disjoint": True,
+        "classes_per_task": 20
+    },
     datasets.MNIST: {
         "disjoint": False,
         "classes_per_task": 0
@@ -168,11 +175,8 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.SupervisedContrastiveReplay
-    dataset_class = datasets.CIFAR10
-
-    print(dataset_class(**DATASET_DEFAULTS[dataset_class]).dataset_class.classes) # type: ignore
-    exit()
+    algorithm_class = algorithms.LearningToPrompt
+    dataset_class = datasets.CIFAR100
 
     experiment_name = None
 
@@ -183,7 +187,7 @@ if __name__ == "__main__":
 
     # Has higher performance, need to analyse why in the future
     reduced = algorithm_class == algorithms.SupervisedContrastiveReplay
-    model = utils.get_gdumb_resnet_impl(reduced=reduced)
+    model = utils.get_gdumb_resnet_32_impl(reduced=reduced)
 
     model.to(device)
 

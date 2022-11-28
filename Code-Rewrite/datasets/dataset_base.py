@@ -1,5 +1,5 @@
 import abc
-from typing import Type, List, Union, Tuple
+from typing import Type, List, Union, Tuple, Optional
 from collections.abc import Iterator
 import json
 
@@ -26,7 +26,7 @@ class BaseCLDataset(abc.ABC):
         testing_transform: torchvision.transforms.Compose,
         classes: List[Union[int, str]],
         disjoint: bool,
-        classes_per_task: Union[int, None],
+        classes_per_task: Optional[int],
         folder: str = "./store/data"
     ):
         """

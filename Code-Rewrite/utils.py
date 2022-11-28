@@ -21,10 +21,26 @@ def seed_everything(seed):
     if torch.cuda.is_available():
         torch.backends.cudnn.benchmark = True # type: ignore
 
-def get_gdumb_resnet_impl(reduced=False):
+def get_gdumb_resnet_18_impl(num_classes=10, reduced=False):
     opt = {
         "depth": 18,
-        "num_classes": 10,
+        "num_classes": num_classes,
+        "bn": True,
+        "preact": False,
+        "normtype": "BatchNorm",
+        "affine_bn": True, 
+        "bn_eps": 1e-6,
+        "activetype": "ReLU",
+        "in_channels": 3
+    }
+    
+    model = ResNet(DotMap(opt), reduced=reduced)
+    return model
+
+def get_gdumb_resnet_32_impl(num_classes=100, reduced=False):
+    opt = {
+        "depth": 32,
+        "num_classes": num_classes,
         "bn": True,
         "preact": False,
         "normtype": "BatchNorm",
