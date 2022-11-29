@@ -65,10 +65,10 @@
 ## CIFAR-100 Experiments
 - GDumb: 35.58% (~21 minutes) (5000 memory samples)
 - DER: 3.38% (~7 minutes) (5000 memory samples)
-- DER++: (5000 memory samples)
-- L2P: 61.58% (runtime was ~1h15m) (10 prompts, 5 selected per sample)
+- DER++: 3.41% (~7 minutes) (5000 memory samples)
+- L2P: 61.58% (~1h15m) (10 prompts, 5 selected per sample)
     - Quite a bit lower than the actual implementations, think it is likely down to hyperparameters
-- Rainbow: Took too long to run last night, probably an overnight job I expect
+- Rainbow: 39.1% (~5h30m) (5000 memory samples)
 
 ## Novel Experimentation
 - Next week I want to bring concrete plan for experimentation to do over the break
@@ -81,6 +81,8 @@
 
 ## Plans
 - Don't think I need to implement any more new literature techniques
+    - ~9 techniques, 1 less than the timeline but not really sure more will be worthwhile?
+    - There is generic episodic replay which is another simple baseline but not sure if it will add any value
 - Change EWC to EWC++ which is a better online version
 - Maybe implement generic episodic replay which is very basic baseline
     - Instead of storing the samples and training at the end like GDumb, train as we save and mix with the memory samples 

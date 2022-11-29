@@ -40,7 +40,7 @@ ALGORITHM_DEFAULTS = {
         "cutmix_probability": 0.5
     },
     algorithms.ElasticWeightConsolidation: {
-        "max_epochs_per_task": 5,
+        "max_epochs_per_task": 50,
         "batch_size": 64,
         "task_importance": 1000
     },
@@ -54,8 +54,8 @@ ALGORITHM_DEFAULTS = {
         "cutmix_probability": 0.5
     },
     algorithms.RainbowOnline: {
-        "batch_size": 16,
-        "max_memory_samples": 1000,
+        "batch_size": 32,
+        "max_memory_samples": 5000,
         "epochs_per_task": 50,
         "gradient_clip": 10,
         "max_lr": 0.05,
@@ -108,9 +108,9 @@ ALGORITHM_DEFAULTS = {
     algorithms.DarkExperiencePlusPlus: {
         "epochs_per_task": 1,
         "batch_size": 16,
-        "max_memory_samples": 1000,
+        "max_memory_samples": 5000,
         "alpha": 0.5,
-        "beta": 0.5
+        "beta": 0.5 # set beta = 0 for DER, beta > 0 for DER++
     }
 }
 
@@ -182,10 +182,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.DarkExperiencePlusPlus
-    dataset_class = datasets.CIFAR10
+    algorithm_class = algorithms.RainbowOnline
+    dataset_class = datasets.CIFAR100
 
-    experiment_name = "INITIAL_EXPERIMENTS"
+    experiment_name = None
 
     device = torch.device("cuda:0")
 
@@ -194,7 +194,7 @@ if __name__ == "__main__":
 
     # Has higher performance, need to analyse why in the future
     reduced = algorithm_class == algorithms.SupervisedContrastiveReplay
-    model = utils.get_gdumb_resnet_18_impl(reduced=reduced)
+    model = utils.get_gdumb_resnet_32_impl(reduced=reduced) if dataset_class == datasets.CIFAR100 else utils.get_gdumb_resnet_18_impl(reduced=reduced)
 
     model.to(device)
 
