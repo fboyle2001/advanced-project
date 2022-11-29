@@ -166,11 +166,8 @@ class NovelExperimentOne(BaseCLAlgorithm):
                         labels = torch.cat([labels, labels], dim=0)
 
                         vit_features = self.f_r(self.f_e(inp))[:, 0, :]
-                        print("vit_f", vit_features.shape, vit_features.mean())
                         clustered_features = self.model.forward(vit_features)
-                        print("cl_f", clustered_features.shape, clustered_features.mean())
                         loss = self.scl_loss(clustered_features, labels)
-                        print("L", loss.item())
 
                         self.optimiser.zero_grad()
                         loss.backward()
@@ -268,7 +265,6 @@ class TestNet(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        print(x.shape)
         x = self.classifier(x)
         return x
 
