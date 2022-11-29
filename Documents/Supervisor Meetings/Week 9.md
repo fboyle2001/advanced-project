@@ -44,6 +44,11 @@
 - Results: 
     - Average accuracy on CIFAR-10 was 61.8%
     - Didn't test on CIFAR-100 yet
+    - Again slightly lower, looking at their repo they use a review trick at the end of their code
+    - Not mentioned in their paper
+    - Essentially do one more re-run on the memory alone
+    - They achieved 65.7% using this so not too concerned
+    - Don't want to use the review trick because it could be applied to any memory based method to boost performance
 
 ### Dark Experience Replay (DER / DER++)
 - 3 loss terms
@@ -61,6 +66,7 @@
     - DER++: 46.8%
     - DER: 34.5%
     - DER++ outperforms before the CE loss acts as a regularising term on the output
+    - Slightly lower than paper
 
 ## CIFAR-100 Experiments
 - GDumb: 35.58% (~21 minutes) (5000 memory samples)
@@ -68,6 +74,7 @@
 - DER++: 10.14% (~4 minutes) (5000 memory samples)
 - L2P: 61.58% (~1h15m) (10 prompts, 5 selected per sample)
     - Quite a bit lower than the actual implementations, think it is likely down to hyperparameters
+    - They train for 5 epochs per task rather than 1
 - Rainbow^: 39.1% (~5h30m) (5000 memory samples)
 
 ## Novel Experimentation
