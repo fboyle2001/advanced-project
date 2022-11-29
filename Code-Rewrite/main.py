@@ -44,15 +44,6 @@ ALGORITHM_DEFAULTS = {
         "batch_size": 64,
         "task_importance": 1000
     },
-    algorithms.Rainbow: {
-        "batch_size": 16,
-        "max_memory_samples": 1000,
-        "epochs_per_task": 1,
-        "gradient_clip": 10,
-        "max_lr": 0.05,
-        "min_lr": 0.0005,
-        "cutmix_probability": 0.5
-    },
     algorithms.RainbowOnline: {
         "batch_size": 32,
         "max_memory_samples": 5000,
@@ -111,6 +102,10 @@ ALGORITHM_DEFAULTS = {
         "max_memory_samples": 5000,
         "alpha": 0.5,
         "beta": 0 # 0.5 # set beta = 0 for DER, beta > 0 for DER++
+    },
+    algorithms.NovelExperimentOne: {
+        "epochs_per_task": 1,
+        "batch_size": 8
     }
 }
 
@@ -182,10 +177,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.DarkExperiencePlusPlus
-    dataset_class = datasets.CIFAR100
+    algorithm_class = algorithms.NovelExperimentOne
+    dataset_class = datasets.CIFAR10
 
-    experiment_name = "DER"
+    experiment_name = "TESTING"
 
     device = torch.device("cuda:0")
 

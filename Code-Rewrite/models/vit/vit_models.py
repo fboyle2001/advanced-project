@@ -199,7 +199,7 @@ def create_model():
     cfg = config_dict.ConfigDict()
 
     cfg.MODEL = config_dict.ConfigDict()
-    cfg.MODEL.MODEL_ROOT = "F:\\Documents\\Development\\GitHub\\advanced-project\\Code-Rewrite\\vit\\pretrained"
+    cfg.MODEL.MODEL_ROOT = "F:\\Documents\\Development\\GitHub\\advanced-project\\Code-Rewrite\\models\\vit\\pretrained"
     cfg.MODEL.TRANSFER_TYPE = "prompt"
     cfg.MODEL.TYPE = "vit"
     cfg.MODEL.MLP_NUM = 0
@@ -216,6 +216,27 @@ def create_model():
     cfg.MODEL.PROMPT.CLSEMB_FOLDER = ""
     cfg.MODEL.PROMPT.CLSEMB_PATH = ""
     cfg.MODEL.PROMPT.DROPOUT = 0.0
+
+    cfg.MODEL.LINEAR = config_dict.ConfigDict()
+    cfg.MODEL.LINEAR.DROPOUT = 0.1
+    cfg.MODEL.LINEAR.MLP_SIZES = []
+
+    cfg.DATA = config_dict.ConfigDict()
+    cfg.DATA.FEATURE = "sup_vitb16_224"
+    cfg.DATA.CROPSIZE = 224
+    cfg.DATA.NUMBER_CLASSES = 10
+
+    model = ViT(cfg, load_pretrain=True)
+    return model
+
+def create_model_non_prompt():
+    cfg = config_dict.ConfigDict()
+
+    cfg.MODEL = config_dict.ConfigDict()
+    cfg.MODEL.MODEL_ROOT = "F:\\Documents\\Development\\GitHub\\advanced-project\\Code-Rewrite\\models\\vit\\pretrained"
+    cfg.MODEL.TRANSFER_TYPE = "end2end"
+    cfg.MODEL.TYPE = "vit"
+    cfg.MODEL.MLP_NUM = 0
 
     cfg.MODEL.LINEAR = config_dict.ConfigDict()
     cfg.MODEL.LINEAR.DROPOUT = 0.1
