@@ -64,11 +64,11 @@
 
 ## CIFAR-100 Experiments
 - GDumb: 35.58% (~21 minutes) (5000 memory samples)
-- DER: 3.38% (~7 minutes) (5000 memory samples)
-- DER++: 3.41% (~7 minutes) (5000 memory samples)
+- DER: 6.29% (~4 minutes) (5000 memory samples)
+- DER++: 10.14% (~4 minutes) (5000 memory samples)
 - L2P: 61.58% (~1h15m) (10 prompts, 5 selected per sample)
     - Quite a bit lower than the actual implementations, think it is likely down to hyperparameters
-- Rainbow: 39.1% (~5h30m) (5000 memory samples)
+- Rainbow^: 39.1% (~5h30m) (5000 memory samples)
 
 ## Novel Experimentation
 - Next week I want to bring concrete plan for experimentation to do over the break

@@ -110,7 +110,7 @@ ALGORITHM_DEFAULTS = {
         "batch_size": 16,
         "max_memory_samples": 5000,
         "alpha": 0.5,
-        "beta": 0.5 # set beta = 0 for DER, beta > 0 for DER++
+        "beta": 0 # 0.5 # set beta = 0 for DER, beta > 0 for DER++
     }
 }
 
@@ -182,10 +182,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.RainbowOnline
+    algorithm_class = algorithms.DarkExperiencePlusPlus
     dataset_class = datasets.CIFAR100
 
-    experiment_name = None
+    experiment_name = "DER"
 
     device = torch.device("cuda:0")
 
