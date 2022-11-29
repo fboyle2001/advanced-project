@@ -145,7 +145,11 @@ class ViT(nn.Module):
                     p.requires_grad = False
 
         elif transfer_type == "end2end":
-            logger.info("Enable all parameters update during training")
+            # logger.info("Enable all parameters update during training")
+            logger.warning("OVERRIDE: FREEZING PRETRAINED MODEL DIRECTLY")
+
+            for k, p in self.named_parameters():
+                p.requires_grad = False
 
         else:
             raise ValueError("transfer type {} is not supported".format(
