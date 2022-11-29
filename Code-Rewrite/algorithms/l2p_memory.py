@@ -11,7 +11,7 @@ import torch.utils.tensorboard
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-import vit.vit_models
+import models.vit.vit_models as vit_models
 
 class LearningToPromptWithMemory(BaseCLAlgorithm):
     valid_prompt_freq_strategies: List[str] = ["disabled", "minmax", "scaled_frequency"]
@@ -53,7 +53,7 @@ class LearningToPromptWithMemory(BaseCLAlgorithm):
         self.P_lr = P_lr
         self.g_phi_lr = g_phi_lr
 
-        self.pretrained_vit = vit.vit_models.create_model().to(self.device)
+        self.pretrained_vit = vit_models.create_model().to(self.device)
         self.D = self.pretrained_vit.feat_dim # number of features
         self.D_k = self.D
         self.N = N # prompt selection length

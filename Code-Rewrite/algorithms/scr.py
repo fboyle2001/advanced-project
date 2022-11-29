@@ -3,7 +3,7 @@ from loguru import logger
 
 from .algorithm_base import BaseCLAlgorithm
 from . import buffers
-from models import scr_resnet
+from models.scr import scr_resnet
 
 import torch
 import datasets

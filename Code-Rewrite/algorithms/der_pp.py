@@ -1,21 +1,17 @@
-from typing import Dict, Union, Optional
+from typing import Dict, Union
 from loguru import logger
 
 from . import buffers
-from . import utils
 from .algorithm_base import BaseCLAlgorithm
 
 import torch
 import datasets
 import torch.utils.tensorboard
-import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, ColorJitter, RandomGrayscale
+from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip
 import numpy as np
 from PIL import Image
-
-import random
 
 class DarkExperiencePlusPlus(BaseCLAlgorithm):
     def __init__(

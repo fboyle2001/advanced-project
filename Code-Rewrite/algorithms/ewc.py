@@ -9,8 +9,6 @@ import torch.utils.data
 import torch.utils.tensorboard
 import copy
 
-import matplotlib.pyplot as plt
-
 class ElasticWeightConsolidation(BaseCLAlgorithm):
     def __init__(
         self,
