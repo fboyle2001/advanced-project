@@ -9,6 +9,7 @@ import atexit
 import datasets
 import algorithms
 import utils
+import experiments
 
 import torch
 from torchvision.models import resnet18
@@ -103,10 +104,12 @@ ALGORITHM_DEFAULTS = {
         "alpha": 0.5,
         "beta": 0 # 0.5 # set beta = 0 for DER, beta > 0 for DER++
     },
-    algorithms.NovelExperimentOne: {
+    experiments.NovelExperimentOne: {
         "epochs_per_task": 1,
         "batch_size": 8
-    }
+    },
+    experiments.NovelExperimentTwo: {},
+    experiments.NovelExperimentFour: {}
 }
 
 DATASET_DEFAULTS = {
@@ -115,8 +118,8 @@ DATASET_DEFAULTS = {
         "classes_per_task": 2
     },
     datasets.CIFAR100: {
-        "disjoint": True,
-        "classes_per_task": 20
+        "disjoint": False,
+        "classes_per_task": 0
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -177,10 +180,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.NovelExperimentOne
-    dataset_class = datasets.CIFAR10
+    algorithm_class = algorithms.OfflineTraining
+    dataset_class = datasets.CIFAR100
 
-    experiment_name = "TESTING"
+    experiment_name = None
 
     device = torch.device("cuda:0")
 

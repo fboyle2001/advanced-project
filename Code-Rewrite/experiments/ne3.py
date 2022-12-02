@@ -1,8 +1,7 @@
 from typing import Dict, Union, List
 from loguru import logger
 
-from . import buffers
-from .algorithm_base import BaseCLAlgorithm
+from algorithms import BaseCLAlgorithm, buffers
 import datasets
 
 import torch
@@ -18,7 +17,14 @@ from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, ColorJi
 import numpy as np
 from PIL import Image
 
-class NovelExperimentOne(BaseCLAlgorithm):
+class NovelExperimentThree(BaseCLAlgorithm):
+    """
+    Experiment 3:
+    Combines Supervised Constrative Learning with the pretrained ViT and an MLP that constrains the embeddings
+    A linear layer classifies the output instead of Nearest Embedding 
+
+    CIFAR-10 final accuracy: Not run
+    """
     def __init__(
         self,
         model: torch.nn.Module,
