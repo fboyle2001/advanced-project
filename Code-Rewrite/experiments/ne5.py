@@ -21,12 +21,11 @@ from PIL import Image
 import random
 import pickle
 
-class NovelExperimentFour(BaseCLAlgorithm):
+class NovelExperimentFive(BaseCLAlgorithm):
     """
     Experiment 4:
     Use Nearest Feature Embedding classification with the ViT and a memory buffer
     Estimate the uncertainty of the samples using augmentation and mean distance to other mean class embeddings
-    Supports central and edge rather than diverse sampling
     
     CIFAR-10  (2000 samples) final accuracy:
     CIFAR-100 (5000 Samples) final accuracy:
@@ -40,7 +39,7 @@ class NovelExperimentFour(BaseCLAlgorithm):
         writer: torch.utils.tensorboard.writer.SummaryWriter,
     ):
         super().__init__(
-            name="Novel Experiment: Idea Four",
+            name="Novel Experiment: Idea Five",
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
@@ -51,7 +50,7 @@ class NovelExperimentFour(BaseCLAlgorithm):
         self.model = None
         self.optimiser = None
 
-        self.pretrained_vit = vit_models.create_model_non_prompt().to(self.device)
+        self.pretrained_vit = vit_models.create_model_non_prompt().to(self.device).eval()
         self.D = self.pretrained_vit.feat_dim
 
         self.require_mean_calculation = True
@@ -59,6 +58,7 @@ class NovelExperimentFour(BaseCLAlgorithm):
 
         self.epochs_per_task = 1
         self.batch_size = 16
+        self.max_memory_size = 1000
         
         self.augmentations = [
             RandomHorizontalFlip(),
@@ -71,11 +71,12 @@ class NovelExperimentFour(BaseCLAlgorithm):
             RandomInvert(p=1)
         ]
 
-        self.buffer = LimitedPriorityBuffer(1000, high_priority=False)
+        # self.buffer = LimitedPriorityBuffer(1000, high_priority=False)
+        self.memory: Dict[int, List[np.ndarray]] = {}
 
     @staticmethod
     def get_algorithm_folder() -> str:
-        return "novel_experiment/idea_four"
+        return "novel_experiment/idea_five"
 
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         return {}
@@ -108,62 +109,98 @@ class NovelExperimentFour(BaseCLAlgorithm):
         
         return augmented
 
+    def compute_batch_distance(self, batch: torch.Tensor):
+        augmented_input = self.augment_batch(batch)
+        distances = self.closest_mean_embeddings(augmented_input, k=1).values
+        distances = (distances / distances.norm()).squeeze().reshape(batch.shape[0], -1).mean(dim=1).cpu()
+        return distances
+
+    def update_memory(self, new_task: DataLoader):
+        logger.info("Starting memory update")
+        segmented_uncertainty: Dict[int, List[Tuple[np.ndarray, float]]] = {}
+
+        logger.debug("Processing new task samples")
+        # Handle the new task samples first
+        for batch_data in new_task:
+            raw_inp, labels = batch_data
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = self.compute_batch_distance(inp)
+
+            for sample, target, uncertainty in zip(raw_inp, labels, distances):
+                target = target.item()
+                
+                if target not in segmented_uncertainty.keys():
+                    segmented_uncertainty[target] = []
+
+                segmented_uncertainty[target].append((sample.cpu().numpy(), uncertainty))
+        
+        logger.debug("Processing old task samples")
+        # Handle the old task samples
+        for target in self.memory.keys():
+            if target not in segmented_uncertainty.keys():
+                segmented_uncertainty[target] = []
+
+            batches = len(self.memory[target]) // self.batch_size
+
+            # Process batches
+            for batch_no in range(batches):
+                raw_inp = self.memory[target][batch_no * self.batch_size:(batch_no + 1) * self.batch_size]
+                inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+                distances = self.compute_batch_distance(inp)
+
+                for sample, uncertainty in zip(raw_inp, distances):
+                    segmented_uncertainty[target].append((sample, uncertainty))
+
+            # Process remains
+            raw_inp = self.memory[target][batches * self.batch_size:]
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = self.compute_batch_distance(inp)
+
+            for sample, uncertainty in zip(raw_inp, distances):
+                segmented_uncertainty[target].append((sample, uncertainty))
+        
+        logger.debug("Drawing memory samples")
+        # Now draw the samples out for the new buffer
+        seen_class_count = len(segmented_uncertainty.keys())
+        new_memory: Dict[int, List[np.ndarray]] = {}
+        memory_per_class = self.max_memory_size // seen_class_count
+
+        for target in segmented_uncertainty.keys():
+            items = segmented_uncertainty[target]
+            item_count = len(items)
+            uncertainty_sorted_items = sorted(items, key=lambda item: item[1])
+            selected_samples: List[np.ndarray] = []
+
+            for j in range(memory_per_class):
+                selected_samples.append(uncertainty_sorted_items[(j * item_count) // memory_per_class][0])
+
+            new_memory[target] = selected_samples
+
+        self.memory = new_memory
+        self.require_mean_calculation = True
+        logger.info("Memory update completed")
+
     def train(self) -> None:
         super().train()
 
         for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
-            self.require_mean_calculation = True
+            task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
 
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-            task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
-
-            if task_no == 0:
-                for data, target in zip(task_dataset.data, task_dataset.targets): # type: ignore
-                    self.buffer.add_sample(target.detach().cpu().item(), data, 0)
-                
-                self.generate_embeddings()
-                #self.run_base_task_metrics(task_no)
-                continue
-
-            label_dists: Dict[int, List[float]] = {x: [] for x in range(10)}
-
-            for batch_no, data in enumerate(task_dataloader, 0):
-                raw_inp, labels = data
-                inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
-                
-                augmented_input = self.augment_batch(inp)
-                # labels = labels.tile(len(self.augmentations) + 1) #.reshape(-1, 1)
-                distances = self.closest_mean_embeddings(augmented_input, k=1).values
-                distances = (distances / distances.norm()).squeeze().reshape(inp.shape[0], -1).mean(dim=1)
-                
-                for dist, sample, label in zip(distances.to("cpu"), raw_inp.to("cpu"), labels.to("cpu")):
-                    self.buffer.add_sample(label.detach().item(), sample.detach().numpy(), dist.detach().item())
-                    label_dists[label.detach().item()].append(dist.detach().item())
-
-                if batch_no % 40 == 0 and batch_no != 0:
-                    logger.info(f"{task_no}:{batch_no}")
-
-                    for k in label_dists.keys():
-                        if len(label_dists[k]) == 0:
-                            continue
-
-                        mean = np.mean(label_dists[k])
-                        std = np.std(label_dists[k])
-                        logger.debug(f"Target: {k}, mean: {mean}, std: {std}")
-                        logger.debug(sorted(label_dists[k]))
-
-                    # break
-                
-                self.require_mean_calculation = True
+            with torch.no_grad():
+                self.update_memory(task_dataloader)
 
             logger.debug("Current buffer stats:")
 
-            for class_name in self.buffer.known_targets:
-                logger.debug(f"{class_name} has {len(self.buffer[class_name])} samples")
-        
-            self.generate_embeddings()
+            for target in self.memory.keys():
+                logger.debug(f"{target} has {len(self.memory[target])} samples")
+
+            # Need to update
+            with torch.no_grad():
+                self.generate_embeddings()
+
             self.run_base_task_metrics(task_no)
         
         logger.info("Training complete")
@@ -174,11 +211,11 @@ class NovelExperimentFour(BaseCLAlgorithm):
         batch_size = 32
 
         for target in range(0, len(self.dataset.classes)):
-            if target not in self.buffer.known_targets:
+            if target not in self.memory.keys():
                 means.append(torch.full((1, self.D), 1e8).to("cpu"))
                 continue
             
-            buffered = [self.dataset.testing_transform(Image.fromarray(v.astype(np.uint8))).unsqueeze(0) for v in self.buffer[target].hash_map.values()] # type: ignore
+            buffered = [self.dataset.testing_transform(Image.fromarray(v.astype(np.uint8))).unsqueeze(0) for v in self.memory[target]] # type: ignore
             buffered = torch.cat(buffered, dim=0)
             embeds: Optional[torch.Tensor] = None
 
@@ -199,7 +236,7 @@ class NovelExperimentFour(BaseCLAlgorithm):
     
         self.mean_embeddings = torch.cat(means, dim=0).to(self.device)
         self.require_mean_calculation = False
-        logger.debug(f"Generated mean embedding vectors for: {self.buffer.known_targets}")
+        logger.debug(f"Generated mean embedding vectors for: {self.memory.keys()}")
 
     def closest_mean_embeddings(self, batch: torch.Tensor, k: int):
         batch = batch.to(self.device)

@@ -10,7 +10,7 @@ training_cifar_transform = [
 
 # https://gist.github.com/weiaicunzai/e623931921efefd4c331622c344d8151?permalink_comment_id=2627261#gistcomment-2627261 
 base_cifar_transform = [
-    torchvision.transforms.Resize((224, 224)),
+    torchvision.transforms.Resize((32, 32)),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616)) # changed from (0.2023, 0.1994, 0.2010)
 ]

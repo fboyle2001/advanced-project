@@ -123,12 +123,14 @@ class OfflineTraining(BaseCLAlgorithm):
 
                 running_loss = 0
 
-                if (epoch > 0 and epoch % 10 == 0) or epoch == self.epochs_per_task:
+                if epoch > 0 and epoch % 10 == 0:
                     self.model.eval()
                     self.run_base_task_metrics(task_no=task_no * self.epochs_per_task + epoch)
                     self.model.train()
 
+            self.model.eval()
             self.run_base_task_metrics((task_no + 1) * self.epochs_per_task)
+            self.model.train()
         
         logger.info("Training complete")
 

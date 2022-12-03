@@ -33,7 +33,7 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.GDumb: {
         "batch_size": 32,
-        "max_memory_samples": 5000,
+        "max_memory_samples": 1000,
         "post_population_max_epochs": 256,
         "gradient_clip": 10,
         "max_lr": 0.05,
@@ -109,7 +109,8 @@ ALGORITHM_DEFAULTS = {
         "batch_size": 8
     },
     experiments.NovelExperimentTwo: {},
-    experiments.NovelExperimentFour: {}
+    experiments.NovelExperimentFour: {},
+    experiments.NovelExperimentFive: {}
 }
 
 DATASET_DEFAULTS = {
@@ -180,10 +181,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.OfflineTraining
-    dataset_class = datasets.CIFAR100
+    algorithm_class = algorithms.GDumb
+    dataset_class = datasets.CIFAR10
 
-    experiment_name = None
+    experiment_name = "NEW_METRICS"
 
     device = torch.device("cuda:0")
 
