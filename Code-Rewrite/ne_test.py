@@ -130,3 +130,16 @@ class LimitedPriorityBuffer(Generic[T]):
 # c.add_sample("cat", "x", 5)
 # c.add_sample("dog", "m", 10)
 # print(c)
+
+import json
+import numpy as np
+
+stored = None
+
+with open("ne5_features.json", "r") as fp:
+    stored = json.load(fp)
+
+memory: Dict[int, List[np.ndarray]] = {}
+
+for target in stored["memory"].keys():
+    memory[int(target)] = [np.asarray(sample) for sample in stored["memory"][target]]

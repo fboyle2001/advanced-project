@@ -110,7 +110,9 @@ ALGORITHM_DEFAULTS = {
     },
     experiments.NovelExperimentTwo: {},
     experiments.NovelExperimentFour: {},
-    experiments.NovelExperimentFive: {}
+    experiments.NovelExperimentFive: {},
+    experiments.NovelExperimentSix: {},
+    experiments.NovelExperimentSeven: {}
 }
 
 DATASET_DEFAULTS = {
@@ -119,8 +121,8 @@ DATASET_DEFAULTS = {
         "classes_per_task": 2
     },
     datasets.CIFAR100: {
-        "disjoint": False,
-        "classes_per_task": 0
+        "disjoint": True,
+        "classes_per_task": 20
     },
     datasets.MNIST: {
         "disjoint": False,
@@ -181,10 +183,10 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.GDumb
-    dataset_class = datasets.CIFAR10
+    algorithm_class = experiments.NovelExperimentSeven
+    dataset_class = datasets.CIFAR100
 
-    experiment_name = "NEW_METRICS"
+    experiment_name = None
 
     device = torch.device("cuda:0")
 

@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 
 import models.vit.vit_models as vit_models
 from models.scr import scr_resnet
-from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomSolarize, RandomInvert
+from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomSolarize, RandomInvert, ColorJitter, RandomGrayscale
 import torchvision
 from algorithms.rainbow_online import Cutout
 
@@ -22,14 +22,14 @@ import random
 import pickle
 import json
 
-class NovelExperimentFive(BaseCLAlgorithm):
+import models.vit.mlp as mlp
+
+class NovelExperimentSeven(BaseCLAlgorithm):
     """
-    Experiment 5:
-    Use Nearest Feature Embedding classification with the ViT and a memory buffer
-    Estimate the uncertainty of the samples using augmentation and mean distance to other mean class embeddings
+    Experiment 7:
     
     CIFAR-10  (2000 samples) final accuracy: 
-    CIFAR-100 (5000 Samples) final accuracy: 73.17% (~1h20m)
+    CIFAR-100 (5000 Samples) final accuracy:  (+ ~1h20m)
     """
     def __init__(
         self,
@@ -40,7 +40,7 @@ class NovelExperimentFive(BaseCLAlgorithm):
         writer: torch.utils.tensorboard.writer.SummaryWriter,
     ):
         super().__init__(
-            name="Novel Experiment: Idea Five",
+            name="Novel Experiment: Idea Seven",
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
@@ -48,8 +48,9 @@ class NovelExperimentFive(BaseCLAlgorithm):
             writer=writer
         )
         
-        self.model = None
-        self.optimiser = None
+        self.model = mlp.MLP(784, [784, 512, 256, 128, 100])
+        self.optimiser = optim.SGD(self.model.parameters(), lr=1e-3)
+        self.loss_criterion = SupConLoss()
 
         self.pretrained_vit = vit_models.create_model_non_prompt().to(self.device).eval()
         self.D = self.pretrained_vit.feat_dim
@@ -72,16 +73,26 @@ class NovelExperimentFive(BaseCLAlgorithm):
             RandomInvert(p=1)
         ]
 
+        # Taken directly from https://github.com/RaptorMai/online-continual-learning/blob/6175ca034e56435acd82b8f17ff59f920f0bc45e/agents/scr.py
+        self.augment = nn.Sequential(
+            RandomResizedCrop(size=(32, 32), scale=(0.2, 1.)),
+            RandomHorizontalFlip(),
+            ColorJitter(0.4, 0.4, 0.4, 0.1, p=0.8),
+            RandomGrayscale(p=0.2)
+        ).to(self.device)
+
         # self.buffer = LimitedPriorityBuffer(1000, high_priority=False)
         self.memory: Dict[int, List[np.ndarray]] = {}
+        self.buffer = None
 
         # Not recommended, generates a ~400mb file
         # Probably going to use this tomorrow to investigate the feature embeddings
         self.dump_memory = True
+        self.memory_batch_size = 100
 
     @staticmethod
     def get_algorithm_folder() -> str:
-        return "novel_experiment/idea_five"
+        return "novel_experiment/idea_seven"
 
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         return {}
@@ -185,6 +196,15 @@ class NovelExperimentFive(BaseCLAlgorithm):
         self.memory = new_memory
         self.require_mean_calculation = True
 
+        logger.debug("Creating buffer")
+        buffer = buffers.BalancedReplayBuffer(5000)
+
+        for target in new_memory.keys():
+            for i in range(len(new_memory[target])):
+                buffer.add_sample(new_memory[target][i], target)
+        
+        self.buffer = buffer
+
         logger.info("Memory update completed")
 
     def train(self) -> None:
@@ -198,11 +218,55 @@ class NovelExperimentFive(BaseCLAlgorithm):
 
             with torch.no_grad():
                 self.update_memory(task_dataloader)
+                self.generate_embeddings()
 
             logger.debug("Current buffer stats:")
 
             for target in self.memory.keys():
                 logger.debug(f"{target} has {len(self.memory[target])} samples")
+
+            running_loss = 0
+            short_running_loss = 0
+
+            assert self.buffer is not None
+
+            for batch_no, data in enumerate(task_dataloader, 0):
+                raw_inp, raw_labels = data
+
+                inp = torch.stack([self.dataset.training_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+                labels = raw_labels.to(self.device)
+                
+                buffer_data, buffer_targets = self.buffer.draw_sample(self.memory_batch_size, self.device, transform=self.dataset.training_transform)
+
+                # tags = {x: [0 if x not in self.buffer.known_classes else len(self.buffer.class_hash_pointers[x]), 0] for x in range(10)}
+
+                # for t in buffer_targets:
+                #     tags[t.item()][1] += 1 # type: ignore
+
+                # logger.debug(tags)
+
+                inp = torch.cat([inp, buffer_data], dim=0)
+                labels = torch.cat([labels, buffer_targets], dim=0)
+                
+                augmented = self.augment(inp.detach().clone())
+
+                inp = torch.cat([inp, augmented], dim=0)
+                inp = self.f_r(self.f_e(inp))[:, 0, :].unsqueeze(1)
+                labels = torch.cat([labels, labels], dim=0)
+
+                features = self.model.forward(inp)
+                loss = self.loss_criterion(features, labels) 
+
+                self.optimiser.zero_grad()
+                loss.backward()
+                self.optimiser.step()
+
+                running_loss += loss.item()
+                short_running_loss += loss.item()
+
+                if batch_no % 40 == 0 and batch_no != 0:
+                    logger.info(f"{task_no}:{batch_no}, loss: {short_running_loss / 40:.3f}")
+                    short_running_loss = 0
 
             # Need to update
             with torch.no_grad():
@@ -273,11 +337,10 @@ class NovelExperimentFive(BaseCLAlgorithm):
         return distances.topk(k, dim=1, largest=False)
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
-        if self.require_mean_calculation:
-            self.generate_embeddings()
-
-        classes = self.closest_mean_embeddings(batch, k=1).indices.squeeze()
-        return classes
+        vit_features = self.f_r(self.f_e(batch))[:, 0, :].unsqueeze(1)
+        output = self.model(vit_features)
+        _, predicted = torch.max(output.data, 1)
+        return predicted
 
 from typing import Dict, List, Tuple, Generic, TypeVar, Iterator, Any
 
@@ -393,3 +456,89 @@ class LimitedPriorityBuffer(Generic[T]):
         # Reduce the size of existing buffers accordingly w.r.t to the priorities
         for known_target in self.known_targets:
             self.target_buffers[known_target].reduce_max_length(max_samples_per_class)
+
+class SupConLoss(nn.Module):
+    """Supervised Contrastive Learning: https://arxiv.org/pdf/2004.11362.pdf.
+    It also supports the unsupervised contrastive loss in SimCLR"""
+    def __init__(self, temperature=0.07, contrast_mode='all'):
+        super(SupConLoss, self).__init__()
+        self.temperature = temperature
+        self.contrast_mode = contrast_mode
+
+    def forward(self, features, labels=None, mask=None):
+        """Compute loss for model. If both `labels` and `mask` are None,
+        it degenerates to SimCLR unsupervised loss:
+        https://arxiv.org/pdf/2002.05709.pdf
+        Args:
+            features: hidden vector of shape [bsz, n_views, ...].
+            labels: ground truth of shape [bsz].
+            mask: contrastive mask of shape [bsz, bsz], mask_{i,j}=1 if sample j
+                has the same class as sample i. Can be asymmetric.
+        Returns:
+            A loss scalar.
+        """
+        device = (torch.device('cuda')
+                  if features.is_cuda
+                  else torch.device('cpu'))
+
+        if len(features.shape) < 3:
+            raise ValueError('`features` needs to be [bsz, n_views, ...],'
+                             'at least 3 dimensions are required')
+        if len(features.shape) > 3:
+            features = features.view(features.shape[0], features.shape[1], -1)
+
+        batch_size = features.shape[0]
+        if labels is not None and mask is not None:
+            raise ValueError('Cannot define both `labels` and `mask`')
+        elif labels is None and mask is None:
+            mask = torch.eye(batch_size, dtype=torch.float32).to(device)
+        elif labels is not None:
+            labels = labels.contiguous().view(-1, 1)
+            if labels.shape[0] != batch_size:
+                raise ValueError('Num of labels does not match num of features')
+            mask = torch.eq(labels, labels.T).float().to(device)
+        else:
+            mask = mask.float().to(device) # type: ignore
+
+        contrast_count = features.shape[1]
+        contrast_feature = torch.cat(torch.unbind(features, dim=1), dim=0)
+        if self.contrast_mode == 'one':
+            anchor_feature = features[:, 0]
+            anchor_count = 1
+        elif self.contrast_mode == 'all':
+            anchor_feature = contrast_feature
+            anchor_count = contrast_count
+        else:
+            raise ValueError('Unknown mode: {}'.format(self.contrast_mode))
+
+        # compute logits
+        anchor_dot_contrast = torch.div(
+            torch.matmul(anchor_feature, contrast_feature.T),
+            self.temperature)
+        # for numerical stability
+        logits_max, _ = torch.max(anchor_dot_contrast, dim=1, keepdim=True)
+        logits = anchor_dot_contrast - logits_max.detach()
+
+        # tile mask
+        mask = mask.repeat(anchor_count, contrast_count)
+        # mask-out self-contrast cases
+        logits_mask = torch.scatter(
+            torch.ones_like(mask),
+            1,
+            torch.arange(batch_size * anchor_count).view(-1, 1).to(device),
+            0
+        )
+        mask = mask * logits_mask
+
+        # compute log_prob
+        exp_logits = torch.exp(logits) * logits_mask
+        log_prob = logits - torch.log(exp_logits.sum(1, keepdim=True))
+
+        # compute mean of log-likelihood over positive
+        mean_log_prob_pos = (mask * log_prob).sum(1) / mask.sum(1)
+
+        # loss
+        loss = -1 * mean_log_prob_pos
+        loss = loss.view(anchor_count, batch_size).mean()
+
+        return loss

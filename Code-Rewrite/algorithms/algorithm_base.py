@@ -132,7 +132,7 @@ class BaseCLAlgorithm(abc.ABC):
         _, predicted = torch.max(output.data, 1)
         return predicted
 
-    def run_base_task_metrics(self, task_no: int, eval_batch_size=32):
+    def run_base_task_metrics(self, task_no: int, eval_batch_size: int = 32) -> None:
         """
         Calculates metrics for comparisons and stores them per task
 
