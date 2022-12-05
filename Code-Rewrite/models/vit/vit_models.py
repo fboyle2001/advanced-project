@@ -146,22 +146,25 @@ class ViT(nn.Module):
 
         elif transfer_type == "end2end":
             # logger.info("Enable all parameters update during training")
-            logger.warning("OVERRIDE: FREEZING PRETRAINED MODEL DIRECTLY")
+            logger.warning("OVERRIDE: FREEZING PRETRAINED MODEL DIRECTLY EXCEPT")
 
             for k, p in self.named_parameters():
                 p.requires_grad = False
-
         else:
             raise ValueError("transfer type {} is not supported".format(
                 transfer_type))
 
     def setup_head(self, cfg):
+        logger.info("SETUP HEAD")
         self.head = MLP(
             input_dim=self.feat_dim,
             mlp_dims=[self.feat_dim] * self.cfg.MODEL.MLP_NUM + \
                 [cfg.DATA.NUMBER_CLASSES], # noqa
             special_bias=True
         )
+        
+        for k, p in self.head.named_parameters(): 
+            p.requires_grad = True
 
     def forward(self, x, return_feature=False):
         if self.side is not None:
@@ -233,7 +236,7 @@ def create_model():
     model = ViT(cfg, load_pretrain=True)
     return model
 
-def create_model_non_prompt():
+def create_model_non_prompt(num_classes: int):
     cfg = config_dict.ConfigDict()
 
     cfg.MODEL = config_dict.ConfigDict()
@@ -249,7 +252,7 @@ def create_model_non_prompt():
     cfg.DATA = config_dict.ConfigDict()
     cfg.DATA.FEATURE = "sup_vitb16_224"
     cfg.DATA.CROPSIZE = 224
-    cfg.DATA.NUMBER_CLASSES = 10
+    cfg.DATA.NUMBER_CLASSES = num_classes
 
     model = ViT(cfg, load_pretrain=True)
     return model

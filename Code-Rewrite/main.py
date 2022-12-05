@@ -33,7 +33,7 @@ ALGORITHM_DEFAULTS = {
     },
     algorithms.GDumb: {
         "batch_size": 32,
-        "max_memory_samples": 1000,
+        "max_memory_samples": 5000,
         "post_population_max_epochs": 256,
         "gradient_clip": 10,
         "max_lr": 0.05,
@@ -112,7 +112,8 @@ ALGORITHM_DEFAULTS = {
     experiments.NovelExperimentFour: {},
     experiments.NovelExperimentFive: {},
     experiments.NovelExperimentSix: {},
-    experiments.NovelExperimentSeven: {}
+    experiments.NovelExperimentSeven: {},
+    experiments.NovelExperimentEight: {}
 }
 
 DATASET_DEFAULTS = {
@@ -183,7 +184,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = experiments.NovelExperimentSeven
+    algorithm_class = experiments.NovelExperimentEight
     dataset_class = datasets.CIFAR100
 
     experiment_name = None
