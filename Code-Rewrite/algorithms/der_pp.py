@@ -14,6 +14,14 @@ import numpy as np
 from PIL import Image
 
 class DarkExperiencePlusPlus(BaseCLAlgorithm):
+    """
+    DER and DER++ stores samples and a snapshot of their logits at initial classification.
+    These are used to regularise the model via augmentations and loss functions.
+    Standard DER uses a loss function that minimises the change in logits.
+    DER++ uses the same but introduces an additional loss function to minimise the change in label prediction.
+
+    Reference: Buzzega, Pietro, et al. 2020 "Dark experience for general continual learning: a strong, simple baseline."
+    """
     def __init__(
         self,
         model: torch.nn.Module,
@@ -40,6 +48,7 @@ class DarkExperiencePlusPlus(BaseCLAlgorithm):
         self.batch_size = batch_size
         self.max_memory_samples = max_memory_samples
 
+        # Buffer needs to store logits as well
         self.buffer = buffers.BalancedReplayBufferWithLogits(self.max_memory_samples)
         self.alpha = alpha # recommended by the paper
         self.beta = beta # recommended by the paper

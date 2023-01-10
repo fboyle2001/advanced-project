@@ -12,8 +12,6 @@ import torch.optim as optim
 class OfflineTraining(BaseCLAlgorithm):
     """
     Offline training is the traditional method of training machine learning models.
-    This is the same as Finetuning except it is valid to allow more than one epoch
-    per task.
     """
     def __init__(
         self,
@@ -65,12 +63,15 @@ class OfflineTraining(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
 
+        # Train per task
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
             lr_warmer = None
 
+            # Optionally apply learning rate annealing to vary LR over epochs
+            # Leads to better results
             if self.apply_learning_rate_annealing:
                 assert self.max_lr is not None and self.min_lr is not None, "Must set min and max LRs for annealing"
                 lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
@@ -96,6 +97,7 @@ class OfflineTraining(BaseCLAlgorithm):
                 logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
                 running_loss = 0
 
+                # Process the minibatches for SGD
                 for batch_no, data in enumerate(task_dataloader, 0):
                     inp, labels = data
                     inp = inp.to(self.device)
@@ -116,6 +118,7 @@ class OfflineTraining(BaseCLAlgorithm):
             
                 epoch_offset = self.epochs_per_task * task_no
 
+                # Log data
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
@@ -123,11 +126,13 @@ class OfflineTraining(BaseCLAlgorithm):
 
                 running_loss = 0
 
+                # Evaluate every 10 epochs for intermediate results
                 if epoch > 0 and epoch % 10 == 0:
                     self.model.eval()
                     self.run_base_task_metrics(task_no=task_no * self.epochs_per_task + epoch)
                     self.model.train()
 
+            # Evaluate final model
             self.model.eval()
             self.run_base_task_metrics((task_no + 1) * self.epochs_per_task)
             self.model.train()

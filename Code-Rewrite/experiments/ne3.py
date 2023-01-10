@@ -47,7 +47,7 @@ class NovelExperimentThree(BaseCLAlgorithm):
         self.epochs_per_task = epochs_per_task
         self.batch_size = batch_size
 
-        self.pretrained_vit = vit_models.create_model_non_prompt().to(self.device)
+        self.pretrained_vit = vit_models.create_model_non_prompt(len(self.dataset.classes)).to(self.device)
         self.D = self.pretrained_vit.feat_dim # number of features
         self.tau = 0.07
 

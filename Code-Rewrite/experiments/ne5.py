@@ -51,7 +51,7 @@ class NovelExperimentFive(BaseCLAlgorithm):
         self.model = None
         self.optimiser = None
 
-        self.pretrained_vit = vit_models.create_model_non_prompt().to(self.device).eval()
+        self.pretrained_vit = vit_models.create_model_non_prompt(len(self.dataset.classes)).to(self.device).eval()
         self.D = self.pretrained_vit.feat_dim
 
         self.require_mean_calculation = True

@@ -15,13 +15,10 @@ import random
 class GDumb(BaseCLAlgorithm):
     """
     GDumb (Prabhu et al. 2020)
+    Reference: Prabhu et al. "GDumb: A simple approach that questions our progress in continual learning." 2020
 
-    Stores samples in a replay buffer and uses it at inference time to train
-    a model from scratch. Challenges the success of existing algorithms
-
-    Disjoint Task Formulation: No
-    Online CL: Yes
-    Class Incremental: Yes
+    Greedily saves samples as they arrive while maintaining a balanced memory buffer.
+    At inference, trains a model on the memory samples only.
     """
     def __init__(
         self,

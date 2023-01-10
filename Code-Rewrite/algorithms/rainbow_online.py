@@ -19,7 +19,15 @@ from PIL import Image
 import math
 
 class RainbowOnline(BaseCLAlgorithm):
+    """
+    Rainbow uses diverse memory sampling to store samples that are on the boundaries of
+    classes and those that are at the center of classes. These are then used to train
+    the model.
+    
+    Reference: Bang, Jihwan, et al. 2021 "Rainbow memory: Continual learning with a memory of diverse samples."
+    """
     # random could have repeated samples
+    # j = index, D = total images in class, k = sample size
     sample_idx_functions: Dict[str, Callable[[int, int, int], int]] = {
         "diverse": lambda j, D, k: (j * D) // k,
         "central": lambda j, D, k: j,

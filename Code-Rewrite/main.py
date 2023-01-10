@@ -113,7 +113,8 @@ ALGORITHM_DEFAULTS = {
     experiments.NovelExperimentFive: {},
     experiments.NovelExperimentSix: {},
     experiments.NovelExperimentSeven: {},
-    experiments.NovelExperimentEight: {}
+    experiments.NovelExperimentEight: {},
+    experiments.NovelActual: {}
 }
 
 DATASET_DEFAULTS = {
@@ -184,7 +185,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = experiments.NovelExperimentEight
+    algorithm_class = experiments.NovelActual
     dataset_class = datasets.CIFAR100
 
     experiment_name = None

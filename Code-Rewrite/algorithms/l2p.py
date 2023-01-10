@@ -12,6 +12,13 @@ import torch.optim as optim
 import models.vit.vit_models as vit_models
 
 class LearningToPrompt(BaseCLAlgorithm):
+    """
+    Learning to Prompt introduces the use of a pretrained vision transformer.
+    It introduces the idea of trainable prompts from Natural Language Processing to guide the model.
+
+    Reference: Wang, Zifeng, et al. 2022 "Learning to prompt for continual learning."
+    """
+
     valid_prompt_freq_strategies: List[str] = ["disabled", "minmax", "scaled_frequency"]
 
     def __init__(
@@ -47,41 +54,49 @@ class LearningToPrompt(BaseCLAlgorithm):
         self.epochs_per_task = epochs_per_task
         self.batch_size = batch_size
 
+        # Hyperparameters
         self.K_lr = K_lr
         self.P_lr = P_lr
         self.g_phi_lr = g_phi_lr
-
-        self.pretrained_vit = vit_models.create_model().to(self.device)
-        self.D = self.pretrained_vit.feat_dim # number of features
-        self.D_k = self.D
+        self.balancing_lambda = balancing_lambda
         self.N = N # prompt selection length
         self.L_p = L_p # prompt token length
         self.M = M # total number of prompts
+
+        # Create and load the pretrained model
+        self.pretrained_vit = vit_models.create_model().to(self.device)
+        self.D = self.pretrained_vit.feat_dim # number of features
+        self.D_k = self.D
         self.g_phi = AvgPoolClassifier(self.D, len(self.dataset.classes)).to(self.device)
-        self.balancing_lambda = balancing_lambda
         self.prompt_frequency = torch.zeros(self.M).to(self.device)
         assert prompt_frequency_strategy in self.valid_prompt_freq_strategies, "Invalid prompt frequency strategy"
         self.prompt_frequency_strategy = prompt_frequency_strategy
 
+        # Initialise the keys
         self.prompt_keys = [
             torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.D_k) + 0.0625).to(self.device), requires_grad=True)
             for _ in range(self.M)
         ]
 
+        # Each key has its own optimiser
         self.K_opts = [
             optim.Adam([K], lr=self.K_lr, betas=(0.9, 0.999))
             for K in self.prompt_keys
         ]
 
+        # Initialise the prompts
         self.prompts = [
             torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.L_p, self.D) + 0.0625).to(self.device), requires_grad=True) # maybe should be upping this to L_p, D instead? -> yes!
             for _ in range(self.M)
         ]
 
+        # Each prompt has its own optimiser
         self.P_opts = [
             optim.Adam([P], lr=self.P_lr, betas=(0.9, 0.999))
             for P in self.prompts
         ]
+
+        self.g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=self.g_phi_lr, betas=(0.9, 0.999))
 
     @staticmethod
     def get_algorithm_folder() -> str:
@@ -106,6 +121,7 @@ class LearningToPrompt(BaseCLAlgorithm):
         return info
 
     def gamma(self, sample, compare):
+        # Computes the similarity between a sample and a reference value (i.e. a key)
         query_features, _ = self.pretrained_vit.enc.transformer(sample)
         query_features = query_features[:, 0]
         # print("q", query_features.shape)
@@ -115,8 +131,9 @@ class LearningToPrompt(BaseCLAlgorithm):
     def calculate_top_N_keys(self, sample, weights):
         # qf should be 1x768
         # k should be Mx768
+        # Selects the top N keys to draw the corresponding prompts
         compare = torch.cat([x.unsqueeze(0) for x in self.prompt_keys], dim=0)
-        # print("C", compare.shape)
+        # Apply the frequency weighting to stop some prompts dominating
         distance = self.gamma(sample, compare) * weights
         indices = [i for i in range(self.M)]
         argmin = sorted(indices, key=lambda i: distance[i])[:self.N]
@@ -141,14 +158,15 @@ class LearningToPrompt(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
         torch.set_printoptions(sci_mode=False)
-        g_phi_opt = optim.Adam(self.g_phi.parameters(), lr=self.g_phi_lr, betas=(0.9, 0.999))
 
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
+            # Count the frequency that each prompt is selected
             previous_prompt_freq = torch.ones_like(self.prompt_frequency).to(self.device)
 
+            # Optionally weight the prompts to prevent overfitting to certain prompts
             if task_no > 0 and self.prompt_frequency_strategy != "disabled":
                 if self.prompt_frequency_strategy == "minmax":
                     ppf_min = torch.min(self.prompt_frequency)
@@ -173,25 +191,32 @@ class LearningToPrompt(BaseCLAlgorithm):
                     inp = inp.to(self.device)
                     labels = labels.to(self.device)
 
+                    # Get the feature embeddings of the input
                     xs_e = self.f_e(inp)
 
                     selected_key_indices = set()
 
                     batch_loss = 0
 
+                    # Process the samples individually
                     for i, img in enumerate(inp):
                         img = img.unsqueeze(0)
+                        # Draw the prompts
                         top_N_indices, top_N_keys = self.calculate_top_N_keys(img, previous_prompt_freq)
                         selected_key_indices |= set(top_N_indices)
 
                         # x_p = torch.cat([xs_e[i, :1, :], self.prompts[top_N_keys], xs_e[i, 1:, :]], dim=1)
                         selected_prompts = torch.cat([self.prompts[i].unsqueeze(0) for i in top_N_indices], dim=0)
 
+                        # Update the frequency
                         for prompt_index in top_N_indices:
                             self.prompt_frequency[prompt_index] += 1
 
+                        # Prepend prompts and get the feature representations
                         x_p = self.f_r(xs_e[i], selected_prompts)
                         x_p = x_p[:, 0:(self.L_p * self.N + 1)]
+
+                        # Get the output prediction
                         prediction = self.g_phi(x_p)
                         ce_loss = self.loss_criterion(prediction, labels[i].unsqueeze(0))
                         key_loss = self.balancing_lambda * self.gamma(img, torch.cat([x.unsqueeze(0) for x in top_N_keys], dim=0)).sum()
@@ -200,15 +225,14 @@ class LearningToPrompt(BaseCLAlgorithm):
                         ce_l += ce_loss.item()
                         ky_l += key_loss.item()
 
-
                     running_loss += batch_loss.item() # type: ignore
                     short_running_loss += batch_loss.item() # type: ignore
                     
-                    copied_keys = {i: self.prompt_keys[i].detach().clone() for i in selected_key_indices}
-                    copied_prompts = {i: self.prompts[i].detach().clone() for i in selected_key_indices}
+                    # copied_keys = {i: self.prompt_keys[i].detach().clone() for i in selected_key_indices}
+                    # copied_prompts = {i: self.prompts[i].detach().clone() for i in selected_key_indices}
 
                     # Update phi
-                    g_phi_opt.zero_grad()
+                    self.g_phi_opt.zero_grad()
 
                     for seen_key in selected_key_indices:
                         # Update K
@@ -225,12 +249,13 @@ class LearningToPrompt(BaseCLAlgorithm):
                         self.P_opts[seen_key].step()
 
                     # Update phi
-                    g_phi_opt.step()
+                    self.g_phi_opt.step()
 
                     # for seen_key in selected_key_indices:
                     #     logger.debug(f"K {seen_key}: {not torch.all(torch.eq(copied_keys[seen_key], self.prompt_keys[seen_key]))}")
                     #     logger.debug(f"P {seen_key}: {not torch.all(torch.eq(copied_prompts[seen_key], self.prompts[seen_key]))}")
 
+                    # Logging
                     if batch_no % 40 == 0 and batch_no != 0:
                         logger.info(f"{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
                         logger.info(f"KL: {ky_l / 40}, CE: {ce_l / 40}")
@@ -268,19 +293,25 @@ class LearningToPrompt(BaseCLAlgorithm):
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
                 self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
                 running_loss = 0
-        
+
+            # Evaluate the model
             self.run_base_task_metrics(task_no)
         
         logger.info("Training complete")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
+        # Can't use simple maximisation classification 
+        # Need to draw prompts
         predictions = []
         xs_e = self.f_e(batch)
 
         weights = torch.ones(self.M).to(self.device)
+
+        # Count the prompt frequency applied to the unseen data
         prompt_occurs = torch.zeros(10)
 
         for i, img in enumerate(batch):
+            # Draw the prompts and classify
             img = img.unsqueeze(0)
             top_N_indices, top_N_keys = self.calculate_top_N_keys(img, weights)
 

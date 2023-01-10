@@ -10,6 +10,13 @@ import torch.utils.tensorboard
 import copy
 
 class ElasticWeightConsolidation(BaseCLAlgorithm):
+    """
+    Historical technique that uses the Fisher Information Matrix to regularise the loss
+    and constrain weight changes to reduce their effect on important connections.
+    Reference: Kirkpatrick, James, et al. "Overcoming catastrophic forgetting in neural networks." 2017
+    Code reference: https://github.com/tudor-berariu/fisher-information-matrix
+    """
+        
     def __init__(
         self,
         model: torch.nn.Module,
@@ -71,23 +78,23 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
                     predictions = self.model(inp)
                     loss = self.loss_criterion(predictions, labels)
 
+                    # Apply the EWC loss if the FIM is available
                     if self.fim is not None and self.stored_parameters is not None:
                         cum_param_loss = 0
-                        # self.logger.debug(f"BATCH {batch_no}")
 
+                        # Calculate the per parameter loss
                         for n, p in self.model.named_parameters():
-                            # self.logger.debug(f"{n}, {((p - self.stored_parameters[n]) ** 2).sum().detach().item()}")
-                            # self.logger.debug(f"Stored {n}: {self.stored_parameters[n].sum().detach().item()}")
                             parameter_loss = self.fim[n] * ((p - self.stored_parameters[n]) ** 2) # may need to be made mean if the fim is vector?
                             cum_param_loss += parameter_loss.sum()
 
+                        # Add the regularising loss
                         ewc_loss = self.task_importance * cum_param_loss
-                        # self.logger.debug(f"EWC loss {ewc_loss.detach().item()}")
                         loss += ewc_loss
                         running_ewc += ewc_loss.detach().item() # type: ignore
 
                     loss.backward()
 
+                    # Clip the gradients
                     if self.fim is not None:
                         torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1) # type: ignore
 
@@ -97,6 +104,7 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
 
                 epoch_offset = self.max_epochs_per_task * task_no
 
+                # Log data
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
@@ -110,8 +118,10 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
                 running_loss = 0
                 running_ewc = 0
 
+            # Evaluate
             self.run_base_task_metrics(task_no)
 
+            # Update the Fisher Information Matrix
             if task_no != len(self.dataset.task_datasets) - 1:
                 concat_ds = self.dataset.task_datasets[0]
 
@@ -128,8 +138,6 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
         self.stored_parameters = copy.deepcopy({n: p.detach() for n, p in self.model.named_parameters()})
 
         logger.debug("Computing FIM")
-        # self.fim = {n: torch.ones_like(p) for n, p in model.named_parameters()}
-
         real_fim = fim_diag(self.model, torch.utils.data.DataLoader(task_datasets, batch_size=32, shuffle=True), samples_no=4096, device=torch.device("cuda:0"), verbose=True)
         self.fim = real_fim
 
@@ -140,7 +148,8 @@ import sys
 import time
 from torch.distributions import Categorical
 
-# Need to replace, this is completely copied
+# Full credit to tudor-berariu
+# https://github.com/tudor-berariu/fisher-information-matrix/blob/52d9be02291f2b3f60e1b4459babcf841f3cc6c0/fim.py#L15
 def fim_diag(model: torch.nn.Module,
              data_loader: torch.utils.data.DataLoader,
              samples_no: Union[int, None] = None,

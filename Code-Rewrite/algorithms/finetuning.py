@@ -9,8 +9,8 @@ import torch.utils.tensorboard
 
 class Finetuning(BaseCLAlgorithm):
     """
-    Finetuning is a baseline algorithm. It is the same as Offline Training but only a
-    single epoch is allowed for each task.
+    Finetuning is a baseline algorithm. 
+    Only a single epoch is allowed per task.
     """
     def __init__(
         self,
@@ -48,14 +48,17 @@ class Finetuning(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
 
+        # Process each task
         for task_no, (task_indices, task_dataloader) in enumerate(self.dataset.iterate_task_dataloaders(batch_size=self.batch_size)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
+            # Typically this will be set to a single epoch per task
             for epoch in range(1, self.max_epochs_per_task + 1):
                 logger.info(f"Starting epoch {epoch} / {self.max_epochs_per_task}")
                 running_loss = 0
 
+                # Process each minibatch
                 for batch_no, data in enumerate(task_dataloader, 0):
                     inp, labels = data
                     inp = inp.to(self.device)
@@ -71,13 +74,15 @@ class Finetuning(BaseCLAlgorithm):
 
                 epoch_offset = self.max_epochs_per_task * task_no
 
+                # Log data
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
                 self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
                 
                 running_loss = 0
-        
+
+            # Evaluate at the end of each task
             self.run_base_task_metrics(task_no)
 
         logger.info("Training complete")

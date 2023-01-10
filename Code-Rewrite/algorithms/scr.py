@@ -18,6 +18,12 @@ import numpy as np
 from PIL import Image
 
 class SupervisedContrastiveReplay(BaseCLAlgorithm):
+    """
+    Uses Supervised Contrastive Loss to segregate the features of the samples in
+    the feature space. Classifies samples using nearest class mean classification.
+
+    Reference: Mai, Zheda, et al. 2021 "Supervised contrastive replay: Revisiting the nearest class mean classifier in online class-incremental continual learning."
+    """
     def __init__(
         self,
         model: torch.nn.Module,
@@ -29,7 +35,8 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         batch_size: int,
         max_memory_samples: int, # 2000
         memory_batch_size: int, # 100
-        temperature: float # 0.07
+        temperature: float, # 0.07
+        lr: float # 0.1
     ):
         super().__init__(
             name="Supervised Contrastive Replay",
@@ -43,12 +50,13 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         self.epochs_per_task = epochs_per_task
         self.batch_size = batch_size
         self.max_memory_samples = max_memory_samples
+        self.lr = lr
 
         self.buffer = buffers.BalancedReplayBuffer(max_memory_samples)
         
         # Use the reduced model from the official repo
         self.model = scr_resnet.SupConResNet().to(self.device)  #self.model.to(self.device)
-        self.optimiser = optim.SGD(self.model.parameters(), lr=0.1)
+        self.optimiser = optim.SGD(self.model.parameters(), lr=self.lr)
 
         self.memory_batch_size = memory_batch_size
         self.tau = temperature
@@ -74,12 +82,14 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
             "batch_size": self.batch_size,
             "max_memory_samples": self.max_memory_samples,
             "memory_batch_size": self.memory_batch_size,
-            "tau (temperature)": self.tau
+            "tau (temperature)": self.tau,
+            "lr": self.lr
         }
 
         return info
 
     def scl_loss(self, batch, targets) -> torch.Tensor:
+        # Custom implementation of SCL, slower than the official
         target_indices = {}
         loss = torch.zeros(1, requires_grad=True).to(self.device)
         dot_prod_mul = torch.exp(torch.mm(batch, batch.T / self.tau))
@@ -128,6 +138,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                 for batch_no, data in enumerate(task_dataloader, 0):
                     raw_inp, raw_labels = data
 
+                    # If we have enough saved samples we can start using the buffer
                     if self.buffer.count >= self.memory_batch_size:
                         inp = torch.stack([self.dataset.training_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
                         labels = raw_labels.to(self.device)
@@ -144,11 +155,13 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                         inp = torch.cat([inp, buffer_data], dim=0)
                         labels = torch.cat([labels, buffer_targets], dim=0)
                         
+                        # Augment
                         augmented = self.augment(inp.detach().clone())
 
                         inp = torch.cat([inp, augmented], dim=0)
                         labels = torch.cat([labels, labels], dim=0)
 
+                        # Get the features and compute the loss
                         features = self.model.forward(inp)
                         loss = self.scl_loss(features, labels) 
 
@@ -159,6 +172,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                         running_loss += loss.item()
                         short_running_loss += loss.item()
 
+                    # Update the memory
                     for data, target in zip(raw_inp, raw_labels):
                         self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
 
@@ -173,20 +187,24 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
 
                 epoch_offset = self.epochs_per_task * task_no
 
+                # Log data
                 avg_running_loss = running_loss / (len(task_dataloader) - 1)
                 logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
                 self.writer.add_scalar(f"Loss/Task_{task_no + 1}_Total_avg", avg_running_loss, epoch)
                 self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
 
                 running_loss = 0
-        
+
+            # Evaluate the model
             self.run_base_task_metrics(task_no)
         
         logger.info("Training complete")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
+        # Nearest Class Mean Classification
         self.model.eval()
 
+        # Need to update the means
         if self.require_mean_calculation:
             logger.info("Generating fresh mean embedding vectors")
             self.mean_embeddings = dict()
@@ -195,6 +213,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                 total_embed = []
                 count = 0
 
+                # For each sample in the memory, add the normalised feature embedding to the total for the class
                 for hash_key in self.buffer.class_hash_pointers[target]:
                     count += 1
                     sample = self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[hash_key].astype(np.uint8))).unsqueeze(0).to(self.device) # type: ignore
@@ -202,6 +221,7 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
                     encoded = encoded / encoded.norm()
                     total_embed.append(encoded)
                 
+                # Average and normalise
                 assert total_embed is not None
                 mean_embed = torch.stack(total_embed).mean(0).squeeze()
                 mean_embed = mean_embed / mean_embed.norm()
@@ -213,12 +233,14 @@ class SupervisedContrastiveReplay(BaseCLAlgorithm):
         predictions = []
         batch = batch.to(self.device)
 
+        # Classify the samples
         for sample in batch:
             encoded_sample = self.model.features(sample.unsqueeze(0)).squeeze(0)
             encoded_sample = encoded_sample / encoded_sample.norm()
             closest_target = None
             closest_value = None
 
+            # Find the nearest class mean
             for target in self.mean_embeddings.keys():
                 norm = (self.mean_embeddings[target] - encoded_sample).square().sum().sqrt()
 
