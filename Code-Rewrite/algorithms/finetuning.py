@@ -66,6 +66,10 @@ class Finetuning(BaseCLAlgorithm):
 
                     self.optimiser.zero_grad()
                     predictions = self.model(inp)
+
+                    if not torch.isfinite(predictions).all():
+                        logger.error("Predictions are not finite")
+
                     loss = self.loss_criterion(predictions, labels)
                     loss.backward()
                     self.optimiser.step()

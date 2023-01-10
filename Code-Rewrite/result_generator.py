@@ -34,6 +34,7 @@ class AlgorithmSetup:
     algorithm: Any
     options: Dict[str, Any]
     reduced_model: bool
+    img_size: int
 
 algorithm_setups = {
     "offline": AlgorithmSetup(
@@ -46,14 +47,16 @@ algorithm_setups = {
             "max_lr": 0.05,
             "min_lr": 0.0005,
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "finetuning": AlgorithmSetup(
         algorithm=algorithms.Finetuning,
         options={
             "batch_size": 64
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "gdumb": AlgorithmSetup(
         algorithm=algorithms.GDumb,
@@ -66,7 +69,8 @@ algorithm_setups = {
             "min_lr": 0.0005,
             "cutmix_probability": 0.5
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "ewc": AlgorithmSetup(
         algorithm=algorithms.ElasticWeightConsolidation,
@@ -75,7 +79,8 @@ algorithm_setups = {
             "batch_size": 64,
             "task_importance": 1000
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "rainbow": AlgorithmSetup(
         algorithm=algorithms.RainbowOnline,
@@ -89,7 +94,8 @@ algorithm_setups = {
             "cutmix_probability": 0.5,
             "sampling_strategy": "diverse" # ["diverse", "central", "edge", "random", "proportional"]
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "l2p": AlgorithmSetup(
         algorithm=algorithms.LearningToPrompt,
@@ -105,7 +111,8 @@ algorithm_setups = {
             "balancing_lambda": 0.5,
             "prompt_frequency_strategy": "minmax" # ["disabled", "minmax", "scaled_frequency"]
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=224
     ),
     "scr": AlgorithmSetup(
         algorithm=algorithms.SupervisedContrastiveReplay,
@@ -117,7 +124,8 @@ algorithm_setups = {
             "temperature": 0.07,
             "lr": 0.1
         },
-        reduced_model=True
+        reduced_model=True,
+        img_size=32
     ),
     "der": AlgorithmSetup(
         algorithm=algorithms.DarkExperiencePlusPlus,
@@ -128,7 +136,8 @@ algorithm_setups = {
             "alpha": 0.5,
             "beta": 0 # Beta = 0 is equivalent to DER
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
     "der++": AlgorithmSetup(
         algorithm=algorithms.DarkExperiencePlusPlus,
@@ -139,7 +148,8 @@ algorithm_setups = {
             "alpha": 0.5,
             "beta": 0.5
         },
-        reduced_model=False
+        reduced_model=False,
+        img_size=32
     ),
 }
 
@@ -215,17 +225,15 @@ def force_cuda_load(device):
     random_tensor.square()
     torch.cuda.synchronize(device)
 
-    logger.info("CUDA loaded")
-
 def run_experiment(config: Configuration, algorithm_setup: AlgorithmSetup, device, model, directory, writer):
     classes_per_task = config.classes_per_task
     disjoint = classes_per_task != 0
-    dataset = dataset_map[config.dataset](disjoint=disjoint, classes_per_task=classes_per_task)
+    dataset = dataset_map[config.dataset](disjoint=disjoint, classes_per_task=classes_per_task, size=algorithm_setup.img_size)
 
     algorithm = algorithm_setup.algorithm(
         model=model,
         dataset=dataset,
-        optimiser=torch.optim.SGD(model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-6),
+        optimiser=torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=1e-6),
         loss_criterion=torch.nn.CrossEntropyLoss(),
         writer=writer,
         **algorithm_setup.options
@@ -262,27 +270,33 @@ def main():
     # Parse command line arguments
     config = parse_arguments()
 
-    # Set the random seed everywhere 
-    utils.seed_everything(config.seed)
-
-    # Get the GPU
-    device = get_device()
-
-    # Force CUDA initialisation to prevent incorrect timings
-    force_cuda_load(device)
-
     # Get the algorithm
     algorithm_setup = algorithm_setups[config.algorithm]
 
     # Setup the directory and get the writer
     directory, writer = setup_files(algorithm_setup.algorithm.get_algorithm_folder(), dataset_map[config.dataset], "OFFICIAL_RUN")
+    logger.info(f"Command line arguments: {config}")
+
+    # Set the random seed everywhere 
+    utils.seed_everything(config.seed)
+    logger.info(f"Seeded random to {config.seed}")
+
+    # Get the GPU
+    device = get_device()
+    logger.info("Got CUDA device")
+
+    # Force CUDA initialisation to prevent incorrect timings
+    force_cuda_load(device)
+    logger.info("CUDA initialised")
 
     # Setup the writer shutdown hook
     setup_shutdown_hook(writer)
+    logger.info("Setup shutdown hooks")
 
     # Select the model
     model = select_model(config.dataset, algorithm_setup.reduced_model)
     model.to(device)
+    logger.info("Model is setup")
 
     logger.info("Complete pre-setup, starting experiment")
 

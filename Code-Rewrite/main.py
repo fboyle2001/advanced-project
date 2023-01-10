@@ -181,7 +181,7 @@ def execute(algorithm_class, dataset_class, directory, writer):
     if algorithm.model is not None:
         logger.info(f"Saving model to {model_save_loc}")
         torch.save(algorithm.model.state_dict(), model_save_loc)
-
+ 
 if __name__ == "__main__":
     utils.seed_everything(0)
 
