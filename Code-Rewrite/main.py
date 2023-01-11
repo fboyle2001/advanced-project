@@ -164,7 +164,14 @@ class MLP(torch.nn.Module):
         # return torch.nn.functional.softmax(x)
 
 def execute(algorithm_class, dataset_class, directory, writer):
-    dataset = dataset_class(**DATASET_DEFAULTS[dataset_class])
+    size = 32
+
+    if algorithm_class == algorithms.LearningToPrompt or algorithm_class == algorithms.LearningToPromptWithMemory:
+        size = 224
+
+    # assert algorithm_class not in experiments
+
+    dataset = dataset_class(size=size, **DATASET_DEFAULTS[dataset_class])
 
     algorithm = algorithm_class(
         model=model,

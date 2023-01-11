@@ -1,21 +1,16 @@
 @echo off
 
-set algorithm=gdumb
+set algorithm=rainbow
 set dataset=cifar100
 set cpt=20
-
-set seeds[0]=9767
-set seeds[1]=2843
-set seeds[2]=2214
-set seeds[3]=5953
-set seeds[4]=2461
 
 echo Configuration
 echo Algorithm: %algorithm%
 echo Dataset: %dataset%
 echo Classes Per Task: %cpt%
-echo Start Index: %idx%
 echo:
+
+@REM 9767, 2843, 2214, 5953, 2461
 
 FOR %%s IN (9767, 2843, 2214, 5953, 2461) DO (
     echo Seed: %%s

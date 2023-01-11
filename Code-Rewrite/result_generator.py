@@ -119,7 +119,7 @@ algorithm_setups = {
         options={
             "epochs_per_task": 1,
             "batch_size": 10,
-            "max_memory_samples": 1000,
+            "max_memory_samples": 5000,
             "memory_batch_size": 100,
             "temperature": 0.07,
             "lr": 0.1

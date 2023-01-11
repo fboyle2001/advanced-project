@@ -164,6 +164,7 @@ class NovelActual(BaseCLAlgorithm):
         samples = samples / torch.linalg.norm(samples, dim=1).reshape(-1, 1)
         tiled = samples.tile(dims=(1, C)).reshape(B, C, self.D)
         tiled_means = self.mean_embeddings.tile(dims=(B, 1, 1))
+        # Compute Euclidean distance
         distances = (tiled - tiled_means).square().sum(dim=2).sqrt()
         return distances.topk(k, dim=1, largest=False)
 
@@ -514,3 +515,9 @@ class SupConLoss(nn.Module):
         print("G", loss)
 
         return loss
+
+class TrainableHead(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        
