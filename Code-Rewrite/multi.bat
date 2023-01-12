@@ -1,6 +1,6 @@
 @echo off
 
-set algorithm=rainbow
+set algorithm=
 set dataset=cifar100
 set cpt=20
 

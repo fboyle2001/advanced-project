@@ -139,7 +139,7 @@ algorithm_setups = {
         reduced_model=False,
         img_size=32
     ),
-    "der++": AlgorithmSetup(
+    "derpp": AlgorithmSetup(
         algorithm=algorithms.DarkExperiencePlusPlus,
         options={
             "epochs_per_task": 1,
