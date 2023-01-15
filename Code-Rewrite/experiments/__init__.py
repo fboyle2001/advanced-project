@@ -7,3 +7,6 @@ from .ne6 import NovelExperimentSix
 from .ne7 import NovelExperimentSeven
 from .ne8 import NovelExperimentEight
 from .novel_actual import NovelActual
+
+from .scl_experiment import SCLExperiment
+from .resnet_experiment import ResNetExperiment

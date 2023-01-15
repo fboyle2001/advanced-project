@@ -158,10 +158,14 @@ class SupConResNet(nn.Module):
 
     def forward(self, x):
         feat = self.encoder.features(x)
+        #print("A", feat.shape)
         if self.head:
             feat = F.normalize(self.head(feat), dim=1)
         else:
             feat = F.normalize(feat, dim=1)
+
+        #print("B", feat.shape)
+
         return feat
 
     def features(self, x):
