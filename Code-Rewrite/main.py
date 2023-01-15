@@ -114,7 +114,9 @@ ALGORITHM_DEFAULTS = {
     experiments.NovelExperimentSix: {},
     experiments.NovelExperimentSeven: {},
     experiments.NovelExperimentEight: {},
-    experiments.NovelActual: {}
+    experiments.NovelActual: {},
+    experiments.SCLExperiment: {},
+    experiments.ResNetExperiment: {}
 }
 
 DATASET_DEFAULTS = {
@@ -169,6 +171,9 @@ def execute(algorithm_class, dataset_class, directory, writer):
     if algorithm_class == algorithms.LearningToPrompt or algorithm_class == algorithms.LearningToPromptWithMemory:
         size = 224
 
+    if algorithm_class == experiments.SCLExperiment:
+        size = 224
+
     # assert algorithm_class not in experiments
 
     dataset = dataset_class(size=size, **DATASET_DEFAULTS[dataset_class])
@@ -192,12 +197,13 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = experiments.NovelActual
-    dataset_class = datasets.CIFAR100
+    algorithm_class = experiments.SCLExperiment
+    dataset_class = datasets.CIFAR10
 
     experiment_name = None
 
     device = torch.device("cuda:0")
+    # device = torch.device("cpu")
 
     # model = resnet18(weights=None)
     # model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)

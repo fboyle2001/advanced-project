@@ -144,16 +144,16 @@ def load_and_plot_embeddings():
 
 def plot_line_graph():
     bounding_lines = {
-        "Offline": 0.6607,
+        # "Offline": 0.6607,
         # "GDumb": 0.3927,
-        "ViT w/ Transfer": 0.9167 # Appendix C of ViT paper
+        # "ViT w/ Transfer": 0.9167 # Appendix C of ViT paper
     }
     
     series = {
         "ViT NCM w/ Random": [[1, 2, 3, 4, 5], [0.1734, 0.3207, 0.4555, 0.5874, 0.7031]],
         "ViT NCM w/ Uncertainty": [[1, 2, 3, 4, 5], [0.1720, 0.3250, 0.4693, 0.6076, 0.7317]],
-        "ViT MLP w/ Uncertainty": [[1, 2, 3, 4, 5], [0.1745, 0.3289, 0.4700, 0.6081, 0.7336]],
-        "L2P": [[1, 2, 3, 4, 5], [0.1801, 0.3187, 0.4340, 0.5309, 0.6158]],
+        # "ViT MLP w/ Uncertainty": [[1, 2, 3, 4, 5], [0.1745, 0.3289, 0.4700, 0.6081, 0.7336]],
+        # "L2P": [[1, 2, 3, 4, 5], [0.1801, 0.3187, 0.4340, 0.5309, 0.6158]],
         # "DER": [[1, 2, 3, 4, 5], [0.0410, 0.0485, 0.0558, 0.0766, 0.0629]],
         # "DER++": [[1, 2, 3, 4, 5], [0.0507, 0.0669, 0.0759, 0.0962, 0.1014]]
     }
@@ -182,5 +182,5 @@ def plot_line_graph():
     plt.title("CIFAR-100 Task Accuracy")
     plt.show()
 
-# plot_line_graph()
-load_and_plot_embeddings()
+plot_line_graph()
+# load_and_plot_embeddings()
