@@ -8,6 +8,8 @@
     - It does give a performance boost 
     - Is this not just finetuning the ViT though?
     - Sufficiently novel enough as it really just builds on a lot of techniques
+    - Worth doing some experiments around this to show it works in addition to the main comparison?
+    - Look at the distribution of uncertainty in each class?
 - ViT with no training using NCM classification and Random Sampling: ~70%
 - ViT with an MLP head using NCM classification and Random Sampling with CE Loss: ~70% accuracy
 - ViT with an MLP head using NCM classification and Random Sampling with SCL Loss: ~70% accuracy
