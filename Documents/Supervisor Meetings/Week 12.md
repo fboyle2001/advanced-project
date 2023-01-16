@@ -38,3 +38,5 @@
 - Experiment on varying the buffer sample size
 - Check that there is no overlap on ImageNet-21K and cite this
 - What is the motivation for Nearest Class Mean classification
+- Figure placement, maybe move them inline instead?
+- Additional citation anywhere someone might pull up an issue
