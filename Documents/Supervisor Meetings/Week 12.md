@@ -30,3 +30,11 @@
 - Finish results generation
 - Clean up the code for the demo
 - Start writing the results section
+
+# Feedback
+- Wording: in the first section mention the inconsistent result comparison, clarify that this is cross-paper comparisons
+- Why is CIFAR-100 the standard? Back this up with a citation
+- Do a smaller comparison on CIFAR-10
+- Experiment on varying the buffer sample size
+- Check that there is no overlap on ImageNet-21K and cite this
+- What is the motivation for Nearest Class Mean classification
