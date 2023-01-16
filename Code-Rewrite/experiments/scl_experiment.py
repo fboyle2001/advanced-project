@@ -3,7 +3,7 @@ The purpose of this experiment is to test train an additional head using the fea
 from the ViT using SCL loss to segregate the classes and then classify using NCM classification
 """
 
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional, Tuple
 from loguru import logger
 
 from algorithms import BaseCLAlgorithm, buffers
@@ -17,7 +17,7 @@ from torch.utils.data import DataLoader
 
 import models.vit.vit_models as vit_models
 from models.scr import scr_resnet
-from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, ColorJitter, RandomGrayscale
+from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomSolarize, RandomInvert, ColorJitter, RandomGrayscale
 
 import numpy as np
 from PIL import Image
@@ -50,7 +50,18 @@ class SCLExperiment(BaseCLAlgorithm):
         self.D = self.pretrained_vit.feat_dim # number of features
         self.tau = 0.07
 
-        self.buffer = buffers.BalancedReplayBuffer(5000)
+        self.max_memory_size = 5000
+        self.buffer = buffers.BalancedReplayBuffer(self.max_memory_size)
+        self.augmentations = [
+            RandomHorizontalFlip(),
+            RandomVerticalFlip(),
+            RandomRotation(45),
+            RandomRotation(90),
+            RandomSolarize(thresholds=32, p=1),
+            RandomSolarize(thresholds=64, p=1),
+            RandomSolarize(thresholds=128, p=1),
+            RandomInvert(p=1)
+        ]
         
         # Use the reduced model from the official repo
         self.model = TestNet().to(self.device) # SecondaryTestNet(100).to(self.device) # 
@@ -67,9 +78,13 @@ class SCLExperiment(BaseCLAlgorithm):
             RandomGrayscale(p=0.2)
         ).to(self.device)
         
+        self.memory: Dict[int, List[np.ndarray]] = {}
         self.require_mean_calculation = True
-        self.mean_embeddings = {}
+        self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
         self.loss_criterion = SupConLoss()
+
+        self.min_lr = 0.0005
+        self.max_lr = 0.05
 
     @staticmethod
     def get_algorithm_folder() -> str:
@@ -129,6 +144,112 @@ class SCLExperiment(BaseCLAlgorithm):
 
         return loss / batch.shape[0]
 
+    ## UNCERTAINTY SAMPLING
+
+    def _closest_mean_embeddings(self, batch: torch.Tensor, k: int):
+        batch = batch.to(self.device)
+        B = batch.shape[0]
+        C = len(self.dataset.classes)
+        samples = self.f_r(self.f_e(batch))[:, 0, :]
+        samples = samples / torch.linalg.norm(samples, dim=1).reshape(-1, 1)
+        tiled = samples.tile(dims=(1, C)).reshape(B, C, self.D)
+        tiled_means = self.mean_embeddings.tile(dims=(B, 1, 1))
+        # Compute Euclidean distance
+        distances = (tiled - tiled_means).square().sum(dim=2).sqrt()
+        return distances.topk(k, dim=1, largest=False)
+
+    def _augment_batch(self, batch: torch.Tensor) -> torch.Tensor:
+        augmented = batch
+
+        for augmentation in self.augmentations:
+            duped = batch.clone()
+            augmented_batch = augmentation(duped)
+            augmented = torch.cat([augmented, augmented_batch], dim=0)
+        
+        return augmented
+
+    def _compute_batch_distance(self, batch: torch.Tensor) -> torch.Tensor:
+        augmented_input = self._augment_batch(batch)
+        distances = self._closest_mean_embeddings(augmented_input, k=1).values
+        distances = (distances / distances.norm()).squeeze().reshape(batch.shape[0], -1).mean(dim=1).cpu()
+        return distances
+    
+    def _uncertainity_memory_update(self, new_task: DataLoader):
+        logger.info("Starting memory update")
+        segmented_uncertainty: Dict[int, List[Tuple[np.ndarray, float]]] = {}
+
+        logger.debug("Processing new task samples")
+        # Handle the new task samples first
+        for batch_data in new_task:
+            raw_inp, labels = batch_data
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = self._compute_batch_distance(inp)
+
+            for sample, target, uncertainty in zip(raw_inp, labels, distances):
+                target = target.item()
+                
+                if target not in segmented_uncertainty.keys():
+                    segmented_uncertainty[target] = []
+
+                segmented_uncertainty[target].append((sample.cpu().numpy(), uncertainty.item())) # type: ignore
+        
+        logger.debug(f"Processing old task samples: total targets = {self.memory.keys()}")
+        # Handle the old task samples
+        for target in self.memory.keys():
+            logger.debug(f"On target {target}")
+            if target not in segmented_uncertainty.keys():
+                segmented_uncertainty[target] = []
+
+            batches = len(self.memory[target]) // self.batch_size
+
+            # Process batches
+            for batch_no in range(batches):
+                raw_inp = self.memory[target][batch_no * self.batch_size:(batch_no + 1) * self.batch_size]
+                inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+                distances = self._compute_batch_distance(inp)
+
+                for sample, uncertainty in zip(raw_inp, distances):
+                    segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
+
+            # Process remains
+            raw_inp = self.memory[target][batches * self.batch_size:]
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = self._compute_batch_distance(inp)
+
+            for sample, uncertainty in zip(raw_inp, distances):
+                segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
+        
+        logger.debug("Drawing memory samples")
+        # Now draw the samples out for the new buffer
+        seen_class_count = len(segmented_uncertainty.keys())
+        new_memory: Dict[int, List[np.ndarray]] = {}
+        memory_per_class = self.max_memory_size // seen_class_count
+
+        for target in segmented_uncertainty.keys():
+            items = segmented_uncertainty[target]
+            item_count = len(items)
+            uncertainty_sorted_items = sorted(items, key=lambda item: item[1])
+            selected_samples: List[np.ndarray] = []
+
+            for j in range(memory_per_class):
+                selected_samples.append(uncertainty_sorted_items[(j * item_count) // memory_per_class][0])
+
+            new_memory[target] = selected_samples
+
+        self.memory = new_memory
+        self.require_mean_calculation = True
+
+        logger.debug("Creating buffer")
+        buffer = buffers.BalancedReplayBuffer(5000)
+
+        for target in new_memory.keys():
+            for i in range(len(new_memory[target])):
+                buffer.add_sample(new_memory[target][i], target)
+        
+        self.buffer = buffer
+
+        logger.info("Memory update completed")
+
     def train(self) -> None:
         super().train()
 
@@ -146,6 +267,13 @@ class SCLExperiment(BaseCLAlgorithm):
 
                 for data, target in zip(raw_inp, raw_labels):
                     self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
+
+        # for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
+        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+
+        #     task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
+        #     self._uncertainity_memory_update(task_dataloader)
             
         logger.info("Populated buffer")
 
@@ -153,6 +281,7 @@ class SCLExperiment(BaseCLAlgorithm):
         buffer_dl = DataLoader(buffer_ds, batch_size=32)
 
         self.require_mean_calculation = True
+        lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
 
         # Train using the samples only
         for epoch in range(1, self.epochs_per_task + 1):
@@ -161,6 +290,21 @@ class SCLExperiment(BaseCLAlgorithm):
             logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
             running_loss = 0
             short_running_loss = 0
+
+            # Apply learning rate warmup
+            if epoch == 0:
+                for param_group in self.optimiser.param_groups:
+                    param_group['lr'] = self.max_lr * 0.1
+
+                self.writer.add_scalar("LR/Current_LR", self.max_lr * 0.1, epoch)
+            elif epoch == 1:
+                for param_group in self.optimiser.param_groups:
+                    param_group['lr'] = self.max_lr
+
+                self.writer.add_scalar("LR/Current_LR", self.max_lr, epoch)
+            else:
+                lr_warmer.step()
+                self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
 
             for batch_no, batch in enumerate(buffer_dl):
                 inp, labels = batch
@@ -224,53 +368,96 @@ class SCLExperiment(BaseCLAlgorithm):
     #     _, predicted = torch.max(output.data, 1)
     #     return predicted
 
-    def classify(self, batch: torch.Tensor) -> torch.Tensor:
-        self.model.eval()
+    def generate_embeddings(self):
+        logger.info("Generating fresh mean embedding vectors")
+        means = []
+        batch_size = 32
 
-        if self.require_mean_calculation:
-            logger.info("Generating fresh mean embedding vectors")
-            self.mean_embeddings = dict()
-
-            for target in self.buffer.known_classes:
-                total_embed = []
-                count = 0
-
-                for hash_key in self.buffer.class_hash_pointers[target]:
-                    count += 1
-                    sample = self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[hash_key].astype(np.uint8))).unsqueeze(0).to(self.device) # type: ignore
-                    vit_sample_f = self.f_r(self.f_e(sample))[:, 0, :]
-                    encoded = self.model.features(vit_sample_f).detach().clone().squeeze(0)
-                    encoded = encoded / encoded.norm()
-                    total_embed.append(encoded)
-                
-                assert total_embed is not None
-                mean_embed = torch.stack(total_embed).mean(0).squeeze()
-                mean_embed = mean_embed / mean_embed.norm()
-                self.mean_embeddings[target] = mean_embed
+        for target in range(0, len(self.dataset.classes)):
+            if target not in self.buffer.known_classes:
+                means.append(torch.zeros(1, self.D).to("cpu"))
+                continue
             
-            self.require_mean_calculation = False
-            logger.debug(f"Generated mean embedding vectors for: {self.mean_embeddings.keys()}")
+            buffered = [self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[k].astype(np.uint8))).unsqueeze(0) for k in self.buffer.class_hash_pointers[target]] # type: ignore
+            buffered = torch.cat(buffered, dim=0)
+            embeds: Optional[torch.Tensor] = None
 
-        predictions = []
-        batch = batch.to(self.device)
+            for batch_no in range(0, buffered.shape[0] // batch_size + 1):
+                start_idx = batch_no * batch_size
+                end_idx = (batch_no + 1) * batch_size
+                buffer_batch = buffered[start_idx:end_idx].to(self.device)
+                encoded = self.f_r(self.f_e(buffer_batch))[:, 0, :].detach().clone()
+                encoded = encoded / torch.linalg.norm(encoded, dim=1).reshape(-1, 1)
 
-        for sample in batch:
-            vit_sample_f = self.f_r(self.f_e(sample.unsqueeze(0)))[:, 0, :]
-            encoded_sample = self.model.features(vit_sample_f).squeeze(0)
-            encoded_sample = encoded_sample / encoded_sample.norm()
-            closest_target = None
-            closest_value = None
+                if embeds is None:
+                    embeds = encoded.to("cpu")
+                else:
+                    embeds = torch.cat([embeds, encoded.to("cpu")], dim=0)
+            
+            assert embeds is not None
+            means.append(embeds.mean(dim=0).unsqueeze(0))
+    
+        self.mean_embeddings = torch.cat(means, dim=0).to(self.device)
+        self.require_mean_calculation = False
+        logger.debug(f"Generated mean embedding vectors for: {self.buffer.known_classes}")
 
-            for target in self.mean_embeddings.keys():
-                norm = (self.mean_embeddings[target] - encoded_sample).square().sum().sqrt()
+    def ncm_classify(self, batch: torch.Tensor) -> torch.Tensor:
+        if self.require_mean_calculation:
+            self.generate_embeddings()
 
-                if (closest_target is None and closest_value is None) or norm < closest_value:
-                    closest_target = target
-                    closest_value = norm
+        classes = self._closest_mean_embeddings(batch, k=1).indices.squeeze()
+        return classes
+    
+    def classify(self, batch: torch.Tensor) -> torch.Tensor:
+        return self.ncm_classify(batch)
 
-            predictions.append(torch.tensor([closest_target]))
+    # def classify(self, batch: torch.Tensor) -> torch.Tensor:
+    #     self.model.eval()
 
-        return torch.cat(predictions, dim=0)
+    #     if self.require_mean_calculation:
+    #         logger.info("Generating fresh mean embedding vectors")
+    #         self.mean_embeddings = dict()
+
+    #         for target in self.buffer.known_classes:
+    #             total_embed = []
+    #             count = 0
+
+    #             for hash_key in self.buffer.class_hash_pointers[target]:
+    #                 count += 1
+    #                 sample = self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[hash_key].astype(np.uint8))).unsqueeze(0).to(self.device) # type: ignore
+    #                 vit_sample_f = self.f_r(self.f_e(sample))[:, 0, :]
+    #                 encoded = self.model.features(vit_sample_f).detach().clone().squeeze(0)
+    #                 encoded = encoded / encoded.norm()
+    #                 total_embed.append(encoded)
+                
+    #             assert total_embed is not None
+    #             mean_embed = torch.stack(total_embed).mean(0).squeeze()
+    #             mean_embed = mean_embed / mean_embed.norm()
+    #             self.mean_embeddings[target] = mean_embed
+            
+    #         self.require_mean_calculation = False
+    #         logger.debug(f"Generated mean embedding vectors for: {self.mean_embeddings.keys()}")
+
+    #     predictions = []
+    #     batch = batch.to(self.device)
+
+    #     for sample in batch:
+    #         vit_sample_f = self.f_r(self.f_e(sample.unsqueeze(0)))[:, 0, :]
+    #         encoded_sample = self.model.features(vit_sample_f).squeeze(0)
+    #         encoded_sample = encoded_sample / encoded_sample.norm()
+    #         closest_target = None
+    #         closest_value = None
+
+    #         for target in self.mean_embeddings.keys():
+    #             norm = (self.mean_embeddings[target] - encoded_sample).square().sum().sqrt()
+
+    #             if (closest_target is None and closest_value is None) or norm < closest_value:
+    #                 closest_target = target
+    #                 closest_value = norm
+
+    #         predictions.append(torch.tensor([closest_target]))
+
+    #     return torch.cat(predictions, dim=0)
 
 class TestNet(nn.Module):
     def __init__(self):

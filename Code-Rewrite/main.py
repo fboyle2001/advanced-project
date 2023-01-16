@@ -198,7 +198,7 @@ if __name__ == "__main__":
     utils.seed_everything(0)
 
     algorithm_class = experiments.SCLExperiment
-    dataset_class = datasets.CIFAR10
+    dataset_class = datasets.CIFAR100
 
     experiment_name = None
 

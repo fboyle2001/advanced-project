@@ -3,6 +3,9 @@ from typing import Dict
 import matplotlib.pyplot as plt
 import numpy as np
 
+import time
+import os
+
 from technique_parser import TechniqueData
 
 def load_techniques(technique_structure) -> Dict[str, TechniqueData]:
@@ -79,7 +82,7 @@ def extract_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool) 
     
     return results
 
-def plot_wall_clock(techniques: Dict[str, TechniqueData]) -> None:
+def plot_wall_clock(techniques: Dict[str, TechniqueData]):
     wall_clock = extract_average_wall_clock(techniques)
     boxplot_data = [data for data in wall_clock.values()]
 
@@ -89,8 +92,10 @@ def plot_wall_clock(techniques: Dict[str, TechniqueData]) -> None:
     ax.set_ylabel("Time Taken (s)")
 
     ax.boxplot(boxplot_data, labels=[k for k in techniques.keys()])
+    
+    return fig
 
-def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_width: float = 0.35) -> None:
+def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_width: float = 0.35):
     ram = extract_average_max_ram_usage(techniques)
     vram = extract_average_max_vram_usage(techniques)
 
@@ -112,7 +117,10 @@ def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_w
     else:
         ax.bar(xs - bar_width / 2, ram_ys, width=bar_width, label="RAM Usage")
         ax.bar(xs + bar_width / 2, vram_ys, width=bar_width, label="VRAM Usage")
-        ax.legend()
+
+    ax.legend(bbox_to_anchor=(1.0, 0.5))
+    
+    return fig
 
 def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
     average_accuracy = extract_average_accuracy(techniques)
@@ -134,6 +142,8 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
 
     # Error Bars?
 
+    return fig
+
 def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
     n_accuracy = extract_n_accuracy(techniques, n=n, top=top)
     tasks = [1, 2, 3, 4, 5]
@@ -153,10 +163,16 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
     ax.set_xlabel("Task")
     ax.legend()
 
-def main():
+    return fig
+
+def main(save: bool):
     technique_result_structure = {
         "DER": {
             "folder": "../output/der",
+            "task_files": None
+        },
+        "DER++": {
+            "folder": "../output/der_pp",
             "task_files": None
         },
         "Finetuning": {
@@ -169,14 +185,27 @@ def main():
         }
     }
 
+    store_dir = f"./output/{time.time()}"
+    os.makedirs(store_dir, exist_ok=False)
+
     techniques = load_techniques(technique_result_structure)
 
-    # plot_n_accuracy(techniques, n=5, top=True)
-    # plot_n_accuracy(techniques, n=5, top=False)
-    # plot_average_accuracy(techniques)
-    # plot_memory_usage(techniques, stacked=True)
-    # plot_wall_clock(techniques)
-    plt.show()
+    top_5_fig = plot_n_accuracy(techniques, n=5, top=True)
+    bottom_5_fig = plot_n_accuracy(techniques, n=5, top=False)
+    avg_accuracy_fig = plot_average_accuracy(techniques)
+    memory_stacked_fig = plot_memory_usage(techniques, stacked=True)
+    memory_grouped_fig = plot_memory_usage(techniques, stacked=False)
+    wc_fig = plot_wall_clock(techniques)
+
+    if save:
+        top_5_fig.savefig(f"{store_dir}/Top 5 Accuracy.png")
+        bottom_5_fig.savefig(f"{store_dir}/Bottom 5 Accuracy.png")
+        avg_accuracy_fig.savefig(f"{store_dir}/Average Accuracy.png")
+        memory_stacked_fig.savefig(f"{store_dir}/Stacked Memory Usage.png", bbox_inches="tight")
+        memory_grouped_fig.savefig(f"{store_dir}/Grouped Memory Usage.png", bbox_inches="tight")
+        wc_fig.savefig(f"{store_dir}/Wall Clock Time.png")
+    else:
+        plt.show()
 
     """
     Plots:
@@ -187,4 +216,4 @@ def main():
     """
 
 if __name__ == "__main__":
-    main()
+    main(save=True)
