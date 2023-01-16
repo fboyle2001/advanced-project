@@ -1,6 +1,6 @@
 @echo off
 
-set algorithm=l2p
+set algorithm=scr
 set dataset=cifar100
 set cpt=20
 
