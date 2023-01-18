@@ -1,8 +1,8 @@
 @echo off
 
-set algorithm=scr
+set algorithm=offline
 set dataset=cifar100
-set cpt=20
+set cpt=0
 
 echo Configuration
 echo Algorithm: %algorithm%

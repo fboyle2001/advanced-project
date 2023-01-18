@@ -28,7 +28,7 @@ class CIFAR10(BaseCLDataset):
             dataset_class=torchvision.datasets.CIFAR10,
             training_dataset_parameters={ "train": True, "download": True },
             testing_dataset_parameters={ "train": False, "download": True },
-            training_transform=torchvision.transforms.Compose(training_cifar_transform(size) + base_cifar_transform(size)),
+            training_transform=torchvision.transforms.Compose(base_cifar_transform(size) + training_cifar_transform(size)),
             testing_transform=torchvision.transforms.Compose(base_cifar_transform(size)),
             classes=cifar_classes,
             disjoint=disjoint,

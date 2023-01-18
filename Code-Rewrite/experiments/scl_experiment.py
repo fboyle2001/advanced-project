@@ -83,6 +83,8 @@ class SCLExperiment(BaseCLAlgorithm):
         self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
         self.loss_criterion = SupConLoss()
 
+        self.uncertainty_type = "secondary"
+
         self.min_lr = 0.0005
         self.max_lr = 0.05
 
@@ -93,7 +95,8 @@ class SCLExperiment(BaseCLAlgorithm):
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
-            "batch_size": self.batch_size
+            "batch_size": self.batch_size,
+            "uncertainty_type": self.uncertainty_type
         }
 
         return info
@@ -173,17 +176,36 @@ class SCLExperiment(BaseCLAlgorithm):
         distances = self._closest_mean_embeddings(augmented_input, k=1).values
         distances = (distances / distances.norm()).squeeze().reshape(batch.shape[0], -1).mean(dim=1).cpu()
         return distances
+
+    def _secondary_uncertainty(self, batch: torch.Tensor) -> torch.Tensor:
+        augmented_input = self._augment_batch(batch)
+        distances = self._closest_mean_embeddings(augmented_input, k=2).values
+        first, second = distances.T.cpu().unbind()
+        uncertainty = first / second
+
+        return uncertainty
     
     def _uncertainity_memory_update(self, new_task: DataLoader):
         logger.info("Starting memory update")
         segmented_uncertainty: Dict[int, List[Tuple[np.ndarray, float]]] = {}
+
+        uncertainty_func = None
+
+        if self.uncertainty_type == "main":
+            uncertainty_func = self._compute_batch_distance
+        elif self.uncertainty_type == "secondary":
+            uncertainty_func = self._secondary_uncertainty
+
+        assert uncertainty_func is not None
+
+        logger.info(f"Using uncertainty type: {self.uncertainty_type} {uncertainty_func.__name__}")
 
         logger.debug("Processing new task samples")
         # Handle the new task samples first
         for batch_data in new_task:
             raw_inp, labels = batch_data
             inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
-            distances = self._compute_batch_distance(inp)
+            distances = uncertainty_func(inp)
 
             for sample, target, uncertainty in zip(raw_inp, labels, distances):
                 target = target.item()
@@ -192,6 +214,9 @@ class SCLExperiment(BaseCLAlgorithm):
                     segmented_uncertainty[target] = []
 
                 segmented_uncertainty[target].append((sample.cpu().numpy(), uncertainty.item())) # type: ignore
+
+        # Now we have the new samples, update the mean embeddings
+        self.generate_embeddings()
         
         logger.debug(f"Processing old task samples: total targets = {self.memory.keys()}")
         # Handle the old task samples
@@ -206,7 +231,7 @@ class SCLExperiment(BaseCLAlgorithm):
             for batch_no in range(batches):
                 raw_inp = self.memory[target][batch_no * self.batch_size:(batch_no + 1) * self.batch_size]
                 inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
-                distances = self._compute_batch_distance(inp)
+                distances = uncertainty_func(inp)
 
                 for sample, uncertainty in zip(raw_inp, distances):
                     segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
@@ -214,7 +239,7 @@ class SCLExperiment(BaseCLAlgorithm):
             # Process remains
             raw_inp = self.memory[target][batches * self.batch_size:]
             inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
-            distances = self._compute_batch_distance(inp)
+            distances = uncertainty_func(inp)
 
             for sample, uncertainty in zip(raw_inp, distances):
                 segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
@@ -253,27 +278,27 @@ class SCLExperiment(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
 
-        for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
-            self.model.train()
-
-            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
-
-            task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
-
-            # Greedily sample at random
-            for batch_no, data in enumerate(task_dataloader, 0):
-                raw_inp, raw_labels = data
-
-                for data, target in zip(raw_inp, raw_labels):
-                    self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
-
         # for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
+        #     self.model.train()
+
         #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
         #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
         #     task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
-        #     self._uncertainity_memory_update(task_dataloader)
+
+        #     # Greedily sample at random
+        #     for batch_no, data in enumerate(task_dataloader, 0):
+        #         raw_inp, raw_labels = data
+
+        #         for data, target in zip(raw_inp, raw_labels):
+        #             self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
+
+        for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
+            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
+
+            task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
+            self._uncertainity_memory_update(task_dataloader)
             
         logger.info("Populated buffer")
 
