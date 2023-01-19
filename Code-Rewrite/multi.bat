@@ -1,8 +1,8 @@
 @echo off
 
-set algorithm=offline
+set algorithm=ewc
 set dataset=cifar100
-set cpt=0
+set cpt=20
 
 echo Configuration
 echo Algorithm: %algorithm%

@@ -9,6 +9,7 @@ import torch
 import algorithms
 import datasets
 import utils
+import experiments
 
 import argparse
 import time
@@ -150,6 +151,12 @@ algorithm_setups = {
         },
         reduced_model=False,
         img_size=32
+    ),
+    "novel_main_uncert_sample": AlgorithmSetup(
+        algorithm=experiments.SCLExperiment,
+        options={},
+        reduced_model=False,
+        img_size=224
     ),
 }
 

@@ -43,7 +43,7 @@ class SCLExperiment(BaseCLAlgorithm):
             writer=writer
         )
 
-        self.epochs_per_task = 256
+        self.epochs_per_task = 70
         self.batch_size = 16
 
         self.pretrained_vit = vit_models.create_model_non_prompt(len(self.dataset.classes)).to(self.device)
@@ -96,7 +96,8 @@ class SCLExperiment(BaseCLAlgorithm):
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
             "batch_size": self.batch_size,
-            "uncertainty_type": self.uncertainty_type
+            "uncertainty_type": self.uncertainty_type,
+            "max_memory_samples": self.max_memory_size
         }
 
         return info
@@ -300,91 +301,94 @@ class SCLExperiment(BaseCLAlgorithm):
             task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
             self._uncertainity_memory_update(task_dataloader)
             
-        logger.info("Populated buffer")
+            logger.info("Populated buffer")
 
-        buffer_ds = self.buffer.to_torch_dataset(transform=self.dataset.testing_transform)
-        buffer_dl = DataLoader(buffer_ds, batch_size=32)
+            buffer_ds = self.buffer.to_torch_dataset(transform=self.dataset.testing_transform)
+            buffer_dl = DataLoader(buffer_ds, batch_size=32)
 
-        self.require_mean_calculation = True
-        lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
-
-        # Train using the samples only
-        for epoch in range(1, self.epochs_per_task + 1):
             self.require_mean_calculation = True
+            lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
 
-            logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
-            running_loss = 0
-            short_running_loss = 0
+            offset = self.epochs_per_task * task_no
 
-            # Apply learning rate warmup
-            if epoch == 0:
-                for param_group in self.optimiser.param_groups:
-                    param_group['lr'] = self.max_lr * 0.1
+            # Train using the samples only
+            for epoch in range(1, self.epochs_per_task + 1):
+                self.require_mean_calculation = True
 
-                self.writer.add_scalar("LR/Current_LR", self.max_lr * 0.1, epoch)
-            elif epoch == 1:
-                for param_group in self.optimiser.param_groups:
-                    param_group['lr'] = self.max_lr
+                logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")
+                running_loss = 0
+                short_running_loss = 0
 
-                self.writer.add_scalar("LR/Current_LR", self.max_lr, epoch)
-            else:
-                lr_warmer.step()
-                self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
+                # Apply learning rate warmup
+                if epoch == 0:
+                    for param_group in self.optimiser.param_groups:
+                        param_group['lr'] = self.max_lr * 0.1
 
-            for batch_no, batch in enumerate(buffer_dl):
-                inp, labels = batch
-                inp = inp.to(self.device)
-                labels = labels.to(self.device)
+                    self.writer.add_scalar("LR/Current_LR", self.max_lr * 0.1, epoch)
+                elif epoch == 1:
+                    for param_group in self.optimiser.param_groups:
+                        param_group['lr'] = self.max_lr
 
-                # tags = {x: [0 if x not in self.buffer.known_classes else len(self.buffer.class_hash_pointers[x]), 0] for x in range(10)}
+                    self.writer.add_scalar("LR/Current_LR", self.max_lr, epoch)
+                else:
+                    lr_warmer.step()
+                    self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
 
-                # for t in buffer_targets:
-                #     tags[t.item()][1] += 1 # type: ignore
+                for batch_no, batch in enumerate(buffer_dl):
+                    inp, labels = batch
+                    inp = inp.to(self.device)
+                    labels = labels.to(self.device)
 
-                # logger.debug(tags)
-                
-                augmented = self.augment(inp.detach().clone())
+                    # tags = {x: [0 if x not in self.buffer.known_classes else len(self.buffer.class_hash_pointers[x]), 0] for x in range(10)}
 
-                inp = torch.cat([inp, augmented], dim=0)
-                labels = torch.cat([labels, labels], dim=0)
+                    # for t in buffer_targets:
+                    #     tags[t.item()][1] += 1 # type: ignore
 
-                vit_features = self.f_r(self.f_e(inp))[:, 0, :]
-                clustered_features = self.model.forward(vit_features)
-                # loss = self.scl_loss(clustered_features, labels)
-                loss = self.loss_criterion(clustered_features.unsqueeze(1), labels) # need clustered_features.unsqueeze(1) for SupConLoss
+                    # logger.debug(tags)
+                    
+                    augmented = self.augment(inp.detach().clone())
 
-                self.optimiser.zero_grad()
-                loss.backward()
-                self.optimiser.step()
+                    inp = torch.cat([inp, augmented], dim=0)
+                    labels = torch.cat([labels, labels], dim=0)
 
-                # print(loss)
+                    vit_features = self.f_r(self.f_e(inp))[:, 0, :]
+                    clustered_features = self.model.forward(vit_features)
+                    # loss = self.scl_loss(clustered_features, labels)
+                    loss = self.loss_criterion(clustered_features.unsqueeze(1), labels) # need clustered_features.unsqueeze(1) for SupConLoss
 
-                running_loss += loss.item()
-                short_running_loss += loss.item()
+                    self.optimiser.zero_grad()
+                    loss.backward()
+                    self.optimiser.step()
 
-                if batch_no % 40 == 0 and batch_no != 0:
-                    logger.info(f"{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
-                    short_running_loss = 0
-                
-                if epoch % 8 == 0 and batch_no == 120:
-                    first = self.model.linear_one(vit_features)
-                    calc_first = torch.sum(torch.eq(vit_features, first)).item() / vit_features.numel()
-                    relud = self.model.relu1(first)
-                    calc_relud = torch.sum(torch.eq(vit_features, relud)).item() / vit_features.numel()
-                    logger.warning(f"Sim: First: {calc_relud}% Relud: {calc_first}%")
+                    # print(loss)
 
-            epoch_offset = 0
+                    running_loss += loss.item()
+                    short_running_loss += loss.item()
 
-            avg_running_loss = running_loss / (len(buffer_dl) - 1)
-            logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
-            self.writer.add_scalar(f"Loss/Task_{epoch + 1}_Total_avg", avg_running_loss, epoch)
-            self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
+                    if batch_no % 40 == 0 and batch_no != 0:
+                        logger.info(f"{task_no+1}:{epoch}:{batch_no}, loss: {short_running_loss / 40:.3f}")
+                        short_running_loss = 0
+                    
+                    if epoch % 8 == 0 and batch_no == 120:
+                        first = self.model.linear_one(vit_features)
+                        calc_first = torch.sum(torch.eq(vit_features, first)).item() / vit_features.numel()
+                        relud = self.model.relu1(first)
+                        calc_relud = torch.sum(torch.eq(vit_features, relud)).item() / vit_features.numel()
+                        logger.warning(f"Sim: First: {calc_relud}% Relud: {calc_first}%")
 
-            running_loss = 0
+                epoch_offset = offset + epoch
 
-            if epoch % 10 == 0 and epoch != 0:
-                self.run_base_task_metrics(epoch)
+                avg_running_loss = running_loss / (len(buffer_dl) - 1)
+                logger.info(f"{task_no+1}:{epoch}, loss: {avg_running_loss:.3f}")
+                self.writer.add_scalar(f"Loss/Task_{epoch_offset}_Total_avg", avg_running_loss, epoch)
+                self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch_offset + epoch)
+
+                running_loss = 0
+
+                if epoch % 10 == 0 and epoch != 0:
+                    self.run_base_task_metrics(epoch_offset)
         
+        self.run_base_task_metrics(999)
         logger.info("Training complete")
 
     # def classify(self, batch: torch.Tensor) -> torch.Tensor:
