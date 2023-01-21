@@ -133,6 +133,7 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
         ys = [accuracies.mean() * 100 for accuracies in task_accuracies.values()]
         ax.plot(tasks, ys, label=name, marker="o")
 
+    ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
     ax.set_title("Overall Accuracy by Task")
@@ -155,6 +156,7 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
         ys = [accuracies.mean() * 100 for accuracies in task_accuracies.values()]
         ax.plot(tasks, ys, label=name, marker="o")
 
+    ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
     title = f"{'Top' if top else 'Bottom'}-{n} Accuracy by Task"
@@ -182,7 +184,27 @@ def main(save: bool):
         "Rainbow": {
             "folder": "../output/rainbow_online",
             "task_files": {i: f"task_{i * 50}_results.json" for i in [1, 2, 3, 4, 5]}
-        }
+        },
+        "L2P": {
+            "folder": "../output/l2p",
+            "task_files": None
+        },
+        "SCR": {
+           "folder": "../output/scr",
+           "task_files": None 
+        },
+        "Novel (1)": {
+            "folder": "../output/novel_main",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
+        "Novel (2)": {
+            "folder": "../output/novel_secondary",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
+        "EWC": {
+           "folder": "../output/ewc",
+           "task_files": None 
+        },
     }
 
     store_dir = f"./output/{time.time()}"

@@ -16,6 +16,7 @@
 - Write up the NCM vs Maximisation of Logits experiment -> section started
 - Second uncertainty approach experiment -> closest / second closest quantification -> section mostly written
 - --> Need to look at Manhatten vs Euclidean for norm?
+- --> compare directly with Rainbow?
 
 ## Code demonstration:
 - Clean up or cite any code that I haven't wrote
@@ -29,6 +30,7 @@
 - Generate results
 	- CIFAR-100, need to vary the samples 
 	- CIFAR-10 for direct comparison
+- Zero-shot implementation
 - Implementation Write Up
 - Methodology Write Up
 - Code commenting
