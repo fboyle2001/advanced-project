@@ -22,6 +22,11 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 
 class RainbowOnlineExperimental(BaseCLAlgorithm):
+    """
+    Rainbow with different sampling distributions to experiment with potential
+    different sampling approaches
+    """
+
     # random could have repeated samples
     sample_distribution_parameters: Dict[str, Tuple[float, float]] = {
         "endpoint_peak": (0.5, 0.5),
@@ -61,12 +66,7 @@ class RainbowOnlineExperimental(BaseCLAlgorithm):
         self.gradient_clip = gradient_clip
         self.max_lr = max_lr
         self.min_lr = min_lr
-
-        """
-        Potential sampling techniques:
-        *
-        *
-        """
+        
         self.sampling_strategy = sampling_strategy
         self.all_occurrences = all_occurrences
 

@@ -10,10 +10,16 @@ from datasets.utils import CustomImageDataset
 from PIL import Image
 
 class BalancedReplayBuffer:
+    """
+    Implementation of a memory buffer that dynamically resizes the allocated buffer size
+    for each class as the number of classes increases. Always ensures that the total size
+    is less than the specified max size.
+    """
     def __init__(self, max_memory_size: int, disable_warnings: bool = False):
         self.max_memory_size = max_memory_size
         self.disable_warnings = disable_warnings
 
+        # Implemented classes consist of hashes that point to images
         self.class_hash_pointers: Dict[Any, List[int]] = {}
         self.hash_map: Dict[int, Any] = {}
 
@@ -29,6 +35,7 @@ class BalancedReplayBuffer:
         if self.count == 0:
             return
         
+        # Find the largest class
         largest_class = max(self.class_hash_pointers.keys(), key=lambda c: len(self.class_hash_pointers[c]))
         remove_index = random.randrange(0, len(self.class_hash_pointers[largest_class]))
 
@@ -40,6 +47,8 @@ class BalancedReplayBuffer:
         self.class_hash_pointers[largest_class].remove(data_hash)
 
     def add_sample(self, data: np.ndarray, target: Any) -> None:
+        # Usually want to store raw samples instead of augmented tensors
+        # Warn if we don't as it will severely affect results
         if not self.disable_warnings and type(data) is torch.Tensor:
             logger.warning(f"Received data of type tensor")
 
@@ -48,6 +57,7 @@ class BalancedReplayBuffer:
 
         data_hash = hash(pickle.dumps(data))
 
+        # Occurs occasionally due to duplicates in datasets
         if data_hash in self.hash_map.keys():
             logger.warning(f"Duplicate hash: {data_hash}")
             return
@@ -64,12 +74,13 @@ class BalancedReplayBuffer:
             self._remove_sample()
 
     def draw_sample(self, batch_size, device, transform=None):
+        # Random indices, sort them so we can draw the sample easily
         indices = sorted(random.sample(range(self.count), k=batch_size))
-        # logger.debug(f"{self.count}, {indices}")
 
         seen = 0
         indice_index = 0
         next_index = indices[indice_index]
+        # Identity transform
         apply_transform = lambda x: x
 
         if transform is not None:
@@ -77,13 +88,12 @@ class BalancedReplayBuffer:
 
         samples = []
         targets = []
-
+        
+        # Draw the sample across all classes
         for target in self.class_hash_pointers.keys():
             length = len(self.class_hash_pointers[target])
 
             while next_index < seen + length:
-                # print(next_index, seen, length, seen + length, next_index < seen + length)
-                # print(seen + length - next_index)
                 samples.append(self.hash_map[self.class_hash_pointers[target][next_index - seen]])
                 targets.append(target)
 
@@ -99,8 +109,10 @@ class BalancedReplayBuffer:
             if next_index is None:
                 break
         
+        # Convert to a tensor for use with the model
         return torch.stack([apply_transform(x) for x in samples]).to(device), torch.LongTensor(targets).to(device)
-
+    
+    # Convert to a dataset consisting of the buffer samples
     def to_torch_dataset(self, transform=None) -> CustomImageDataset:
         data = []
         targets = []
@@ -113,6 +125,11 @@ class BalancedReplayBuffer:
         return CustomImageDataset(data, targets, transform)
 
 class BalancedReplayBufferWithLogits:
+    """
+    Similar to the BalancedReplayBuffer but additionally stores the logits
+    Needed for Dark Experience Replay
+    """
+
     def __init__(self, max_memory_size: int, disable_warnings: bool = False):
         self.max_memory_size = max_memory_size
         self.disable_warnings = disable_warnings

@@ -22,9 +22,9 @@ from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, RandomV
 import numpy as np
 from PIL import Image
 
-class SCLExperiment(BaseCLAlgorithm):
+class NovelImplementation(BaseCLAlgorithm):
     """
-    SCLExperiment
+    NovelImplementation
     """
     def __init__(
         self,

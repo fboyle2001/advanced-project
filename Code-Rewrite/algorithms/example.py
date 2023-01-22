@@ -12,6 +12,10 @@ import torch.optim as optim
 import random
 
 class Example(BaseCLAlgorithm):
+    """
+    Basic code on top of the BaseCLAlgorithm, not suitable for all implementations
+    but useful as a starting point with everything set up
+    """
     def __init__(
         self,
         model: torch.nn.Module,

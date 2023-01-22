@@ -78,18 +78,6 @@ ALGORITHM_DEFAULTS = {
         "balancing_lambda": 0.5,
         "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
     },
-    algorithms.LearningToPromptWithMemory: {
-        "epochs_per_task": 1,
-        "batch_size": 32,
-        "K_lr": 1e-3,
-        "P_lr": 1e-3,
-        "g_phi_lr": 1e-3,
-        "N": 2,
-        "L_p": 5,
-        "M": 10,
-        "balancing_lambda": 0.5,
-        "prompt_frequency_strategy": ["disabled", "minmax", "scaled_frequency"][1]
-    },
     algorithms.SupervisedContrastiveReplay: {
         "epochs_per_task": 1,
         "batch_size": 10,
@@ -114,9 +102,7 @@ ALGORITHM_DEFAULTS = {
     experiments.NovelExperimentSix: {},
     experiments.NovelExperimentSeven: {},
     experiments.NovelExperimentEight: {},
-    experiments.NovelActual: {},
-    experiments.SCLExperiment: {},
-    experiments.ResNetExperiment: {}
+    experiments.NovelImplementation: {},
 }
 
 DATASET_DEFAULTS = {
@@ -168,10 +154,7 @@ class MLP(torch.nn.Module):
 def execute(algorithm_class, dataset_class, directory, writer):
     size = 32
 
-    if algorithm_class == algorithms.LearningToPrompt or algorithm_class == algorithms.LearningToPromptWithMemory:
-        size = 224
-
-    if algorithm_class == experiments.SCLExperiment:
+    if algorithm_class == algorithms.LearningToPrompt or algorithm_class == experiments.NovelImplementation:
         size = 224
 
     # assert algorithm_class not in experiments

@@ -57,8 +57,6 @@ class DarkExperiencePlusPlus(BaseCLAlgorithm):
         self.augment = torch.nn.Sequential(
             RandomResizedCrop(size=(32, 32), scale=(0.2, 1.)),
             RandomHorizontalFlip()
-            # ColorJitter(0.4, 0.4, 0.4, 0.1, p=0.8),
-            # RandomGrayscale(p=0.2)
         ).to(self.device)
 
         self.memory_batch_size = batch_size
@@ -91,6 +89,7 @@ class DarkExperiencePlusPlus(BaseCLAlgorithm):
             task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
 
             for epoch in range(1, self.epochs_per_task + 1):
+                # Need to update the means if we have done some training
                 self.require_mean_calculation = True
 
                 logger.info(f"Starting epoch {epoch} / {self.epochs_per_task}")

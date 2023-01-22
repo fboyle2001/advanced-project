@@ -7,8 +7,8 @@ from models.cifar.resnet import ResNet
 from dotmap import DotMap
 
 # From GDumb
+# Credit: https://github.com/drimpossible/GDumb/blob/ca38afcec332fa523ceff0cc8d3846e2bcf78697/src/utils.py#L67
 def seed_everything(seed):
-    
     '''
     Fixes the class-to-task assignments and most other sources of randomness, except CUDA training aspects.
     '''

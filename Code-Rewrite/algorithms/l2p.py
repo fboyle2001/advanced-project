@@ -13,8 +13,8 @@ import models.vit.vit_models as vit_models
 
 class LearningToPrompt(BaseCLAlgorithm):
     """
-    Learning to Prompt introduces the use of a pretrained vision transformer.
-    It introduces the idea of trainable prompts from Natural Language Processing to guide the model.
+    Learning to Prompt introduces the use of a pretrained vision transformer and 
+    the idea of trainable prompts from Natural Language Processing to guide the model.
 
     Reference: Wang, Zifeng, et al. 2022 "Learning to prompt for continual learning."
     """
@@ -86,7 +86,7 @@ class LearningToPrompt(BaseCLAlgorithm):
 
         # Initialise the prompts
         self.prompts = [
-            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.L_p, self.D) + 0.0625).to(self.device), requires_grad=True) # maybe should be upping this to L_p, D instead? -> yes!
+            torch.nn.parameter.Parameter(((-0.0625 - 0.0625) * torch.rand(self.L_p, self.D) + 0.0625).to(self.device), requires_grad=True)
             for _ in range(self.M)
         ]
 
@@ -227,9 +227,6 @@ class LearningToPrompt(BaseCLAlgorithm):
 
                     running_loss += batch_loss.item() # type: ignore
                     short_running_loss += batch_loss.item() # type: ignore
-                    
-                    # copied_keys = {i: self.prompt_keys[i].detach().clone() for i in selected_key_indices}
-                    # copied_prompts = {i: self.prompts[i].detach().clone() for i in selected_key_indices}
 
                     # Update phi
                     self.g_phi_opt.zero_grad()
@@ -250,10 +247,6 @@ class LearningToPrompt(BaseCLAlgorithm):
 
                     # Update phi
                     self.g_phi_opt.step()
-
-                    # for seen_key in selected_key_indices:
-                    #     logger.debug(f"K {seen_key}: {not torch.all(torch.eq(copied_keys[seen_key], self.prompt_keys[seen_key]))}")
-                    #     logger.debug(f"P {seen_key}: {not torch.all(torch.eq(copied_prompts[seen_key], self.prompts[seen_key]))}")
 
                     # Logging
                     if batch_no % 40 == 0 and batch_no != 0:
@@ -283,8 +276,6 @@ class LearningToPrompt(BaseCLAlgorithm):
                         short_running_loss = 0
                         ce_l = 0
                         ky_l = 0
-                    
-                    # logger.debug(f"Keys: {sorted(selected_key_indices)}")
 
                 epoch_offset = self.epochs_per_task * task_no
 

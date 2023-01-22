@@ -1,4 +1,3 @@
-
 import torch
 import numpy as np
 import random
@@ -6,7 +5,7 @@ import random
 from torch.utils.data import Dataset
 from PIL import Image
 
-# https://stackoverflow.com/a/59661024
+# Full credit: https://stackoverflow.com/a/59661024
 class CustomImageDataset(Dataset):
     def __init__(self, data, targets, transform=None):
         self.data = data

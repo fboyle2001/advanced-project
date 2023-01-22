@@ -14,11 +14,10 @@ import random
 
 class GDumb(BaseCLAlgorithm):
     """
-    GDumb (Prabhu et al. 2020)
-    Reference: Prabhu et al. "GDumb: A simple approach that questions our progress in continual learning." 2020
-
-    Greedily saves samples as they arrive while maintaining a balanced memory buffer.
+    Greedily stores samples as they arrive while maintaining a balanced memory buffer.
     At inference, trains a model on the memory samples only.
+
+    Reference: Prabhu et al. "GDumb: A simple approach that questions our progress in continual learning." 2020
     """
     def __init__(
         self,

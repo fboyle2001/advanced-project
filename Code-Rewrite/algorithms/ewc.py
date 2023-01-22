@@ -7,14 +7,19 @@ import torch
 import datasets
 import torch.utils.data
 import torch.utils.tensorboard
+from torch.distributions import Categorical
+
 import copy
+import sys
+import time
 
 class ElasticWeightConsolidation(BaseCLAlgorithm):
     """
     Historical technique that uses the Fisher Information Matrix to regularise the loss
     and constrain weight changes to reduce their effect on important connections.
     Reference: Kirkpatrick, James, et al. "Overcoming catastrophic forgetting in neural networks." 2017
-    Code reference: https://github.com/tudor-berariu/fisher-information-matrix
+
+    FIM code reference: https://github.com/tudor-berariu/fisher-information-matrix
     """
         
     def __init__(
@@ -143,10 +148,6 @@ class ElasticWeightConsolidation(BaseCLAlgorithm):
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         return super().classify(batch)
-
-import sys
-import time
-from torch.distributions import Categorical
 
 # Full credit to tudor-berariu
 # https://github.com/tudor-berariu/fisher-information-matrix/blob/52d9be02291f2b3f60e1b4459babcf841f3cc6c0/fim.py#L15

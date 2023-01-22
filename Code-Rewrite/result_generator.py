@@ -152,8 +152,8 @@ algorithm_setups = {
         reduced_model=False,
         img_size=32
     ),
-    "novel_main_uncert_sample": AlgorithmSetup(
-        algorithm=experiments.SCLExperiment,
+    "novel": AlgorithmSetup(
+        algorithm=experiments.NovelImplementation,
         options={},
         reduced_model=False,
         img_size=224

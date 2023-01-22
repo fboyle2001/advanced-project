@@ -14,7 +14,7 @@ import matplotlib.figure
 
 class BaseCLAlgorithm(abc.ABC):
     """
-    Complete training and classification package for a Continual Learning algorithm.
+    Base class for a Continual Learning algorithm implementation
     """
     def __init__(
         self,
@@ -120,6 +120,7 @@ class BaseCLAlgorithm(abc.ABC):
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         """
         Classify samples using max of the outputs of the model
+        Defaults to logit maximisation can override e.g. for NCM classification
 
         Args:
             batch (torch.Tensor): The batch of images to classify
@@ -135,9 +136,6 @@ class BaseCLAlgorithm(abc.ABC):
     def run_base_task_metrics(self, task_no: int, eval_batch_size: int = 32) -> None:
         """
         Calculates metrics for comparisons and stores them per task
-
-        Args:
-            task_no (int): _description_
         """
 
         base_name = f"Task {task_no}"

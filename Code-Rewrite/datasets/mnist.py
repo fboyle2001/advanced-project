@@ -21,7 +21,8 @@ class MNIST(BaseCLDataset):
             dataset_class=torchvision.datasets.MNIST,
             training_dataset_parameters={ "train": True, "download": True },
             testing_dataset_parameters={ "train": False, "download": True },
-            transform=mnist_transform,
+            training_transform=mnist_transform,
+            testing_transform=mnist_transform,
             classes=mnist_classes,
             disjoint=disjoint,
             classes_per_task=classes_per_task
