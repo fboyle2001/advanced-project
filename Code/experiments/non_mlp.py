@@ -22,6 +22,8 @@ import numpy as np
 from PIL import Image
 
 class NonMLPImplementation(BaseCLAlgorithm):
+    valid_sampling_types: List[str] = ["batch_normalised", "relative_distances", "random"]
+
     """
     """
     def __init__(
@@ -64,6 +66,7 @@ class NonMLPImplementation(BaseCLAlgorithm):
         # Use the reduced model from the official repo
         self.model = None
         self.optimiser = None
+        self.loss_criterion = None
         
         # Taken directly from https://github.com/RaptorMai/online-continual-learning/blob/6175ca034e56435acd82b8f17ff59f920f0bc45e/agents/scr.py
         self.augment = nn.Sequential(
@@ -76,6 +79,10 @@ class NonMLPImplementation(BaseCLAlgorithm):
         self.memory: Dict[int, List[np.ndarray]] = {}
         self.require_mean_calculation = True
         self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
+
+        self.uncertainty_type = "relative_distances"
+
+        assert self.uncertainty_type in self.valid_sampling_types, "Invalid sampling type"
 
     @staticmethod
     def get_algorithm_folder() -> str:
@@ -134,6 +141,115 @@ class NonMLPImplementation(BaseCLAlgorithm):
             augmented = torch.cat([augmented, augmented_batch], dim=0)
         
         return augmented
+
+    def _compute_batch_distance(self, batch: torch.Tensor) -> torch.Tensor:
+        # This is approach 1 outlined in the paper
+        augmented_input = self._augment_batch(batch)
+        distances = self._closest_mean_embeddings(augmented_input, k=1).values
+        # Normalise across the batch
+        distances = (distances / distances.norm()).squeeze().reshape(batch.shape[0], -1).mean(dim=1).cpu()
+        return distances
+
+    def _secondary_uncertainty(self, batch: torch.Tensor) -> torch.Tensor:
+        # This is approach 2 outlined in the paper
+        augmented_input = self._augment_batch(batch)
+        # Get the 2 closest
+        distances = self._closest_mean_embeddings(augmented_input, k=2).values
+        # Transpose and split the vector
+        first, second = distances.T.cpu().unbind()
+        uncertainty = first / second
+
+        return uncertainty
+    
+    def _uncertainity_memory_update(self, new_task: DataLoader):
+        logger.info("Starting memory update")
+        segmented_uncertainty: Dict[int, List[Tuple[np.ndarray, float]]] = {}
+
+        uncertainty_func = None
+
+        if self.uncertainty_type == "batch_normalised":
+            uncertainty_func = self._compute_batch_distance
+        elif self.uncertainty_type == "relative_distances":
+            uncertainty_func = self._secondary_uncertainty
+
+        assert uncertainty_func is not None
+
+        logger.info(f"Using uncertainty type: {self.uncertainty_type} {uncertainty_func.__name__}")
+
+        logger.debug("Processing new task samples")
+        # Handle the new task samples first
+        for batch_data in new_task:
+            raw_inp, labels = batch_data
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.numpy().astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = uncertainty_func(inp)
+
+            for sample, target, uncertainty in zip(raw_inp, labels, distances):
+                target = target.item()
+                
+                if target not in segmented_uncertainty.keys():
+                    segmented_uncertainty[target] = []
+
+                segmented_uncertainty[target].append((sample.cpu().numpy(), uncertainty.item())) # type: ignore
+
+        # Now we have the new samples, update the mean embeddings
+        self.generate_embeddings()
+        
+        logger.debug(f"Processing old task samples: total targets = {self.memory.keys()}")
+        # Handle the old task samples
+        for target in self.memory.keys():
+            logger.debug(f"On target {target}")
+            if target not in segmented_uncertainty.keys():
+                segmented_uncertainty[target] = []
+
+            batches = len(self.memory[target]) // self.batch_size
+
+            # Process batches
+            for batch_no in range(batches):
+                raw_inp = self.memory[target][batch_no * self.batch_size:(batch_no + 1) * self.batch_size]
+                inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+                distances = uncertainty_func(inp)
+
+                for sample, uncertainty in zip(raw_inp, distances):
+                    segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
+
+            # Process remains
+            raw_inp = self.memory[target][batches * self.batch_size:]
+            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+            distances = uncertainty_func(inp)
+
+            for sample, uncertainty in zip(raw_inp, distances):
+                segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
+        
+        logger.debug("Drawing memory samples")
+        # Now draw the samples out for the new buffer
+        seen_class_count = len(segmented_uncertainty.keys())
+        new_memory: Dict[int, List[np.ndarray]] = {}
+        memory_per_class = self.max_memory_size // seen_class_count
+
+        for target in segmented_uncertainty.keys():
+            items = segmented_uncertainty[target]
+            item_count = len(items)
+            uncertainty_sorted_items = sorted(items, key=lambda item: item[1])
+            selected_samples: List[np.ndarray] = []
+
+            for j in range(memory_per_class):
+                selected_samples.append(uncertainty_sorted_items[(j * item_count) // memory_per_class][0])
+
+            new_memory[target] = selected_samples
+
+        self.memory = new_memory
+        self.require_mean_calculation = True
+
+        logger.debug("Creating buffer")
+        buffer = buffers.BalancedReplayBuffer(5000)
+
+        for target in new_memory.keys():
+            for i in range(len(new_memory[target])):
+                buffer.add_sample(new_memory[target][i], target)
+        
+        self.buffer = buffer
+
+        logger.info("Memory update completed")
    
     def train(self) -> None:
         super().train()
@@ -144,13 +260,17 @@ class NonMLPImplementation(BaseCLAlgorithm):
 
             task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
 
-            for batch_no, data in enumerate(task_dataloader, 0):
-                raw_inp, raw_labels = data
+            if self.uncertainty_type == "random":
+                for batch_no, data in enumerate(task_dataloader, 0):
+                    raw_inp, raw_labels = data
 
-                for data, target in zip(raw_inp, raw_labels):
-                    self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
+                    for data, target in zip(raw_inp, raw_labels):
+                        self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
+            else:
+                self._uncertainity_memory_update()
             
             logger.info("Populated buffer")
+            self.require_mean_calculation = True
             self.run_base_task_metrics(task_no)
 
         logger.info("Training complete")
