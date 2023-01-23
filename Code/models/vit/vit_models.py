@@ -206,7 +206,7 @@ def create_model():
     cfg = config_dict.ConfigDict()
 
     cfg.MODEL = config_dict.ConfigDict()
-    cfg.MODEL.MODEL_ROOT = "F:\\Documents\\Development\\GitHub\\advanced-project\\Code-Rewrite\\models\\vit\\pretrained"
+    cfg.MODEL.MODEL_ROOT = ".\\models\\vit\\pretrained"
     cfg.MODEL.TRANSFER_TYPE = "prompt"
     cfg.MODEL.TYPE = "vit"
     cfg.MODEL.MLP_NUM = 0
@@ -240,7 +240,7 @@ def create_model_non_prompt(num_classes: int):
     cfg = config_dict.ConfigDict()
 
     cfg.MODEL = config_dict.ConfigDict()
-    cfg.MODEL.MODEL_ROOT = "F:\\Documents\\Development\\GitHub\\advanced-project\\Code-Rewrite\\models\\vit\\pretrained"
+    cfg.MODEL.MODEL_ROOT = ".\\models\\vit\\pretrained"
     cfg.MODEL.TRANSFER_TYPE = "end2end"
     cfg.MODEL.TYPE = "vit"
     cfg.MODEL.MLP_NUM = 0

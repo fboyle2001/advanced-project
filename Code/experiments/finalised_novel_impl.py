@@ -16,15 +16,18 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 import models.vit.vit_models as vit_models
-from models.scr import scr_resnet
 from kornia.augmentation import RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomSolarize, RandomInvert, ColorJitter, RandomGrayscale
 
 import numpy as np
 from PIL import Image
 
 class NovelImplementation(BaseCLAlgorithm):
+    valid_sampling_types: List[str] = ["batch_normalised", "relative_distances", "random"]
+    valid_classification_types: List[str] = ["ncm", "maximisation"]
+
     """
-    NovelImplementation
+    Uses a pre-trained vision transformer with a novel sample uncertainty quanitifcation approach.
+    Classifies samples using NCM classification.
     """
     def __init__(
         self,
@@ -35,7 +38,7 @@ class NovelImplementation(BaseCLAlgorithm):
         writer: torch.utils.tensorboard.writer.SummaryWriter
     ):
         super().__init__(
-            name="SCL Experiment",
+            name="Novel Implementation",
             model_instance=model,
             dataset_instance=dataset,
             optimiser_instance=optimiser,
@@ -64,11 +67,9 @@ class NovelImplementation(BaseCLAlgorithm):
         ]
         
         # Use the reduced model from the official repo
-        self.model = TestNet().to(self.device) # SecondaryTestNet(100).to(self.device) # 
+        self.model = TestNet(len(self.dataset.classes)).to(self.device) # SecondaryTestNet(100).to(self.device) # 
 
         self.optimiser = optim.SGD(self.model.parameters(), lr=0.1)
-
-        self.memory_batch_size = 8
         
         # Taken directly from https://github.com/RaptorMai/online-continual-learning/blob/6175ca034e56435acd82b8f17ff59f920f0bc45e/agents/scr.py
         self.augment = nn.Sequential(
@@ -83,21 +84,26 @@ class NovelImplementation(BaseCLAlgorithm):
         self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
         self.loss_criterion = SupConLoss()
 
-        self.uncertainty_type = "secondary"
+        self.uncertainty_type = "relative_distances"
+        self.classification_type = "ncm"
 
         self.min_lr = 0.0005
         self.max_lr = 0.05
 
+        assert self.uncertainty_type in self.valid_sampling_types, "Invalid sampling type"
+        assert self.classification_type in self.valid_classification_types, "Invalid classification type"
+
     @staticmethod
     def get_algorithm_folder() -> str:
-        return "secondary_experiments/scl"
+        return "novel"
 
     def get_unique_information(self) -> Dict[str, Union[str, int, float]]:
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
             "batch_size": self.batch_size,
             "uncertainty_type": self.uncertainty_type,
-            "max_memory_samples": self.max_memory_size
+            "max_memory_samples": self.max_memory_size,
+            "classification_type": self.classification_type
         }
 
         return info
@@ -154,12 +160,15 @@ class NovelImplementation(BaseCLAlgorithm):
         batch = batch.to(self.device)
         B = batch.shape[0]
         C = len(self.dataset.classes)
+        # Get normalised features
         samples = self.f_r(self.f_e(batch))[:, 0, :]
         samples = samples / torch.linalg.norm(samples, dim=1).reshape(-1, 1)
+        # Extend the vectors
         tiled = samples.tile(dims=(1, C)).reshape(B, C, self.D)
         tiled_means = self.mean_embeddings.tile(dims=(B, 1, 1))
-        # Compute Euclidean distance
+        # Compute Euclidean distance between all means
         distances = (tiled - tiled_means).square().sum(dim=2).sqrt()
+        # Get the smallest k distances i.e. the closest vectors
         return distances.topk(k, dim=1, largest=False)
 
     def _augment_batch(self, batch: torch.Tensor) -> torch.Tensor:
@@ -173,14 +182,19 @@ class NovelImplementation(BaseCLAlgorithm):
         return augmented
 
     def _compute_batch_distance(self, batch: torch.Tensor) -> torch.Tensor:
+        # This is approach 1 outlined in the paper
         augmented_input = self._augment_batch(batch)
         distances = self._closest_mean_embeddings(augmented_input, k=1).values
+        # Normalise across the batch
         distances = (distances / distances.norm()).squeeze().reshape(batch.shape[0], -1).mean(dim=1).cpu()
         return distances
 
     def _secondary_uncertainty(self, batch: torch.Tensor) -> torch.Tensor:
+        # This is approach 2 outlined in the paper
         augmented_input = self._augment_batch(batch)
+        # Get the 2 closest
         distances = self._closest_mean_embeddings(augmented_input, k=2).values
+        # Transpose and split the vector
         first, second = distances.T.cpu().unbind()
         uncertainty = first / second
 
@@ -192,9 +206,9 @@ class NovelImplementation(BaseCLAlgorithm):
 
         uncertainty_func = None
 
-        if self.uncertainty_type == "main":
+        if self.uncertainty_type == "batch_normalised":
             uncertainty_func = self._compute_batch_distance
-        elif self.uncertainty_type == "secondary":
+        elif self.uncertainty_type == "relative_distances":
             uncertainty_func = self._secondary_uncertainty
 
         assert uncertainty_func is not None
@@ -279,27 +293,22 @@ class NovelImplementation(BaseCLAlgorithm):
     def train(self) -> None:
         super().train()
 
-        # for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
-        #     self.model.train()
-
-        #     logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
-        #     logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
-
-        #     task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
-
-        #     # Greedily sample at random
-        #     for batch_no, data in enumerate(task_dataloader, 0):
-        #         raw_inp, raw_labels = data
-
-        #         for data, target in zip(raw_inp, raw_labels):
-        #             self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
-
         for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
             logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
             logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
             task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
-            self._uncertainity_memory_update(task_dataloader)
+
+            # Either sample randomly or use the uncertainty approach
+            if self.uncertainty_type == "random":
+                # Greedily sample at random
+                for batch_no, data in enumerate(task_dataloader, 0):
+                    raw_inp, raw_labels = data
+
+                    for data, target in zip(raw_inp, raw_labels):
+                        self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
+            else:
+                self._uncertainity_memory_update(task_dataloader)
             
             logger.info("Populated buffer")
 
@@ -391,26 +400,33 @@ class NovelImplementation(BaseCLAlgorithm):
         self.run_base_task_metrics(999)
         logger.info("Training complete")
 
-    # def classify(self, batch: torch.Tensor) -> torch.Tensor:
-    #     vit_sample_f = self.f_r(self.f_e(batch))[:, 0, :]
-    #     output = self.model(vit_sample_f)
-    #     _, predicted = torch.max(output.data, 1)
-    #     return predicted
-
+    ## CLASSIFICATION
+    
+    # Maximisation of logits
+    def maximisation_classify(self, batch: torch.Tensor) -> torch.Tensor:
+        vit_sample_f = self.f_r(self.f_e(batch))[:, 0, :]
+        output = self.model(vit_sample_f)
+        _, predicted = torch.max(output.data, 1)
+        return predicted
+    
+    # Generate the mean embedding vectors
     def generate_embeddings(self):
         logger.info("Generating fresh mean embedding vectors")
         means = []
         batch_size = 32
 
         for target in range(0, len(self.dataset.classes)):
+            # Zero mean'd, could set them to be really far away alternatively
             if target not in self.buffer.known_classes:
                 means.append(torch.zeros(1, self.D).to("cpu"))
                 continue
             
+            # Extract and convert to tensors
             buffered = [self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[k].astype(np.uint8))).unsqueeze(0) for k in self.buffer.class_hash_pointers[target]] # type: ignore
             buffered = torch.cat(buffered, dim=0)
             embeds: Optional[torch.Tensor] = None
 
+            # Get the encodings
             for batch_no in range(0, buffered.shape[0] // batch_size + 1):
                 start_idx = batch_no * batch_size
                 end_idx = (batch_no + 1) * batch_size
@@ -434,62 +450,21 @@ class NovelImplementation(BaseCLAlgorithm):
         if self.require_mean_calculation:
             self.generate_embeddings()
 
+        # Classify according to the closest mean
         classes = self._closest_mean_embeddings(batch, k=1).indices.squeeze()
         return classes
     
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
-        return self.ncm_classify(batch)
-
-    # def classify(self, batch: torch.Tensor) -> torch.Tensor:
-    #     self.model.eval()
-
-    #     if self.require_mean_calculation:
-    #         logger.info("Generating fresh mean embedding vectors")
-    #         self.mean_embeddings = dict()
-
-    #         for target in self.buffer.known_classes:
-    #             total_embed = []
-    #             count = 0
-
-    #             for hash_key in self.buffer.class_hash_pointers[target]:
-    #                 count += 1
-    #                 sample = self.dataset.testing_transform(Image.fromarray(self.buffer.hash_map[hash_key].astype(np.uint8))).unsqueeze(0).to(self.device) # type: ignore
-    #                 vit_sample_f = self.f_r(self.f_e(sample))[:, 0, :]
-    #                 encoded = self.model.features(vit_sample_f).detach().clone().squeeze(0)
-    #                 encoded = encoded / encoded.norm()
-    #                 total_embed.append(encoded)
-                
-    #             assert total_embed is not None
-    #             mean_embed = torch.stack(total_embed).mean(0).squeeze()
-    #             mean_embed = mean_embed / mean_embed.norm()
-    #             self.mean_embeddings[target] = mean_embed
-            
-    #         self.require_mean_calculation = False
-    #         logger.debug(f"Generated mean embedding vectors for: {self.mean_embeddings.keys()}")
-
-    #     predictions = []
-    #     batch = batch.to(self.device)
-
-    #     for sample in batch:
-    #         vit_sample_f = self.f_r(self.f_e(sample.unsqueeze(0)))[:, 0, :]
-    #         encoded_sample = self.model.features(vit_sample_f).squeeze(0)
-    #         encoded_sample = encoded_sample / encoded_sample.norm()
-    #         closest_target = None
-    #         closest_value = None
-
-    #         for target in self.mean_embeddings.keys():
-    #             norm = (self.mean_embeddings[target] - encoded_sample).square().sum().sqrt()
-
-    #             if (closest_target is None and closest_value is None) or norm < closest_value:
-    #                 closest_target = target
-    #                 closest_value = norm
-
-    #         predictions.append(torch.tensor([closest_target]))
-
-    #     return torch.cat(predictions, dim=0)
+        if self.classification_type == "ncm":
+            return self.ncm_classify(batch)
+        elif self.classification_type == "maximisation":
+            return self.maximisation_classify(batch)
+        
+        logger.error("Invalid classification type")
+        return torch.zeros(1)
 
 class TestNet(nn.Module):
-    def __init__(self):
+    def __init__(self, classes: int):
         super().__init__()
         self.linear_one = nn.Linear(768, 768)
         self.relu1 = nn.ReLU()
@@ -499,7 +474,7 @@ class TestNet(nn.Module):
 
         self.linear_three = nn.Linear(768, 768)
         
-        self.classifier = AvgPoolClassifier(768, 100)
+        self.classifier = nn.Linear(in_features=768, out_features=classes)
 
     def features(self, x):
         x = self.linear_one(x)
@@ -509,64 +484,14 @@ class TestNet(nn.Module):
         x = self.relu2(x)
 
         x = self.linear_three(x)
-
         return x
 
     def forward(self, x):
         x = self.features(x)
-        x = self.classifier(x)
-        return x
-
-class SecondaryTestNet(nn.Module):
-    def __init__(self, nc: int):
-        super().__init__()
-
-        self.fc1 = nn.Linear(in_features=768, out_features=768)
-        self.bn1 = nn.BatchNorm1d(num_features=768)
-        self.act1 = nn.ReLU()
-
-        self.fc2 = nn.Linear(in_features=768, out_features=512)
-        self.bn2 = nn.BatchNorm1d(num_features=512)
-        self.act2 = nn.ReLU()
-
-        self.fc3 = nn.Linear(in_features=512, out_features=256)
-        self.bn3 = nn.BatchNorm1d(num_features=256)
-        self.act3 = nn.ReLU()
-
-        self.head = nn.Linear(in_features=256, out_features=nc)
-
-    def features(self, x):
-        x = self.fc1(x)
-        x = self.bn1(x)
-        x = self.act1(x)
-
-        x = self.fc2(x)
-        x = self.bn2(x)
-        x = self.act2(x)
-
-        x = self.fc3(x)
-        x = self.bn3(x)
-        x = self.act3(x) # Do I need this here?
-
-        return x
-
-    def forward(self, x):
-        x = self.features(x)
-        return self.head(x)
-
-class AvgPoolClassifier(nn.Module):
-    """
-    Final classification head, 1D Avg Pool followed by Linear layer
-    """
-    def __init__(self, feature_size, classes):
-        super().__init__()
-        self.classifier = nn.Linear(in_features=feature_size, out_features=classes)
-
-    def forward(self, x):
-        # x = x.mean(dim=1)
         x = self.classifier(x)
         return x.squeeze(dim=1)
 
+# Credit: https://github.com/HobbitLong/SupContrast/blob/master/losses.py
 class SupConLoss(nn.Module):
     """Supervised Contrastive Learning: https://arxiv.org/pdf/2004.11362.pdf.
     It also supports the unsupervised contrastive loss in SimCLR"""
