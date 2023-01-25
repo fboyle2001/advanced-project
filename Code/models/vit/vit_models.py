@@ -256,3 +256,24 @@ def create_model_non_prompt(num_classes: int):
 
     model = ViT(cfg, load_pretrain=True)
     return model
+
+def create_model_non_prompt_nf(num_classes: int):
+    cfg = config_dict.ConfigDict()
+
+    cfg.MODEL = config_dict.ConfigDict()
+    cfg.MODEL.MODEL_ROOT = ".\\models\\vit\\pretrained"
+    cfg.MODEL.TRANSFER_TYPE = "end2end"
+    cfg.MODEL.TYPE = "vit"
+    cfg.MODEL.MLP_NUM = 2
+
+    cfg.MODEL.LINEAR = config_dict.ConfigDict()
+    cfg.MODEL.LINEAR.DROPOUT = 0.1
+    cfg.MODEL.LINEAR.MLP_SIZES = []
+
+    cfg.DATA = config_dict.ConfigDict()
+    cfg.DATA.FEATURE = "sup_vitb16_224"
+    cfg.DATA.CROPSIZE = 224
+    cfg.DATA.NUMBER_CLASSES = num_classes
+
+    model = ViT(cfg, load_pretrain=True)
+    return model

@@ -135,13 +135,17 @@ class ResNet(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
-    def forward(self, x):
+    def features(self, x):
         out = self.initial(x)
         out = self.group1(out)
         out = self.group2(out)
         out = self.group3(out)
         if self.nettype == 'imagenet':
             out = self.group4(out)
+        return out
+
+    def forward(self, x):
+        out = self.features(x)
         out = self.pool(out)
         out = out.view(x.size(0), -1)
         out = self.final(out)

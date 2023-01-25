@@ -9,3 +9,4 @@ from .rainbow_online_exp import RainbowOnlineExperimental
 from .l2p import LearningToPrompt
 from .scr import SupervisedContrastiveReplay
 from .der_pp import DarkExperiencePlusPlus
+from .rainbow_ncm import RainbowOnlineNCM

@@ -32,11 +32,11 @@
 - Start writing the results section
 
 # Feedback
-- Wording: in the first section mention the inconsistent result comparison, clarify that this is cross-paper comparisons
-- Why is CIFAR-100 the standard? Back this up with a citation
-- Do a smaller comparison on CIFAR-10
-- Experiment on varying the buffer sample size
-- Check that there is no overlap on ImageNet-21K and cite this
-- What is the motivation for Nearest Class Mean classification
-- Figure placement, maybe move them inline instead?
-- Additional citation anywhere someone might pull up an issue
+- Wording: in the first section mention the inconsistent result comparison, clarify that this is cross-paper comparisons -> added
+- Why is CIFAR-100 the standard? Back this up with a citation -> added
+- Do a smaller comparison on CIFAR-10 -> added to methodology
+- Experiment on varying the buffer sample size -> added 
+- Check that there is no overlap on ImageNet-21K and cite this -> added
+- What is the motivation for Nearest Class Mean classification -> added
+- Figure placement, maybe move them inline instead -> done
+- Additional citation anywhere someone might pull up an issue -> do during review

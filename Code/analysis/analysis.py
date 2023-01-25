@@ -5,8 +5,16 @@ import numpy as np
 
 import time
 import os
+import json
 
 from technique_parser import TechniqueData
+
+# https://stackoverflow.com/a/47626762
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 def load_techniques(technique_structure) -> Dict[str, TechniqueData]:
     techniques = {}
@@ -118,7 +126,7 @@ def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_w
         ax.bar(xs - bar_width / 2, ram_ys, width=bar_width, label="RAM Usage")
         ax.bar(xs + bar_width / 2, vram_ys, width=bar_width, label="VRAM Usage")
 
-    ax.legend(bbox_to_anchor=(1.0, 0.5))
+    ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
     
     return fig
 
@@ -139,7 +147,7 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
     ax.set_title("Overall Accuracy by Task")
     ax.set_ylim(0, 100)
     ax.set_xlabel("Task")
-    ax.legend()
+    ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
 
     # Error Bars?
 
@@ -163,11 +171,11 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
     ax.set_title(title)
     ax.set_ylim(0, 100)
     ax.set_xlabel("Task")
-    ax.legend()
+    ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
 
     return fig
 
-def main(save: bool):
+def main(save: bool, show: bool):
     technique_result_structure = {
         "DER": {
             "folder": "../output/der",
@@ -193,19 +201,29 @@ def main(save: bool):
            "folder": "../output/scr",
            "task_files": None 
         },
-        "Novel (1)": {
-            "folder": "../output/novel_main",
+        "Novel BN": {
+            "folder": "../output/novel_bn",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
         },
-        "Novel (2)": {
-            "folder": "../output/novel_secondary",
+        "Novel RD": {
+            "folder": "../output/novel_rd",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
         },
         "EWC": {
-           "folder": "../output/ewc",
-           "task_files": None 
+            "folder": "../output/ewc",
+            "task_files": None 
         },
+        "GDumb": {
+            "folder": "../output/gdumb",
+            "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
+        # "GDumb BD": {
+        #     "folder": "../output/rainbow_ncm",
+        #     "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
+        # }
     }
+
+    technique_result_structure = dict(sorted(technique_result_structure.items()))
 
     store_dir = f"./output/{time.time()}"
     os.makedirs(store_dir, exist_ok=False)
@@ -219,14 +237,37 @@ def main(save: bool):
     memory_grouped_fig = plot_memory_usage(techniques, stacked=False)
     wc_fig = plot_wall_clock(techniques)
 
+    top_5 = extract_n_accuracy(techniques, n=5, top=True)
+    bottom_5 = extract_n_accuracy(techniques, n=5, top=False)
+    avg_acc = extract_average_accuracy(techniques)
+    ram = extract_average_max_ram_usage(techniques)
+    vram = extract_average_max_vram_usage(techniques)
+    wc = extract_average_wall_clock(techniques)
+
+    joined = {}
+
+    for technique in top_5.keys():
+        joined[technique] = {
+            "top_5": top_5[technique],
+            "bottom_5": bottom_5[technique],
+            "avg_acc": avg_acc[technique],
+            "ram": ram[technique],
+            "vram": vram[technique],
+            "wc": wc[technique]
+        }
+
     if save:
-        top_5_fig.savefig(f"{store_dir}/Top 5 Accuracy.png")
-        bottom_5_fig.savefig(f"{store_dir}/Bottom 5 Accuracy.png")
-        avg_accuracy_fig.savefig(f"{store_dir}/Average Accuracy.png")
+        top_5_fig.savefig(f"{store_dir}/Top 5 Accuracy.png", bbox_inches="tight")
+        bottom_5_fig.savefig(f"{store_dir}/Bottom 5 Accuracy.png", bbox_inches="tight")
+        avg_accuracy_fig.savefig(f"{store_dir}/Average Accuracy.png", bbox_inches="tight")
         memory_stacked_fig.savefig(f"{store_dir}/Stacked Memory Usage.png", bbox_inches="tight")
         memory_grouped_fig.savefig(f"{store_dir}/Grouped Memory Usage.png", bbox_inches="tight")
-        wc_fig.savefig(f"{store_dir}/Wall Clock Time.png")
-    else:
+        wc_fig.savefig(f"{store_dir}/Wall Clock Time.png", bbox_inches="tight")
+
+        with open(f"{store_dir}/processed_results.json", "w+") as fp:
+            json.dump(joined, fp, indent=2, cls=NumpyEncoder)
+
+    if show:
         plt.show()
 
     """
@@ -238,4 +279,4 @@ def main(save: bool):
     """
 
 if __name__ == "__main__":
-    main(save=True)
+    main(save=True, show=False)

@@ -8,3 +8,5 @@ from .ne7 import NovelExperimentSeven
 from .ne8 import NovelExperimentEight
 
 from .finalised_novel_impl import NovelImplementation
+from .non_mlp import NonMLPImplementation
+from .finalised_novel_impl_et_only import NovelImplementationETOnly

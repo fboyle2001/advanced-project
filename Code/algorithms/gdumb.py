@@ -12,6 +12,8 @@ import torch.utils.tensorboard
 import torch.optim as optim
 import random
 
+import copy
+
 class GDumb(BaseCLAlgorithm):
     """
     Greedily stores samples as they arrive while maintaining a balanced memory buffer.
@@ -51,6 +53,8 @@ class GDumb(BaseCLAlgorithm):
         self.min_lr = min_lr
 
         self.cutmix_probability = cutmix_probability
+
+        self.raw_model = copy.deepcopy(self.model).to("cpu")
         
         self.replay_buffer = buffers.BalancedReplayBuffer(max_memory_samples)
 
@@ -73,100 +77,111 @@ class GDumb(BaseCLAlgorithm):
 
     def train(self) -> None:
         super().train()
-        logger.info("Populating replay buffer")
+        for task_no, (task_indices, task_dataset) in enumerate(zip(self.dataset.task_splits, self.dataset.raw_task_datasets)):
+            logger.info(f"Task {task_no + 1} / {self.dataset.task_count}")
+            logger.info(f"Classes in task: {self.dataset.resolve_class_indexes(task_indices)}")
 
-        # Loop the training data once
-        for index in range(len(self.dataset.training_data.data)): # type: ignore
-            img = self.dataset.training_data.data[index] # type: ignore
-            target = self.dataset.training_data.targets[index] # type: ignore
+            task_dataloader = DataLoader(task_dataset, batch_size=self.batch_size, shuffle=True)
+
+            logger.info("Populating replay buffer")
             
-            # Create a balanced replay buffer of samples
-            self.replay_buffer.add_sample(img, target)
+            # Greedily sample at random
+            for batch_no, data in enumerate(task_dataloader, 0):
+                raw_inp, raw_labels = data
+
+                for data, target in zip(raw_inp, raw_labels):
+                    self.replay_buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
         
-        logger.info("Replay buffer populated")
-        logger.info(f"Buffer keys: {self.replay_buffer.known_classes}")
+            logger.info("Replay buffer populated")
+            logger.info(f"Buffer keys: {self.replay_buffer.known_classes}")
 
-        # Check the replay buffer is balanced
-        for class_name in self.replay_buffer.known_classes:
-           logger.info(f"{class_name} has {len(self.replay_buffer.class_hash_pointers[class_name])} samples")
+            # Check the replay buffer is balanced
+            for class_name in self.replay_buffer.known_classes:
+                logger.info(f"{class_name} has {len(self.replay_buffer.class_hash_pointers[class_name])} samples")
 
-        # Convert the raw images to a PyTorch dataset with a dataloader
-        buffer_dataset = self.replay_buffer.to_torch_dataset(transform=self.dataset.training_transform)
-        buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
+            self.model = copy.deepcopy(self.raw_model).to(self.device)
+            self.optimiser = torch.optim.SGD(self.model.parameters(), lr=0.1)
+            logger.info("Copied new raw model")
 
-        logger.info("Training model for inference from buffer")
+            # Convert the raw images to a PyTorch dataset with a dataloader
+            buffer_dataset = self.replay_buffer.to_torch_dataset(transform=self.dataset.training_transform)
+            buffer_dataloader = DataLoader(buffer_dataset, batch_size=self.batch_size, shuffle=True)
 
-        lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
-        # unique_imgs = set()
+            offset = self.post_population_max_epochs * task_no
 
-        for epoch in range(1, self.post_population_max_epochs + 1):
-            logger.info(f"Starting epoch {epoch} / {self.post_population_max_epochs}")
-            # logger.info(f"Unique images: {len(unique_imgs)}")
-            running_loss = 0
+            logger.info("Training model for inference from buffer")
 
-            # Apply learning rate warmup
-            if epoch == 0:
-                for param_group in self.optimiser.param_groups:
-                    param_group['lr'] = self.max_lr * 0.1
+            lr_warmer = optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimiser, T_0=1, T_mult=2, eta_min=self.min_lr)
+            # unique_imgs = set()
 
-                self.writer.add_scalar("LR/Current_LR", self.max_lr * 0.1, epoch)
-            elif epoch == 1:
-                for param_group in self.optimiser.param_groups:
-                    param_group['lr'] = self.max_lr
+            for epoch in range(1, self.post_population_max_epochs + 1):
+                logger.info(f"Starting epoch {epoch} / {self.post_population_max_epochs}")
+                # logger.info(f"Unique images: {len(unique_imgs)}")
+                running_loss = 0
 
-                self.writer.add_scalar("LR/Current_LR", self.max_lr, epoch)
-            else:
-                lr_warmer.step()
-                self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
+                # Apply learning rate warmup
+                if epoch == 0:
+                    for param_group in self.optimiser.param_groups:
+                        param_group['lr'] = self.max_lr * 0.1
 
-            for batch_no, data in enumerate(buffer_dataloader, 0):
-                inp, labels = data
+                    self.writer.add_scalar("LR/Current_LR", self.max_lr * 0.1, epoch)
+                elif epoch == 1:
+                    for param_group in self.optimiser.param_groups:
+                        param_group['lr'] = self.max_lr
 
-                # for ix in inp:
-                #     unique_imgs.add(hash(pickle.dumps(ix.detach().cpu())))
-
-                inp = inp.to(self.device)
-                labels = labels.to(self.device)
-
-                # Apply cutmix
-                apply_cutmix = random.uniform(0, 1) < self.cutmix_probability
-                lam, labels_a, labels_b = None, None, None
-
-                # Cannot merge the two if statements because inp will change causing issues in autograd
-                if apply_cutmix: 
-                    inp, labels_a, labels_b, lam = utils.cutmix_data(x=inp, y=labels, alpha=1.0)
-
-                self.optimiser.zero_grad()
-                predictions = self.model(inp)
-                   
-                if apply_cutmix: 
-                    assert lam is not None and labels_a is not None and labels_b is not None
-                    loss = lam * self.loss_criterion(predictions, labels_a) + (1 - lam) * self.loss_criterion(predictions, labels_b)
+                    self.writer.add_scalar("LR/Current_LR", self.max_lr, epoch)
                 else:
-                    loss = self.loss_criterion(predictions, labels)
-                
-                loss.backward()
+                    lr_warmer.step()
+                    self.writer.add_scalar("LR/Current_LR", lr_warmer.get_last_lr()[-1], epoch)
 
-                # Clip gradients
-                if self.gradient_clip is not None:
-                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+                for batch_no, data in enumerate(buffer_dataloader, 0):
+                    inp, labels = data
 
-                self.optimiser.step()
+                    # for ix in inp:
+                    #     unique_imgs.add(hash(pickle.dumps(ix.detach().cpu())))
 
-                running_loss += loss.item()
+                    inp = inp.to(self.device)
+                    labels = labels.to(self.device)
 
-            # Metrics
-            avg_running_loss = running_loss / (len(buffer_dataloader) - 1)
-            logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
-            self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch)
-            running_loss = 0
+                    # Apply cutmix
+                    apply_cutmix = random.uniform(0, 1) < self.cutmix_probability
+                    lam, labels_a, labels_b = None, None, None
 
-            if epoch > 0 and epoch % 10 == 0:
-                self.model.eval()
-                self.run_base_task_metrics(task_no=epoch)
-                self.model.train()
+                    # Cannot merge the two if statements because inp will change causing issues in autograd
+                    if apply_cutmix: 
+                        inp, labels_a, labels_b, lam = utils.cutmix_data(x=inp, y=labels, alpha=1.0)
+
+                    self.optimiser.zero_grad()
+                    predictions = self.model(inp)
+                    
+                    if apply_cutmix: 
+                        assert lam is not None and labels_a is not None and labels_b is not None
+                        loss = lam * self.loss_criterion(predictions, labels_a) + (1 - lam) * self.loss_criterion(predictions, labels_b)
+                    else:
+                        loss = self.loss_criterion(predictions, labels)
+                    
+                    loss.backward()
+
+                    # Clip gradients
+                    if self.gradient_clip is not None:
+                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip) # type: ignore
+
+                    self.optimiser.step()
+
+                    running_loss += loss.item()
+
+                # Metrics
+                avg_running_loss = running_loss / (len(buffer_dataloader) - 1)
+                logger.info(f"{epoch}, loss: {avg_running_loss:.3f}")
+                self.writer.add_scalar("Loss/Overall_Total_avg", avg_running_loss, epoch)
+                running_loss = 0
+
+                if epoch > 0 and epoch % 10 == 0:
+                    self.model.eval()
+                    self.run_base_task_metrics(task_no=offset+epoch)
+                    self.model.train()
         
-        self.run_base_task_metrics(task_no=self.post_population_max_epochs + 1)
+        self.run_base_task_metrics(task_no=6 * self.post_population_max_epochs + 1)
         logger.info("Training completed")
 
     def classify(self, batch: torch.Tensor) -> torch.Tensor:

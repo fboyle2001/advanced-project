@@ -1,6 +1,6 @@
 @echo off
 
-set algorithm=ewc
+set algorithm=gdumb
 set dataset=cifar100
 set cpt=20
 

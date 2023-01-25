@@ -158,6 +158,32 @@ algorithm_setups = {
         reduced_model=False,
         img_size=224
     ),
+    "non_mlp": AlgorithmSetup(
+        algorithm=experiments.NonMLPImplementation,
+        options={},
+        reduced_model=False,
+        img_size=224
+    ),
+    "novel_et": AlgorithmSetup(
+        algorithm=experiments.NovelImplementationETOnly,
+        options={},
+        reduced_model=False,
+        img_size=224
+    ),
+    "rainbow_ncm": AlgorithmSetup(
+        algorithm=algorithms.RainbowOnlineNCM,
+        options={
+            "batch_size": 32,
+            "max_memory_samples": 5000,
+            "epochs_per_task": 256,
+            "gradient_clip": 10,
+            "max_lr": 0.05,
+            "min_lr": 0.0005,
+            "cutmix_probability": 0.5
+        },
+        reduced_model=False,
+        img_size=32
+    )
 }
 
 dataset_map = {

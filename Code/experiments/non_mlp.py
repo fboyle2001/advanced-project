@@ -92,7 +92,8 @@ class NonMLPImplementation(BaseCLAlgorithm):
         info: Dict[str, Union[str, int, float]] = {
             "epochs_per_task": self.epochs_per_task,
             "batch_size": self.batch_size,
-            "max_memory_samples": self.max_memory_size
+            "max_memory_samples": self.max_memory_size,
+            "uncertainty_type": self.uncertainty_type
         }
 
         return info
@@ -267,7 +268,7 @@ class NonMLPImplementation(BaseCLAlgorithm):
                     for data, target in zip(raw_inp, raw_labels):
                         self.buffer.add_sample(data.detach().cpu().numpy(), target.detach().cpu().item())
             else:
-                self._uncertainity_memory_update()
+                self._uncertainity_memory_update(task_dataloader)
             
             logger.info("Populated buffer")
             self.require_mean_calculation = True
@@ -324,31 +325,3 @@ class NonMLPImplementation(BaseCLAlgorithm):
     
     def classify(self, batch: torch.Tensor) -> torch.Tensor:
         return self.ncm_classify(batch)
-
-class TestNet(nn.Module):
-    def __init__(self, classes: int):
-        super().__init__()
-        self.linear_one = nn.Linear(768, 768)
-        self.relu1 = nn.ReLU()
-
-        self.linear_two = nn.Linear(768, 768)
-        self.relu2 = nn.ReLU()
-
-        self.linear_three = nn.Linear(768, 768)
-        
-        self.classifier = nn.Linear(in_features=768, out_features=classes)
-
-    def features(self, x):
-        x = self.linear_one(x)
-        x = self.relu1(x)
-
-        x = self.linear_two(x)
-        x = self.relu2(x)
-
-        x = self.linear_three(x)
-        return x
-
-    def forward(self, x):
-        x = self.features(x)
-        x = self.classifier(x)
-        return x.squeeze(dim=1)
