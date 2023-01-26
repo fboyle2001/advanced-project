@@ -92,6 +92,17 @@ def extract_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool) 
 
 def plot_wall_clock(techniques: Dict[str, TechniqueData]):
     wall_clock = extract_average_wall_clock(techniques)
+
+    print("Wall Clock")
+
+    for name, task in wall_clock.items():
+        mean = task.mean()
+        se = task.std(ddof=1) / np.sqrt(task.shape[0])
+        
+        print(name, f"{mean:.2f} +- {se:.2f}")
+    
+    print()
+
     boxplot_data = [data for data in wall_clock.values()]
 
     fig = plt.figure()
@@ -109,6 +120,26 @@ def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_w
 
     x_labels = [k for k in ram.keys()]
     xs = np.arange(len(x_labels))
+
+    print("RAM Usage")
+
+    for name, task in ram.items():
+        mean = task.mean()
+        se = task.std(ddof=1) / np.sqrt(task.shape[0])
+        
+        print(name, f"{mean:.2f} +- {se:.2f}")
+    
+    print()
+
+    print("VRAM Usage")
+
+    for name, task in vram.items():
+        mean = task.mean()
+        se = task.std(ddof=1) / np.sqrt(task.shape[0])
+        
+        print(name, f"{mean:.2f} +- {se:.2f}")
+    
+    print()
 
     ram_ys = [ram[k].mean() for k in x_labels]
     vram_ys = [vram[k].mean() for k in x_labels]
@@ -137,15 +168,35 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
+    print("Average Accuracy")
+
     for name, task_accuracies in average_accuracy.items():
         ys = [accuracies.mean() * 100 for accuracies in task_accuracies.values()]
+        
+        overall = list(task_accuracies.values())[-1]
+        mean = overall.mean() * 100
+        se = overall.std(ddof=1) / np.sqrt(overall.shape[0])
+        
+        print(name, f"{mean:.2f} +- {se:.2f}")
         ax.plot(tasks, ys, label=name, marker="o")
+
+    print()
+
+    static_techniques = {
+        "Offline": np.array([0.5804, 0.5742, 0.5891, 0.5894, 0.5755]),
+        "ViT Transfer": np.array([0.9167])
+    }
+
+    for name, static_accuracy in static_techniques.items():
+        ys = (static_accuracy.mean() * 100).repeat(len(tasks))
+        ax.plot(tasks, ys, label=name, marker=None, linestyle="dashed")
 
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
     ax.set_title("Overall Accuracy by Task")
     ax.set_ylim(0, 100)
+    ax.set_xlim(min(tasks), max(tasks))
     ax.set_xlabel("Task")
     ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
 
@@ -159,18 +210,29 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    title = f"{'Top' if top else 'Bottom'}-{n} Accuracy by Task"
+
+    print(title)
 
     for name, task_accuracies in n_accuracy.items():
         ys = [accuracies.mean() * 100 for accuracies in task_accuracies.values()]
+        
+        overall = list(task_accuracies.values())[-1]
+        mean = overall.mean() * 100
+        se = overall.std(ddof=1) / np.sqrt(overall.shape[0])    
+
+        print(name, f"{mean:.2f} +- {se:.2f}")
         ax.plot(tasks, ys, label=name, marker="o")
+
+    print()
 
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
-    title = f"{'Top' if top else 'Bottom'}-{n} Accuracy by Task"
     ax.set_title(title)
     ax.set_ylim(0, 100)
     ax.set_xlabel("Task")
+    ax.set_xlim(min(tasks), max(tasks))
     ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
 
     return fig
@@ -217,6 +279,10 @@ def main(save: bool, show: bool):
             "folder": "../output/gdumb",
             "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
         },
+        # "Offline": {
+        #     "folder": "../output/offline",
+        #     "task_files": {i: "task_250_results.json" for i in [1, 2, 3, 4, 5]}
+        # }
         # "GDumb BD": {
         #     "folder": "../output/rainbow_ncm",
         #     "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
