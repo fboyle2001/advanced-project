@@ -107,7 +107,7 @@ class TechniqueData:
                 loaded_task = TaskData(
                     overall_accuracy,
                     class_results,
-                    {t + 1: per_task_accuracy[str(t)] for t in [0, 1, 2, 3, 4]}
+                    {int(t) + 1: per_task_accuracy[t] for t in per_task_accuracy.keys()}
                 )
 
                 loaded_tasks[task_no] = loaded_task

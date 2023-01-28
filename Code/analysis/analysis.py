@@ -87,7 +87,63 @@ def extract_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool) 
                 per_task[task_no] = np.append(per_task[task_no], averaged_accuracy)
         
         results[name] = per_task
-    
+     
+    return results
+
+def extract_average_forgetting(techniques: Dict[str, TechniqueData]) -> Dict[str, Dict[int, np.ndarray]]:
+    results = {}
+
+    for name, technique in techniques.items():
+        per_task = {}
+
+        for run in technique.runs:
+            # 1. Compute accuracy for tasks 1 to i - 1 at task i
+            # accuracy_matrix[i, j] = accuracy on task j < i after learning task m
+            accuracy_matrix = np.zeros((5, 5))
+
+            for task_no, task_data in run.tasks.items():
+                i = task_no - 1
+
+                for j in range(task_no):
+                    a_i_j = task_data.per_task_accuracy[j + 1]
+                    accuracy_matrix[i, j] = a_i_j
+
+            # if name.lower() == "ewc":
+            #     print(accuracy_matrix)
+
+            # 2. Compute forgetting matrix
+            # forgetting_matrix[i, j] = max(a_t_j - a_i_j) for t = 1, ..., i - 1
+            forgetting_matrix = np.zeros((5, 5))
+
+            for i in range(1, 5):
+                for j in range(i):
+                    #m_i = max([accuracy_matrix[t, j] for t in range(0, i)]) + 1e-6
+                    f_i_j  = max([accuracy_matrix[t, j] - accuracy_matrix[i, j] for t in range(0, i)])
+                    forgetting_matrix[i, j] = f_i_j # / (i * 0.2) #/ m_i
+
+            # if name.lower() == "ewc":
+            #     print(forgetting_matrix)
+            #     print((forgetting_matrix.sum(axis=0)[:-1] / np.array([4, 3, 2, 1])) / accuracy_matrix.diagonal()[-1])
+            #     print(accuracy_matrix.diagonal()[-1])
+            
+            # 3. Compute average forgetting for each task
+
+            F_ks = []
+
+            for k in range(1, 5):
+                if k + 1 not in per_task.keys():
+                    per_task[k + 1] = np.array([])
+
+                F_k = (1 / k) * sum([forgetting_matrix[k, i] for i in range(k)])
+                per_task[k + 1] = np.append(per_task[k + 1], F_k)
+                F_ks.append(F_k)
+            
+            # if name.lower() == "ewc":
+            #     print(F_ks)
+            #     print()
+                
+        results[name] = per_task
+
     return results
 
 def plot_wall_clock(techniques: Dict[str, TechniqueData]):
@@ -237,54 +293,90 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
 
     return fig
 
+def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
+    average_forgetting = extract_average_forgetting(techniques)
+    tasks = [2, 3, 4, 5]
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    print("Average Forgetting")
+
+    for name, task_forgetting in average_forgetting.items():
+        ys = [forgetting.mean() * 100 for forgetting in task_forgetting.values()]
+        
+        overall = list(task_forgetting.values())[-1]
+        mean = overall.mean() * 100
+        se = overall.std(ddof=1) / np.sqrt(overall.shape[0])
+        
+        print(name, f"{mean:.2f} +- {se:.2f}")
+        ax.plot(tasks, ys, label=name, marker="o")
+
+    print()
+
+    ax.grid()
+    ax.set_xticks(tasks)
+    ax.set_ylabel("Average Forgetting (%)")
+    ax.set_title("Average Forgetting per Task")
+    ax.set_ylim(0, 40)
+    ax.set_xlim(min(tasks), max(tasks))
+    ax.set_xlabel("Task")
+    ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
+
+    # Error Bars?
+
+    return fig
+
 def main(save: bool, show: bool):
+    folder = "output_cifar100_5k"
+
     technique_result_structure = {
         "DER": {
-            "folder": "../output/der",
+            "folder": f"../{folder}/der",
             "task_files": None
         },
         "DER++": {
-            "folder": "../output/der_pp",
+            "folder": f"../{folder}/der_pp",
             "task_files": None
         },
         "Finetuning": {
-            "folder": "../output/finetuning",
+            "folder": f"../{folder}/finetuning",
             "task_files": None
         },
         "Rainbow": {
-            "folder": "../output/rainbow_online",
+            "folder": f"../{folder}/rainbow_online",
             "task_files": {i: f"task_{i * 50}_results.json" for i in [1, 2, 3, 4, 5]}
         },
         "L2P": {
-            "folder": "../output/l2p",
+            "folder": f"../{folder}/l2p",
             "task_files": None
         },
         "SCR": {
-           "folder": "../output/scr",
+           "folder": f"../{folder}/scr",
            "task_files": None 
         },
         "Novel BN": {
-            "folder": "../output/novel_bn",
+            "folder": f"../{folder}/novel_bn",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
         },
         "Novel RD": {
-            "folder": "../output/novel_rd",
+            "folder": f"../{folder}/novel_rd",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
         },
         "EWC": {
-            "folder": "../output/ewc",
+            "folder": f"../{folder}/ewc",
             "task_files": None 
         },
         "GDumb": {
-            "folder": "../output/gdumb",
+            "folder": f"../{folder}/gdumb",
             "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
         },
         # "Offline": {
-        #     "folder": "../output/offline",
+        #     "folder": f"../{folder}/offline",
         #     "task_files": {i: "task_250_results.json" for i in [1, 2, 3, 4, 5]}
         # }
         # "GDumb BD": {
-        #     "folder": "../output/rainbow_ncm",
+        #     "folder": f"../{folder}/rainbow_ncm",
         #     "task_files": {i: f"task_{256 * i - 6}_results.json" for i in [1, 2, 3, 4, 5]}
         # }
     }
@@ -302,6 +394,7 @@ def main(save: bool, show: bool):
     memory_stacked_fig = plot_memory_usage(techniques, stacked=True)
     memory_grouped_fig = plot_memory_usage(techniques, stacked=False)
     wc_fig = plot_wall_clock(techniques)
+    avg_forgetting_fig = plot_average_forgetting(techniques)
 
     top_5 = extract_n_accuracy(techniques, n=5, top=True)
     bottom_5 = extract_n_accuracy(techniques, n=5, top=False)
@@ -309,6 +402,7 @@ def main(save: bool, show: bool):
     ram = extract_average_max_ram_usage(techniques)
     vram = extract_average_max_vram_usage(techniques)
     wc = extract_average_wall_clock(techniques)
+    avg_forgetting = extract_average_forgetting(techniques)
 
     joined = {}
 
@@ -319,7 +413,8 @@ def main(save: bool, show: bool):
             "avg_acc": avg_acc[technique],
             "ram": ram[technique],
             "vram": vram[technique],
-            "wc": wc[technique]
+            "wc": wc[technique],
+            "avg_forgetting": avg_forgetting[technique]
         }
 
     if save:
@@ -329,6 +424,7 @@ def main(save: bool, show: bool):
         memory_stacked_fig.savefig(f"{store_dir}/Stacked Memory Usage.png", bbox_inches="tight")
         memory_grouped_fig.savefig(f"{store_dir}/Grouped Memory Usage.png", bbox_inches="tight")
         wc_fig.savefig(f"{store_dir}/Wall Clock Time.png", bbox_inches="tight")
+        avg_forgetting_fig.savefig(f"{store_dir}/Average Forgetting.png", bbox_inches="tight")
 
         with open(f"{store_dir}/processed_results.json", "w+") as fp:
             json.dump(joined, fp, indent=2, cls=NumpyEncoder)

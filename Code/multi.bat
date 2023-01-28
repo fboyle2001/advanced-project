@@ -1,8 +1,8 @@
 @echo off
 
-set algorithm=gdumb
-set dataset=cifar100
-set cpt=20
+set algorithm=scr
+set dataset=cifar10
+set cpt=2
 
 echo Configuration
 echo Algorithm: %algorithm%
