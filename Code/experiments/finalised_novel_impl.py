@@ -84,8 +84,8 @@ class NovelImplementation(BaseCLAlgorithm):
         self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
         self.loss_criterion = SupConLoss()
 
-        self.uncertainty_type = "random"
-        self.classification_type = "maximisation"
+        self.uncertainty_type = "relative_distances"
+        self.classification_type = "ncm"
 
         self.min_lr = 0.0005
         self.max_lr = 0.05

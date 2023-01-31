@@ -328,7 +328,7 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
     return fig
 
 def main(save: bool, show: bool):
-    folder = "output_cifar100_5k"
+    folder = "output_cifar10_5k"
 
     technique_result_structure = {
         "DER": {
@@ -355,14 +355,14 @@ def main(save: bool, show: bool):
            "folder": f"../{folder}/scr",
            "task_files": None 
         },
-        "Novel BN": {
-            "folder": f"../{folder}/novel_bn",
-            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        },
-        "Novel RD": {
-            "folder": f"../{folder}/novel_rd",
-            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        },
+        # "Novel BN": {
+        #     "folder": f"../{folder}/novel_bn",
+        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        # },
+        # "Novel RD": {
+        #     "folder": f"../{folder}/novel_rd",
+        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        # },
         "EWC": {
             "folder": f"../{folder}/ewc",
             "task_files": None 
