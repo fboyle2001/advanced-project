@@ -21,7 +21,7 @@ import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-PARENT_DIRECTORY = "./output_cifar10_5k"
+PARENT_DIRECTORY = "./output_cifar10_0.5k"
 
 @dataclass
 class Configuration:
@@ -63,7 +63,7 @@ algorithm_setups = {
         algorithm=algorithms.GDumb,
         options={
             "batch_size": 32,
-            "max_memory_samples": 5000,
+            "max_memory_samples": 500,
             "post_population_max_epochs": 256,
             "gradient_clip": 10,
             "max_lr": 0.05,
@@ -78,7 +78,7 @@ algorithm_setups = {
         options={
             "max_epochs_per_task": 50,
             "batch_size": 64,
-            "task_importance": 1000
+            "task_importance": 50000 # works, 20k didnt maybe drop a little bit?
         },
         reduced_model=False,
         img_size=32
@@ -87,7 +87,7 @@ algorithm_setups = {
         algorithm=algorithms.RainbowOnline,
         options={
             "batch_size": 32,
-            "max_memory_samples": 5000,
+            "max_memory_samples": 500,
             "epochs_per_task": 50,
             "gradient_clip": 10,
             "max_lr": 0.05,
@@ -120,7 +120,7 @@ algorithm_setups = {
         options={
             "epochs_per_task": 1,
             "batch_size": 10,
-            "max_memory_samples": 5000,
+            "max_memory_samples": 500,
             "memory_batch_size": 100,
             "temperature": 0.07,
             "lr": 0.1
@@ -133,7 +133,7 @@ algorithm_setups = {
         options={
             "epochs_per_task": 1,
             "batch_size": 16,
-            "max_memory_samples": 5000,
+            "max_memory_samples": 500,
             "alpha": 0.5,
             "beta": 0 # Beta = 0 is equivalent to DER
         },
@@ -145,7 +145,7 @@ algorithm_setups = {
         options={
             "epochs_per_task": 1,
             "batch_size": 16,
-            "max_memory_samples": 5000,
+            "max_memory_samples": 500,
             "alpha": 0.5,
             "beta": 0.5
         },
@@ -154,7 +154,9 @@ algorithm_setups = {
     ),
     "novel": AlgorithmSetup(
         algorithm=experiments.NovelImplementation,
-        options={},
+        options={
+            "max_memory_size": 500
+        },
         reduced_model=False,
         img_size=224
     ),
