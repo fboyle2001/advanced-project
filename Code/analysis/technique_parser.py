@@ -39,6 +39,7 @@ class RunningStats:
 class RunData:
     stats: RunningStats
     tasks: Dict[int, TaskData]
+    class_ordering: Dict[int, List[str]]
 
 @dataclass
 class TechniqueData:
@@ -81,12 +82,18 @@ class TechniqueData:
 
             # Load the task data
             loaded_tasks = {}
+            class_ordering = None
 
             for task_no, task_file in task_files.items():
                 task = None
 
                 with open(f"{run_folder}/{task_file}", "r") as task_fp:
                     task = json.load(task_fp)
+
+                if class_ordering is None:
+                    class_ordering = task["task_classes"]
+                
+                assert class_ordering == task["task_classes"]
 
                 overall_accuracy = task["overall_accuracy"]
                 per_class_stats = task["per_class_stats"]
@@ -112,7 +119,7 @@ class TechniqueData:
 
                 loaded_tasks[task_no] = loaded_task
 
-            loaded_run = RunData(loaded_stats, loaded_tasks)
+            loaded_run = RunData(loaded_stats, loaded_tasks, class_ordering)
             loaded_runs.append(loaded_run)
         
         return TechniqueData(name, loaded_runs)

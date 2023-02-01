@@ -344,9 +344,7 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
 
     return fig
 
-def main(save: bool, show: bool):
-    folder = "output_cifar10_5k"
-
+def get_technique_result_structure(folder: str):
     technique_result_structure = {
         "DER": {
             "folder": f"../{folder}/der",
@@ -399,6 +397,11 @@ def main(save: bool, show: bool):
     }
 
     technique_result_structure = dict(sorted(technique_result_structure.items()))
+    return technique_result_structure
+
+def main(save: bool, show: bool):
+    folder = "output_cifar10_5k"
+    technique_result_structure = get_technique_result_structure(folder)
 
     store_dir = f"./output/{time.time()}"
     os.makedirs(store_dir, exist_ok=False)
