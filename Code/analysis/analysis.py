@@ -217,7 +217,7 @@ def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_w
     
     return fig
 
-def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
+def plot_average_accuracy(techniques: Dict[str, TechniqueData], static_name: str):
     average_accuracy = extract_average_accuracy(techniques)
     tasks = [1, 2, 3, 4, 5]
 
@@ -239,11 +239,17 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData]):
     print()
 
     static_techniques = {
-        "Offline": np.array([0.5804, 0.5742, 0.5891, 0.5894, 0.5755]),
-        "ViT Transfer": np.array([0.9167])
+        "output_cifar100_5k": {
+            "Offline": np.array([0.5804, 0.5742, 0.5891, 0.5894, 0.5755]),
+            "ViT Transfer": np.array([0.9167])
+        },
+        "output_cifar10_5k": {
+            "Offline": np.array([0.8995]),
+            "ViT Transfer": np.array([0.9895])
+        }
     }
 
-    for name, static_accuracy in static_techniques.items():
+    for name, static_accuracy in static_techniques[static_name].items():
         ys = (static_accuracy.mean() * 100).repeat(len(tasks))
         ax.plot(tasks, ys, label=name, marker=None, linestyle="dashed")
 
@@ -269,9 +275,17 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
     title = f"{'Top' if top else 'Bottom'}-{n} Accuracy by Task"
 
     print(title)
+    lowest = 100
+    highest = 0
 
     for name, task_accuracies in n_accuracy.items():
         ys = [accuracies.mean() * 100 for accuracies in task_accuracies.values()]
+
+        if min(ys) < lowest:
+            lowest = min(ys)
+
+        if max(ys) > highest:
+            highest = max(ys)
         
         overall = list(task_accuracies.values())[-1]
         mean = overall.mean() * 100
@@ -282,11 +296,14 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
 
     print()
 
+    y_low = np.floor(lowest / 20) * 20
+    y_high = np.ceil(highest / 20) * 20
+
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
     ax.set_title(title)
-    ax.set_ylim(0, 100)
+    ax.set_ylim(y_low, y_high)
     ax.set_xlabel("Task")
     ax.set_xlim(min(tasks), max(tasks))
     ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
@@ -355,14 +372,14 @@ def main(save: bool, show: bool):
            "folder": f"../{folder}/scr",
            "task_files": None 
         },
-        # "Novel BN": {
-        #     "folder": f"../{folder}/novel_bn",
-        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        # },
-        # "Novel RD": {
-        #     "folder": f"../{folder}/novel_rd",
-        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        # },
+        "Novel BN": {
+            "folder": f"../{folder}/novel_bn",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
+        "Novel RD": {
+            "folder": f"../{folder}/novel_rd",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
         "EWC": {
             "folder": f"../{folder}/ewc",
             "task_files": None 
@@ -388,16 +405,18 @@ def main(save: bool, show: bool):
 
     techniques = load_techniques(technique_result_structure)
 
-    top_5_fig = plot_n_accuracy(techniques, n=5, top=True)
-    bottom_5_fig = plot_n_accuracy(techniques, n=5, top=False)
-    avg_accuracy_fig = plot_average_accuracy(techniques)
+    n_size = 1
+
+    top_n_fig = plot_n_accuracy(techniques, n=n_size, top=True)
+    bottom_n_fig = plot_n_accuracy(techniques, n=n_size, top=False)
+    avg_accuracy_fig = plot_average_accuracy(techniques, static_name=folder)
     memory_stacked_fig = plot_memory_usage(techniques, stacked=True)
     memory_grouped_fig = plot_memory_usage(techniques, stacked=False)
     wc_fig = plot_wall_clock(techniques)
     avg_forgetting_fig = plot_average_forgetting(techniques)
 
-    top_5 = extract_n_accuracy(techniques, n=5, top=True)
-    bottom_5 = extract_n_accuracy(techniques, n=5, top=False)
+    top_n = extract_n_accuracy(techniques, n=n_size, top=True)
+    bottom_n = extract_n_accuracy(techniques, n=n_size, top=False)
     avg_acc = extract_average_accuracy(techniques)
     ram = extract_average_max_ram_usage(techniques)
     vram = extract_average_max_vram_usage(techniques)
@@ -406,10 +425,10 @@ def main(save: bool, show: bool):
 
     joined = {}
 
-    for technique in top_5.keys():
+    for technique in top_n.keys():
         joined[technique] = {
-            "top_5": top_5[technique],
-            "bottom_5": bottom_5[technique],
+            f"top_{n_size}": top_n[technique],
+            f"bottom_{n_size}": bottom_n[technique],
             "avg_acc": avg_acc[technique],
             "ram": ram[technique],
             "vram": vram[technique],
@@ -418,8 +437,8 @@ def main(save: bool, show: bool):
         }
 
     if save:
-        top_5_fig.savefig(f"{store_dir}/Top 5 Accuracy.png", bbox_inches="tight")
-        bottom_5_fig.savefig(f"{store_dir}/Bottom 5 Accuracy.png", bbox_inches="tight")
+        top_n_fig.savefig(f"{store_dir}/Top {n_size} Accuracy.png", bbox_inches="tight")
+        bottom_n_fig.savefig(f"{store_dir}/Bottom {n_size} Accuracy.png", bbox_inches="tight")
         avg_accuracy_fig.savefig(f"{store_dir}/Average Accuracy.png", bbox_inches="tight")
         memory_stacked_fig.savefig(f"{store_dir}/Stacked Memory Usage.png", bbox_inches="tight")
         memory_grouped_fig.savefig(f"{store_dir}/Grouped Memory Usage.png", bbox_inches="tight")
