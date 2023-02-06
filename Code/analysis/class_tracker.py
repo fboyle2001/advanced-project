@@ -118,7 +118,7 @@ def plot_accuracy_over_task(data):
 
 
 def main():
-    folder = "output_cifar10_5k"
+    folder = "output_cifar100_5k"
     technique_result_structure = get_technique_result_structure(folder)
     techniques = load_techniques(technique_result_structure)
 

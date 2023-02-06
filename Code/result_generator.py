@@ -78,7 +78,7 @@ algorithm_setups = {
         options={
             "max_epochs_per_task": 50,
             "batch_size": 64,
-            "task_importance": 50000 # works, 20k didnt maybe drop a little bit?
+            "task_importance": 175000 # works, 20k didnt maybe drop a little bit? #250k worked reasonably well
         },
         reduced_model=False,
         img_size=32
