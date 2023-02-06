@@ -246,6 +246,10 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData], static_name: str
         "output_cifar10_5k": {
             "Offline": np.array([0.8995]),
             "ViT Transfer": np.array([0.9895])
+        },
+        "output_cifar10_0.5k": {
+            "Offline": np.array([0.8995]),
+            "ViT Transfer": np.array([0.9895])
         }
     }
 
@@ -400,7 +404,7 @@ def get_technique_result_structure(folder: str):
     return technique_result_structure
 
 def main(save: bool, show: bool):
-    folder = "output_cifar10_5k"
+    folder = "output_cifar10_0.5k"
     technique_result_structure = get_technique_result_structure(folder)
 
     store_dir = f"./output/{time.time()}"
