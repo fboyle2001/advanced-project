@@ -385,10 +385,10 @@ def get_technique_result_structure(folder: str):
            "folder": f"../{folder}/scr",
            "task_files": None 
         },
-        # "Novel BN": {
-        #     "folder": f"../{folder}/novel_bn",
-        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        # },
+        "Novel BN": {
+            "folder": f"../{folder}/novel_bn",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
         "Novel RD": {
             "folder": f"../{folder}/novel_rd",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
