@@ -323,9 +323,18 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
 
     print("Average Forgetting")
 
+    lowest = 100
+    highest = 0
+
     for name, task_forgetting in average_forgetting.items():
         ys = [forgetting.mean() * 100 for forgetting in task_forgetting.values()]
         
+        if min(ys) < lowest:
+            lowest = min(ys)
+
+        if max(ys) > highest:
+            highest = max(ys)
+
         overall = list(task_forgetting.values())[-1]
         mean = overall.mean() * 100
         se = overall.std(ddof=1) / np.sqrt(overall.shape[0])
@@ -334,12 +343,14 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
         ax.plot(tasks, ys, label=name, marker="o")
 
     print()
+    y_low = np.floor(lowest / 20) * 20
+    y_high = np.ceil(highest / 20) * 20
 
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Average Forgetting (%)")
     ax.set_title("Average Forgetting per Task")
-    ax.set_ylim(0, 40)
+    ax.set_ylim(y_low, y_high)
     ax.set_xlim(min(tasks), max(tasks))
     ax.set_xlabel("Task")
     ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
