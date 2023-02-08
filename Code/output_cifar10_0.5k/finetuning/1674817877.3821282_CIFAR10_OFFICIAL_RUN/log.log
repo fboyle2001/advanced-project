@@ -1,0 +1,124 @@
+2023-01-27 11:11:17.386 | INFO     | __main__:setup_files:206 - Experiment Name: OFFICIAL_RUN
+2023-01-27 11:11:17.387 | INFO     | __main__:main:311 - Command line arguments: Configuration(algorithm='finetuning', dataset='cifar10', classes_per_task=2, seed=9767)
+2023-01-27 11:11:17.389 | INFO     | __main__:main:315 - Seeded random to 9767
+2023-01-27 11:11:17.391 | INFO     | __main__:main:319 - Got CUDA device
+2023-01-27 11:11:17.391 | INFO     | __main__:force_cuda_load:254 - Forcing CUDA initialisation...
+2023-01-27 11:11:17.454 | INFO     | __main__:main:323 - CUDA initialised
+2023-01-27 11:11:17.455 | INFO     | __main__:setup_shutdown_hook:250 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN
+2023-01-27 11:11:17.485 | INFO     | __main__:main:327 - Setup shutdown hooks
+2023-01-27 11:11:17.611 | INFO     | __main__:main:332 - Model is setup
+2023-01-27 11:11:17.612 | INFO     | __main__:main:334 - Complete pre-setup, starting experiment
+2023-01-27 11:11:18.843 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-01-27 11:11:18.845 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-01-27 11:11:18.865 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      0,
+      6
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      9,
+      8
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "plane",
+      "frog"
+    ],
+    [
+      "deer",
+      "dog"
+    ],
+    [
+      "horse",
+      "bird"
+    ],
+    [
+      "car",
+      "cat"
+    ],
+    [
+      "truck",
+      "ship"
+    ]
+  ]
+}
+2023-01-27 11:11:18.867 | DEBUG    | __main__:run_experiment:278 - PID: 16464
+2023-01-27 11:11:18.868 | INFO     | __main__:run_experiment:280 - Starting...
+2023-01-27 11:11:18.870 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.finetuning.Finetuning",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "max_epochs_per_task": 1,
+  "batch_size": 64
+}
+2023-01-27 11:11:18.870 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-01-27 11:11:18.871 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-01-27 11:11:18.872 | INFO     | algorithms.finetuning:train:53 - Task 1 / 5
+2023-01-27 11:11:18.873 | INFO     | algorithms.finetuning:train:54 - Classes in task: ['plane', 'frog']
+2023-01-27 11:11:18.873 | INFO     | algorithms.finetuning:train:58 - Starting epoch 1 / 1
+2023-01-27 11:11:32.170 | INFO     | algorithms.finetuning:train:83 - 1, loss: 1.473
+2023-01-27 11:11:32.171 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 0
+2023-01-27 11:11:37.286 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-01-27 11:11:37.288 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1772 / 10000 samples (17.72% correct)
+2023-01-27 11:11:37.513 | INFO     | algorithms.finetuning:train:53 - Task 2 / 5
+2023-01-27 11:11:37.517 | INFO     | algorithms.finetuning:train:54 - Classes in task: ['deer', 'dog']
+2023-01-27 11:11:37.518 | INFO     | algorithms.finetuning:train:58 - Starting epoch 1 / 1
+2023-01-27 11:11:46.691 | INFO     | algorithms.finetuning:train:83 - 1, loss: 0.637
+2023-01-27 11:11:46.693 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 1
+2023-01-27 11:11:51.392 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-01-27 11:11:51.394 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1530 / 10000 samples (15.30% correct)
+2023-01-27 11:11:51.524 | INFO     | algorithms.finetuning:train:53 - Task 3 / 5
+2023-01-27 11:11:51.528 | INFO     | algorithms.finetuning:train:54 - Classes in task: ['horse', 'bird']
+2023-01-27 11:11:51.529 | INFO     | algorithms.finetuning:train:58 - Starting epoch 1 / 1
+2023-01-27 11:12:00.580 | INFO     | algorithms.finetuning:train:83 - 1, loss: 0.850
+2023-01-27 11:12:00.581 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 2
+2023-01-27 11:12:05.267 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-01-27 11:12:05.269 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1547 / 10000 samples (15.47% correct)
+2023-01-27 11:12:05.399 | INFO     | algorithms.finetuning:train:53 - Task 4 / 5
+2023-01-27 11:12:05.403 | INFO     | algorithms.finetuning:train:54 - Classes in task: ['car', 'cat']
+2023-01-27 11:12:05.404 | INFO     | algorithms.finetuning:train:58 - Starting epoch 1 / 1
+2023-01-27 11:12:14.459 | INFO     | algorithms.finetuning:train:83 - 1, loss: 0.777
+2023-01-27 11:12:14.460 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 3
+2023-01-27 11:12:19.149 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-01-27 11:12:19.151 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1810 / 10000 samples (18.10% correct)
+2023-01-27 11:12:19.281 | INFO     | algorithms.finetuning:train:53 - Task 5 / 5
+2023-01-27 11:12:19.285 | INFO     | algorithms.finetuning:train:54 - Classes in task: ['truck', 'ship']
+2023-01-27 11:12:19.285 | INFO     | algorithms.finetuning:train:58 - Starting epoch 1 / 1
+2023-01-27 11:12:28.343 | INFO     | algorithms.finetuning:train:83 - 1, loss: 0.815
+2023-01-27 11:12:28.345 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 4
+2023-01-27 11:12:33.086 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/finetuning/1674817877.3821282_CIFAR10_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-01-27 11:12:33.087 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1564 / 10000 samples (15.64% correct)
+2023-01-27 11:12:33.216 | INFO     | algorithms.finetuning:train:92 - Training complete
+2023-01-27 11:12:33.220 | INFO     | __main__:run_experiment:286 - Training and evaluation completed!
+2023-01-27 11:12:33.221 | INFO     | __main__:run_experiment:300 - Wrote usage stats to file
+2023-01-27 11:12:33.222 | INFO     | __main__:main:340 - Complete
+2023-01-27 11:12:33.222 | INFO     | __main__:close_tensorboard_writer:248 - Shut down TensorBoard
