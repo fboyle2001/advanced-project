@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional
 
 from loguru import logger
 from torch.utils.tensorboard.writer import SummaryWriter
@@ -21,14 +21,14 @@ import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-PARENT_DIRECTORY = "./output_cifar10_0.5k"
-
+PARENT_DIRECTORY = "./output_cifar10_varied_sampling"
 @dataclass
 class Configuration:
     algorithm: str
     dataset: str
     classes_per_task: int
     seed: int
+    samples: Optional[int]
 
 @dataclass
 class AlgorithmSetup:
@@ -155,7 +155,7 @@ algorithm_setups = {
     "novel": AlgorithmSetup(
         algorithm=experiments.NovelImplementation,
         options={
-            "max_memory_size": 500
+            "max_memory_samples": 500
         },
         reduced_model=False,
         img_size=224
@@ -217,6 +217,7 @@ def parse_arguments() -> Configuration:
     parser.add_argument("--dataset", action="store", choices=dataset_map.keys(), default="cifar100")
     parser.add_argument("--cpt", "--classes_per_task", action="store", type=int, default=20)
     parser.add_argument("--seed", action="store", type=int, default=2001)
+    parser.add_argument("--samples", action="store", type=int)
 
     arguments = parser.parse_args()
 
@@ -224,7 +225,8 @@ def parse_arguments() -> Configuration:
         algorithm=arguments.algorithm,
         dataset=arguments.dataset,
         classes_per_task=arguments.cpt,
-        seed=arguments.seed
+        seed=arguments.seed,
+        samples=arguments.samples
     )
 
 def select_model(dataset_name, reduced):
@@ -307,6 +309,13 @@ def main():
 
     # Get the algorithm
     algorithm_setup = algorithm_setups[config.algorithm]
+
+    # Set the samples
+    if config.samples is not None:
+        if config.algorithm in ["gdumb", "rainbow", "scr", "der", "derpp", "novel"]:
+            algorithm_setup.options["max_memory_samples"] = config.samples
+        else:
+            assert 1 == 0, f"Invalid algorithm {config.algorithm} for sample setting"
 
     # Setup the directory and get the writer
     directory, writer = setup_files(algorithm_setup.algorithm.get_algorithm_folder(), dataset_map[config.dataset], "OFFICIAL_RUN")

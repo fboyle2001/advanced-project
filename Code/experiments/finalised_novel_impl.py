@@ -36,7 +36,7 @@ class NovelImplementation(BaseCLAlgorithm):
         optimiser: torch.optim.Optimizer,
         loss_criterion: torch.nn.modules.loss._Loss,
         writer: torch.utils.tensorboard.writer.SummaryWriter,
-        max_memory_size: int
+        max_memory_samples: int
     ):
         super().__init__(
             name="Novel Implementation",
@@ -54,7 +54,7 @@ class NovelImplementation(BaseCLAlgorithm):
         self.D = self.pretrained_vit.feat_dim # number of features
         self.tau = 0.07
 
-        self.max_memory_size = max_memory_size
+        self.max_memory_size = max_memory_samples
         self.buffer = buffers.BalancedReplayBuffer(self.max_memory_size)
         self.augmentations = [
             RandomHorizontalFlip(),
