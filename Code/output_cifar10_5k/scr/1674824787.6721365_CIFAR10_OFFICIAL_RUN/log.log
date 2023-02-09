@@ -1,0 +1,293 @@
+2023-01-27 13:06:27.677 | INFO     | __main__:setup_files:206 - Experiment Name: OFFICIAL_RUN
+2023-01-27 13:06:27.678 | INFO     | __main__:main:311 - Command line arguments: Configuration(algorithm='scr', dataset='cifar10', classes_per_task=2, seed=2461)
+2023-01-27 13:06:27.680 | INFO     | __main__:main:315 - Seeded random to 2461
+2023-01-27 13:06:27.681 | INFO     | __main__:main:319 - Got CUDA device
+2023-01-27 13:06:27.682 | INFO     | __main__:force_cuda_load:254 - Forcing CUDA initialisation...
+2023-01-27 13:06:27.738 | INFO     | __main__:main:323 - CUDA initialised
+2023-01-27 13:06:27.739 | INFO     | __main__:setup_shutdown_hook:250 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN
+2023-01-27 13:06:27.741 | INFO     | __main__:main:327 - Setup shutdown hooks
+2023-01-27 13:06:27.764 | INFO     | __main__:main:332 - Model is setup
+2023-01-27 13:06:27.764 | INFO     | __main__:main:334 - Complete pre-setup, starting experiment
+2023-01-27 13:06:29.021 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-01-27 13:06:29.023 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-01-27 13:06:29.043 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      4,
+      7
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      1,
+      9
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      5,
+      0
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "deer",
+      "horse"
+    ],
+    [
+      "cat",
+      "frog"
+    ],
+    [
+      "car",
+      "truck"
+    ],
+    [
+      "ship",
+      "bird"
+    ],
+    [
+      "dog",
+      "plane"
+    ]
+  ]
+}
+2023-01-27 13:06:29.065 | DEBUG    | __main__:run_experiment:278 - PID: 13880
+2023-01-27 13:06:29.066 | INFO     | __main__:run_experiment:280 - Starting...
+2023-01-27 13:06:29.067 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.scr.SupervisedContrastiveReplay",
+  "model_class": "models.scr.scr_resnet.SupConResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "epochs_per_task": 1,
+  "batch_size": 10,
+  "max_memory_samples": 5000,
+  "memory_batch_size": 100,
+  "tau (temperature)": 0.07,
+  "lr": 0.1
+}
+2023-01-27 13:06:29.068 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-01-27 13:06:29.069 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-01-27 13:06:29.070 | INFO     | algorithms.scr:train:126 - Task 1 / 5
+2023-01-27 13:06:29.071 | INFO     | algorithms.scr:train:127 - Classes in task: ['deer', 'horse']
+2023-01-27 13:06:29.071 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-27 13:06:39.050 | INFO     | algorithms.scr:train:180 - 0:1:40, loss: 4.184
+2023-01-27 13:06:49.034 | INFO     | algorithms.scr:train:180 - 0:1:80, loss: 5.368
+2023-01-27 13:06:58.976 | INFO     | algorithms.scr:train:180 - 0:1:120, loss: 5.362
+2023-01-27 13:07:08.913 | INFO     | algorithms.scr:train:180 - 0:1:160, loss: 5.353
+2023-01-27 13:07:19.256 | INFO     | algorithms.scr:train:180 - 0:1:200, loss: 5.345
+2023-01-27 13:07:29.581 | INFO     | algorithms.scr:train:180 - 0:1:240, loss: 5.340
+2023-01-27 13:07:39.953 | INFO     | algorithms.scr:train:180 - 0:1:280, loss: 5.341
+2023-01-27 13:07:50.297 | INFO     | algorithms.scr:train:180 - 0:1:320, loss: 5.339
+2023-01-27 13:08:00.651 | INFO     | algorithms.scr:train:180 - 0:1:360, loss: 5.333
+2023-01-27 13:08:11.038 | INFO     | algorithms.scr:train:180 - 0:1:400, loss: 5.325
+2023-01-27 13:08:21.392 | INFO     | algorithms.scr:train:180 - 0:1:440, loss: 5.329
+2023-01-27 13:08:31.743 | INFO     | algorithms.scr:train:180 - 0:1:480, loss: 5.329
+2023-01-27 13:08:42.136 | INFO     | algorithms.scr:train:180 - 0:1:520, loss: 5.325
+2023-01-27 13:08:52.494 | INFO     | algorithms.scr:train:180 - 0:1:560, loss: 5.329
+2023-01-27 13:09:02.890 | INFO     | algorithms.scr:train:180 - 0:1:600, loss: 5.324
+2023-01-27 13:09:13.254 | INFO     | algorithms.scr:train:180 - 0:1:640, loss: 5.321
+2023-01-27 13:09:23.616 | INFO     | algorithms.scr:train:180 - 0:1:680, loss: 5.311
+2023-01-27 13:09:33.978 | INFO     | algorithms.scr:train:180 - 0:1:720, loss: 5.305
+2023-01-27 13:09:44.352 | INFO     | algorithms.scr:train:180 - 0:1:760, loss: 5.314
+2023-01-27 13:09:54.690 | INFO     | algorithms.scr:train:180 - 0:1:800, loss: 5.294
+2023-01-27 13:10:05.076 | INFO     | algorithms.scr:train:180 - 0:1:840, loss: 5.301
+2023-01-27 13:10:15.556 | INFO     | algorithms.scr:train:180 - 0:1:880, loss: 5.291
+2023-01-27 13:10:25.923 | INFO     | algorithms.scr:train:180 - 0:1:920, loss: 5.291
+2023-01-27 13:10:36.301 | INFO     | algorithms.scr:train:180 - 0:1:960, loss: 5.288
+2023-01-27 13:10:46.413 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-27 13:10:46.414 | DEBUG    | algorithms.scr:train:186 - 7 has 2500 samples
+2023-01-27 13:10:46.414 | DEBUG    | algorithms.scr:train:186 - 4 has 2500 samples
+2023-01-27 13:10:46.415 | INFO     | algorithms.scr:train:192 - 1, loss: 5.277
+2023-01-27 13:10:46.416 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 0
+2023-01-27 13:10:46.423 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-27 13:10:59.249 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-01-27 13:11:27.215 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-01-27 13:11:27.217 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1722 / 10000 samples (17.22% correct)
+2023-01-27 13:11:27.409 | INFO     | algorithms.scr:train:126 - Task 2 / 5
+2023-01-27 13:11:27.413 | INFO     | algorithms.scr:train:127 - Classes in task: ['cat', 'frog']
+2023-01-27 13:11:27.414 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-27 13:11:38.033 | INFO     | algorithms.scr:train:180 - 1:1:40, loss: 5.409
+2023-01-27 13:11:48.414 | INFO     | algorithms.scr:train:180 - 1:1:80, loss: 5.278
+2023-01-27 13:11:58.778 | INFO     | algorithms.scr:train:180 - 1:1:120, loss: 5.268
+2023-01-27 13:12:09.121 | INFO     | algorithms.scr:train:180 - 1:1:160, loss: 5.263
+2023-01-27 13:12:19.445 | INFO     | algorithms.scr:train:180 - 1:1:200, loss: 5.247
+2023-01-27 13:12:29.786 | INFO     | algorithms.scr:train:180 - 1:1:240, loss: 5.252
+2023-01-27 13:12:40.110 | INFO     | algorithms.scr:train:180 - 1:1:280, loss: 5.243
+2023-01-27 13:12:50.456 | INFO     | algorithms.scr:train:180 - 1:1:320, loss: 5.232
+2023-01-27 13:13:00.812 | INFO     | algorithms.scr:train:180 - 1:1:360, loss: 5.217
+2023-01-27 13:13:11.150 | INFO     | algorithms.scr:train:180 - 1:1:400, loss: 5.209
+2023-01-27 13:13:21.583 | INFO     | algorithms.scr:train:180 - 1:1:440, loss: 5.200
+2023-01-27 13:13:31.925 | INFO     | algorithms.scr:train:180 - 1:1:480, loss: 5.187
+2023-01-27 13:13:42.301 | INFO     | algorithms.scr:train:180 - 1:1:520, loss: 5.176
+2023-01-27 13:13:52.614 | INFO     | algorithms.scr:train:180 - 1:1:560, loss: 5.180
+2023-01-27 13:14:02.947 | INFO     | algorithms.scr:train:180 - 1:1:600, loss: 5.155
+2023-01-27 13:14:13.297 | INFO     | algorithms.scr:train:180 - 1:1:640, loss: 5.144
+2023-01-27 13:14:23.631 | INFO     | algorithms.scr:train:180 - 1:1:680, loss: 5.134
+2023-01-27 13:14:33.985 | INFO     | algorithms.scr:train:180 - 1:1:720, loss: 5.129
+2023-01-27 13:14:44.366 | INFO     | algorithms.scr:train:180 - 1:1:760, loss: 5.120
+2023-01-27 13:14:54.697 | INFO     | algorithms.scr:train:180 - 1:1:800, loss: 5.130
+2023-01-27 13:15:05.066 | INFO     | algorithms.scr:train:180 - 1:1:840, loss: 5.102
+2023-01-27 13:15:15.409 | INFO     | algorithms.scr:train:180 - 1:1:880, loss: 5.102
+2023-01-27 13:15:25.753 | INFO     | algorithms.scr:train:180 - 1:1:920, loss: 5.087
+2023-01-27 13:15:36.096 | INFO     | algorithms.scr:train:180 - 1:1:960, loss: 5.098
+2023-01-27 13:15:46.186 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-27 13:15:46.187 | DEBUG    | algorithms.scr:train:186 - 7 has 1250 samples
+2023-01-27 13:15:46.188 | DEBUG    | algorithms.scr:train:186 - 4 has 1250 samples
+2023-01-27 13:15:46.188 | DEBUG    | algorithms.scr:train:186 - 3 has 1250 samples
+2023-01-27 13:15:46.189 | DEBUG    | algorithms.scr:train:186 - 6 has 1250 samples
+2023-01-27 13:15:46.190 | INFO     | algorithms.scr:train:192 - 1, loss: 5.187
+2023-01-27 13:15:46.191 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 1
+2023-01-27 13:15:46.198 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-27 13:15:58.943 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([7, 4, 3, 6])
+2023-01-27 13:16:29.305 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-01-27 13:16:29.307 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3133 / 10000 samples (31.33% correct)
+2023-01-27 13:16:29.439 | INFO     | algorithms.scr:train:126 - Task 3 / 5
+2023-01-27 13:16:29.444 | INFO     | algorithms.scr:train:127 - Classes in task: ['car', 'truck']
+2023-01-27 13:16:29.445 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-27 13:16:40.074 | INFO     | algorithms.scr:train:180 - 2:1:40, loss: 5.203
+2023-01-27 13:16:50.446 | INFO     | algorithms.scr:train:180 - 2:1:80, loss: 5.033
+2023-01-27 13:17:00.812 | INFO     | algorithms.scr:train:180 - 2:1:120, loss: 4.990
+2023-01-27 13:17:11.164 | INFO     | algorithms.scr:train:180 - 2:1:160, loss: 4.939
+2023-01-27 13:17:21.517 | INFO     | algorithms.scr:train:180 - 2:1:200, loss: 4.906
+2023-01-27 13:17:31.894 | INFO     | algorithms.scr:train:180 - 2:1:240, loss: 4.891
+2023-01-27 13:17:42.293 | INFO     | algorithms.scr:train:180 - 2:1:280, loss: 4.861
+2023-01-27 13:17:52.640 | INFO     | algorithms.scr:train:180 - 2:1:320, loss: 4.845
+2023-01-27 13:18:02.990 | INFO     | algorithms.scr:train:180 - 2:1:360, loss: 4.839
+2023-01-27 13:18:13.343 | INFO     | algorithms.scr:train:180 - 2:1:400, loss: 4.830
+2023-01-27 13:18:23.688 | INFO     | algorithms.scr:train:180 - 2:1:440, loss: 4.831
+2023-01-27 13:18:34.050 | INFO     | algorithms.scr:train:180 - 2:1:480, loss: 4.812
+2023-01-27 13:18:44.414 | INFO     | algorithms.scr:train:180 - 2:1:520, loss: 4.770
+2023-01-27 13:18:54.782 | INFO     | algorithms.scr:train:180 - 2:1:560, loss: 4.765
+2023-01-27 13:19:05.179 | INFO     | algorithms.scr:train:180 - 2:1:600, loss: 4.736
+2023-01-27 13:19:15.526 | INFO     | algorithms.scr:train:180 - 2:1:640, loss: 4.746
+2023-01-27 13:19:26.035 | INFO     | algorithms.scr:train:180 - 2:1:680, loss: 4.747
+2023-01-27 13:19:36.410 | INFO     | algorithms.scr:train:180 - 2:1:720, loss: 4.728
+2023-01-27 13:19:46.767 | INFO     | algorithms.scr:train:180 - 2:1:760, loss: 4.721
+2023-01-27 13:19:57.121 | INFO     | algorithms.scr:train:180 - 2:1:800, loss: 4.698
+2023-01-27 13:20:07.493 | INFO     | algorithms.scr:train:180 - 2:1:840, loss: 4.700
+2023-01-27 13:20:17.889 | INFO     | algorithms.scr:train:180 - 2:1:880, loss: 4.681
+2023-01-27 13:20:28.259 | INFO     | algorithms.scr:train:180 - 2:1:920, loss: 4.674
+2023-01-27 13:20:38.626 | INFO     | algorithms.scr:train:180 - 2:1:960, loss: 4.667
+2023-01-27 13:20:48.718 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-27 13:20:48.719 | DEBUG    | algorithms.scr:train:186 - 7 has 833 samples
+2023-01-27 13:20:48.720 | DEBUG    | algorithms.scr:train:186 - 4 has 833 samples
+2023-01-27 13:20:48.721 | DEBUG    | algorithms.scr:train:186 - 3 has 833 samples
+2023-01-27 13:20:48.721 | DEBUG    | algorithms.scr:train:186 - 6 has 833 samples
+2023-01-27 13:20:48.722 | DEBUG    | algorithms.scr:train:186 - 9 has 834 samples
+2023-01-27 13:20:48.723 | DEBUG    | algorithms.scr:train:186 - 1 has 834 samples
+2023-01-27 13:20:48.724 | INFO     | algorithms.scr:train:192 - 1, loss: 4.811
+2023-01-27 13:20:48.724 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 2
+2023-01-27 13:20:48.732 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-27 13:21:01.500 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([7, 4, 3, 6, 9, 1])
+2023-01-27 13:21:34.272 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-01-27 13:21:34.273 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4887 / 10000 samples (48.87% correct)
+2023-01-27 13:21:34.404 | INFO     | algorithms.scr:train:126 - Task 4 / 5
+2023-01-27 13:21:34.408 | INFO     | algorithms.scr:train:127 - Classes in task: ['ship', 'bird']
+2023-01-27 13:21:34.409 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-27 13:21:45.027 | INFO     | algorithms.scr:train:180 - 3:1:40, loss: 4.841
+2023-01-27 13:21:55.409 | INFO     | algorithms.scr:train:180 - 3:1:80, loss: 4.740
+2023-01-27 13:22:05.823 | INFO     | algorithms.scr:train:180 - 3:1:120, loss: 4.752
+2023-01-27 13:22:16.186 | INFO     | algorithms.scr:train:180 - 3:1:160, loss: 4.764
+2023-01-27 13:22:26.677 | INFO     | algorithms.scr:train:180 - 3:1:200, loss: 4.726
+2023-01-27 13:22:37.019 | INFO     | algorithms.scr:train:180 - 3:1:240, loss: 4.728
+2023-01-27 13:22:47.365 | INFO     | algorithms.scr:train:180 - 3:1:280, loss: 4.696
+2023-01-27 13:22:57.731 | INFO     | algorithms.scr:train:180 - 3:1:320, loss: 4.669
+2023-01-27 13:23:08.061 | INFO     | algorithms.scr:train:180 - 3:1:360, loss: 4.676
+2023-01-27 13:23:18.390 | INFO     | algorithms.scr:train:180 - 3:1:400, loss: 4.673
+2023-01-27 13:23:28.746 | INFO     | algorithms.scr:train:180 - 3:1:440, loss: 4.640
+2023-01-27 13:23:39.068 | INFO     | algorithms.scr:train:180 - 3:1:480, loss: 4.642
+2023-01-27 13:23:49.438 | INFO     | algorithms.scr:train:180 - 3:1:520, loss: 4.621
+2023-01-27 13:23:59.776 | INFO     | algorithms.scr:train:180 - 3:1:560, loss: 4.610
+2023-01-27 13:24:10.088 | INFO     | algorithms.scr:train:180 - 3:1:600, loss: 4.615
+2023-01-27 13:24:20.419 | INFO     | algorithms.scr:train:180 - 3:1:640, loss: 4.594
+2023-01-27 13:24:30.743 | INFO     | algorithms.scr:train:180 - 3:1:680, loss: 4.580
+2023-01-27 13:24:41.122 | INFO     | algorithms.scr:train:180 - 3:1:720, loss: 4.575
+2023-01-27 13:24:51.471 | INFO     | algorithms.scr:train:180 - 3:1:760, loss: 4.548
+2023-01-27 13:25:01.818 | INFO     | algorithms.scr:train:180 - 3:1:800, loss: 4.557
+2023-01-27 13:25:12.166 | INFO     | algorithms.scr:train:180 - 3:1:840, loss: 4.552
+2023-01-27 13:25:22.533 | INFO     | algorithms.scr:train:180 - 3:1:880, loss: 4.547
+2023-01-27 13:25:32.992 | INFO     | algorithms.scr:train:180 - 3:1:920, loss: 4.544
+2023-01-27 13:25:43.386 | INFO     | algorithms.scr:train:180 - 3:1:960, loss: 4.556
+2023-01-27 13:25:53.488 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-27 13:25:53.488 | DEBUG    | algorithms.scr:train:186 - 7 has 625 samples
+2023-01-27 13:25:53.489 | DEBUG    | algorithms.scr:train:186 - 4 has 625 samples
+2023-01-27 13:25:53.490 | DEBUG    | algorithms.scr:train:186 - 3 has 625 samples
+2023-01-27 13:25:53.491 | DEBUG    | algorithms.scr:train:186 - 6 has 625 samples
+2023-01-27 13:25:53.491 | DEBUG    | algorithms.scr:train:186 - 9 has 625 samples
+2023-01-27 13:25:53.492 | DEBUG    | algorithms.scr:train:186 - 1 has 625 samples
+2023-01-27 13:25:53.493 | DEBUG    | algorithms.scr:train:186 - 8 has 625 samples
+2023-01-27 13:25:53.494 | DEBUG    | algorithms.scr:train:186 - 2 has 625 samples
+2023-01-27 13:25:53.494 | INFO     | algorithms.scr:train:192 - 1, loss: 4.640
+2023-01-27 13:25:53.495 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 3
+2023-01-27 13:25:53.502 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-27 13:26:06.350 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([7, 4, 3, 6, 9, 1, 8, 2])
+2023-01-27 13:26:41.633 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-01-27 13:26:41.634 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6355 / 10000 samples (63.55% correct)
+2023-01-27 13:26:41.767 | INFO     | algorithms.scr:train:126 - Task 5 / 5
+2023-01-27 13:26:41.772 | INFO     | algorithms.scr:train:127 - Classes in task: ['dog', 'plane']
+2023-01-27 13:26:41.773 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-27 13:26:52.466 | INFO     | algorithms.scr:train:180 - 4:1:40, loss: 4.672
+2023-01-27 13:27:02.841 | INFO     | algorithms.scr:train:180 - 4:1:80, loss: 4.598
+2023-01-27 13:27:13.213 | INFO     | algorithms.scr:train:180 - 4:1:120, loss: 4.624
+2023-01-27 13:27:23.570 | INFO     | algorithms.scr:train:180 - 4:1:160, loss: 4.623
+2023-01-27 13:27:33.919 | INFO     | algorithms.scr:train:180 - 4:1:200, loss: 4.598
+2023-01-27 13:27:44.283 | INFO     | algorithms.scr:train:180 - 4:1:240, loss: 4.569
+2023-01-27 13:27:54.657 | INFO     | algorithms.scr:train:180 - 4:1:280, loss: 4.596
+2023-01-27 13:28:05.022 | INFO     | algorithms.scr:train:180 - 4:1:320, loss: 4.559
+2023-01-27 13:28:15.376 | INFO     | algorithms.scr:train:180 - 4:1:360, loss: 4.533
+2023-01-27 13:28:25.735 | INFO     | algorithms.scr:train:180 - 4:1:400, loss: 4.511
+2023-01-27 13:28:36.254 | INFO     | algorithms.scr:train:180 - 4:1:440, loss: 4.563
+2023-01-27 13:28:46.627 | INFO     | algorithms.scr:train:180 - 4:1:480, loss: 4.523
+2023-01-27 13:28:56.975 | INFO     | algorithms.scr:train:180 - 4:1:520, loss: 4.524
+2023-01-27 13:29:07.334 | INFO     | algorithms.scr:train:180 - 4:1:560, loss: 4.501
+2023-01-27 13:29:17.697 | INFO     | algorithms.scr:train:180 - 4:1:600, loss: 4.518
+2023-01-27 13:29:28.083 | INFO     | algorithms.scr:train:180 - 4:1:640, loss: 4.475
+2023-01-27 13:29:38.433 | INFO     | algorithms.scr:train:180 - 4:1:680, loss: 4.483
+2023-01-27 13:29:48.797 | INFO     | algorithms.scr:train:180 - 4:1:720, loss: 4.493
+2023-01-27 13:29:59.141 | INFO     | algorithms.scr:train:180 - 4:1:760, loss: 4.483
+2023-01-27 13:30:09.521 | INFO     | algorithms.scr:train:180 - 4:1:800, loss: 4.480
+2023-01-27 13:30:19.883 | INFO     | algorithms.scr:train:180 - 4:1:840, loss: 4.465
+2023-01-27 13:30:30.257 | INFO     | algorithms.scr:train:180 - 4:1:880, loss: 4.447
+2023-01-27 13:30:40.618 | INFO     | algorithms.scr:train:180 - 4:1:920, loss: 4.456
+2023-01-27 13:30:50.961 | INFO     | algorithms.scr:train:180 - 4:1:960, loss: 4.433
+2023-01-27 13:31:01.107 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-27 13:31:01.108 | DEBUG    | algorithms.scr:train:186 - 7 has 500 samples
+2023-01-27 13:31:01.108 | DEBUG    | algorithms.scr:train:186 - 4 has 500 samples
+2023-01-27 13:31:01.109 | DEBUG    | algorithms.scr:train:186 - 3 has 500 samples
+2023-01-27 13:31:01.110 | DEBUG    | algorithms.scr:train:186 - 6 has 500 samples
+2023-01-27 13:31:01.111 | DEBUG    | algorithms.scr:train:186 - 9 has 500 samples
+2023-01-27 13:31:01.111 | DEBUG    | algorithms.scr:train:186 - 1 has 500 samples
+2023-01-27 13:31:01.112 | DEBUG    | algorithms.scr:train:186 - 8 has 500 samples
+2023-01-27 13:31:01.113 | DEBUG    | algorithms.scr:train:186 - 2 has 500 samples
+2023-01-27 13:31:01.113 | DEBUG    | algorithms.scr:train:186 - 5 has 500 samples
+2023-01-27 13:31:01.114 | DEBUG    | algorithms.scr:train:186 - 0 has 500 samples
+2023-01-27 13:31:01.115 | INFO     | algorithms.scr:train:192 - 1, loss: 4.527
+2023-01-27 13:31:01.116 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 4
+2023-01-27 13:31:01.123 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-27 13:31:13.900 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([7, 4, 3, 6, 9, 1, 8, 2, 5, 0])
+2023-01-27 13:31:51.451 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_5k/scr/1674824787.6721365_CIFAR10_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-01-27 13:31:51.453 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7304 / 10000 samples (73.04% correct)
+2023-01-27 13:31:51.587 | INFO     | algorithms.scr:train:201 - Training complete
+2023-01-27 13:31:51.592 | INFO     | __main__:run_experiment:286 - Training and evaluation completed!
+2023-01-27 13:31:51.593 | INFO     | __main__:run_experiment:300 - Wrote usage stats to file
+2023-01-27 13:31:51.594 | INFO     | __main__:main:340 - Complete
+2023-01-27 13:31:51.595 | INFO     | __main__:close_tensorboard_writer:248 - Shut down TensorBoard

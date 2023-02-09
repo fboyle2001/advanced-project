@@ -1,0 +1,624 @@
+2023-01-18 02:18:11.152 | INFO     | __main__:setup_files:173 - Experiment Name: OFFICIAL_RUN
+2023-01-18 02:18:11.153 | INFO     | __main__:main:278 - Command line arguments: Configuration(algorithm='offline', dataset='cifar100', classes_per_task=0, seed=2843)
+2023-01-18 02:18:11.155 | INFO     | __main__:main:282 - Seeded random to 2843
+2023-01-18 02:18:11.156 | INFO     | __main__:main:286 - Got CUDA device
+2023-01-18 02:18:11.157 | INFO     | __main__:force_cuda_load:221 - Forcing CUDA initialisation...
+2023-01-18 02:18:11.217 | INFO     | __main__:main:290 - CUDA initialised
+2023-01-18 02:18:11.218 | INFO     | __main__:setup_shutdown_hook:217 - To access TensorBoard, run the command: tensorboard --logdir=./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN
+2023-01-18 02:18:11.220 | INFO     | __main__:main:294 - Setup shutdown hooks
+2023-01-18 02:18:11.243 | INFO     | __main__:main:299 - Model is setup
+2023-01-18 02:18:11.243 | INFO     | __main__:main:301 - Complete pre-setup, starting experiment
+2023-01-18 02:18:12.429 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar100.CIFAR100",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR100",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n)",
+  "classes": "apple, aquarium_fish, baby, bear, beaver, bed, bee, beetle, bicycle, bottle, bowl, boy, bridge, bus, butterfly, camel, can, castle, caterpillar, cattle, chair, chimpanzee, clock, cloud, cockroach, couch, crab, crocodile, cup, dinosaur, dolphin, elephant, flatfish, forest, fox, girl, hamster, house, kangaroo, keyboard, lamp, lawn_mower, leopard, lion, lizard, lobster, man, maple_tree, motorcycle, mountain, mouse, mushroom, oak_tree, orange, orchid, otter, palm_tree, pear, pickup_truck, pine_tree, plain, plate, poppy, porcupine, possum, rabbit, raccoon, ray, road, rocket, rose, sea, seal, shark, shrew, skunk, skyscraper, snail, snake, spider, squirrel, streetcar, sunflower, sweet_pepper, table, tank, telephone, television, tiger, tractor, train, trout, tulip, turtle, wardrobe, whale, willow_tree, wolf, woman, worm",
+  "disjoint": false
+}
+2023-01-18 02:18:12.432 | DEBUG    | __main__:run_experiment:245 - PID: 16672
+2023-01-18 02:18:12.432 | INFO     | __main__:run_experiment:247 - Starting...
+2023-01-18 02:18:12.433 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.offline.OfflineTraining",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar100.CIFAR100",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "epochs_per_task": 250,
+  "batch_size": 64,
+  "apply_learning_rate_annealing": true,
+  "gradient_clip": 10,
+  "max_lr": "0.05",
+  "min_lr": "0.0005"
+}
+2023-01-18 02:18:12.436 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-01-18 02:18:12.436 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-01-18 02:18:12.437 | INFO     | algorithms.offline:train:68 - Task 1 / 1
+2023-01-18 02:18:12.438 | INFO     | algorithms.offline:train:69 - Classes in task: ['apple', 'aquarium_fish', 'baby', 'bear', 'beaver', 'bed', 'bee', 'beetle', 'bicycle', 'bottle', 'bowl', 'boy', 'bridge', 'bus', 'butterfly', 'camel', 'can', 'castle', 'caterpillar', 'cattle', 'chair', 'chimpanzee', 'clock', 'cloud', 'cockroach', 'couch', 'crab', 'crocodile', 'cup', 'dinosaur', 'dolphin', 'elephant', 'flatfish', 'forest', 'fox', 'girl', 'hamster', 'house', 'kangaroo', 'keyboard', 'lamp', 'lawn_mower', 'leopard', 'lion', 'lizard', 'lobster', 'man', 'maple_tree', 'motorcycle', 'mountain', 'mouse', 'mushroom', 'oak_tree', 'orange', 'orchid', 'otter', 'palm_tree', 'pear', 'pickup_truck', 'pine_tree', 'plain', 'plate', 'poppy', 'porcupine', 'possum', 'rabbit', 'raccoon', 'ray', 'road', 'rocket', 'rose', 'sea', 'seal', 'shark', 'shrew', 'skunk', 'skyscraper', 'snail', 'snake', 'spider', 'squirrel', 'streetcar', 'sunflower', 'sweet_pepper', 'table', 'tank', 'telephone', 'television', 'tiger', 'tractor', 'train', 'trout', 'tulip', 'turtle', 'wardrobe', 'whale', 'willow_tree', 'wolf', 'woman', 'worm']
+2023-01-18 02:18:12.439 | INFO     | algorithms.offline:train:78 - Annealing Scheduler setup
+2023-01-18 02:18:12.440 | INFO     | algorithms.offline:train:97 - Starting epoch 1 / 250
+2023-01-18 02:18:43.812 | INFO     | algorithms.offline:train:123 - 1, loss: 3.964
+2023-01-18 02:18:43.813 | INFO     | algorithms.offline:train:97 - Starting epoch 2 / 250
+2023-01-18 02:19:13.346 | INFO     | algorithms.offline:train:123 - 2, loss: 3.391
+2023-01-18 02:19:13.347 | INFO     | algorithms.offline:train:97 - Starting epoch 3 / 250
+2023-01-18 02:19:42.922 | INFO     | algorithms.offline:train:123 - 3, loss: 3.321
+2023-01-18 02:19:42.923 | INFO     | algorithms.offline:train:97 - Starting epoch 4 / 250
+2023-01-18 02:20:12.499 | INFO     | algorithms.offline:train:123 - 4, loss: 3.276
+2023-01-18 02:20:12.500 | INFO     | algorithms.offline:train:97 - Starting epoch 5 / 250
+2023-01-18 02:20:42.046 | INFO     | algorithms.offline:train:123 - 5, loss: 3.239
+2023-01-18 02:20:42.047 | INFO     | algorithms.offline:train:97 - Starting epoch 6 / 250
+2023-01-18 02:21:11.589 | INFO     | algorithms.offline:train:123 - 6, loss: 3.206
+2023-01-18 02:21:11.590 | INFO     | algorithms.offline:train:97 - Starting epoch 7 / 250
+2023-01-18 02:21:41.149 | INFO     | algorithms.offline:train:123 - 7, loss: 3.173
+2023-01-18 02:21:41.150 | INFO     | algorithms.offline:train:97 - Starting epoch 8 / 250
+2023-01-18 02:22:10.690 | INFO     | algorithms.offline:train:123 - 8, loss: 3.154
+2023-01-18 02:22:10.691 | INFO     | algorithms.offline:train:97 - Starting epoch 9 / 250
+2023-01-18 02:22:40.225 | INFO     | algorithms.offline:train:123 - 9, loss: 3.119
+2023-01-18 02:22:40.226 | INFO     | algorithms.offline:train:97 - Starting epoch 10 / 250
+2023-01-18 02:23:09.742 | INFO     | algorithms.offline:train:123 - 10, loss: 3.091
+2023-01-18 02:23:09.743 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 10
+2023-01-18 02:23:13.695 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_10_accuracy_results.json
+2023-01-18 02:23:13.697 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 2676 / 10000 samples (26.76% correct)
+2023-01-18 02:23:14.173 | INFO     | algorithms.offline:train:97 - Starting epoch 11 / 250
+2023-01-18 02:23:43.795 | INFO     | algorithms.offline:train:123 - 11, loss: 3.062
+2023-01-18 02:23:43.796 | INFO     | algorithms.offline:train:97 - Starting epoch 12 / 250
+2023-01-18 02:24:13.394 | INFO     | algorithms.offline:train:123 - 12, loss: 3.028
+2023-01-18 02:24:13.395 | INFO     | algorithms.offline:train:97 - Starting epoch 13 / 250
+2023-01-18 02:24:42.990 | INFO     | algorithms.offline:train:123 - 13, loss: 3.006
+2023-01-18 02:24:42.991 | INFO     | algorithms.offline:train:97 - Starting epoch 14 / 250
+2023-01-18 02:25:12.597 | INFO     | algorithms.offline:train:123 - 14, loss: 2.982
+2023-01-18 02:25:12.598 | INFO     | algorithms.offline:train:97 - Starting epoch 15 / 250
+2023-01-18 02:25:42.259 | INFO     | algorithms.offline:train:123 - 15, loss: 2.958
+2023-01-18 02:25:42.260 | INFO     | algorithms.offline:train:97 - Starting epoch 16 / 250
+2023-01-18 02:26:11.908 | INFO     | algorithms.offline:train:123 - 16, loss: 2.945
+2023-01-18 02:26:11.909 | INFO     | algorithms.offline:train:97 - Starting epoch 17 / 250
+2023-01-18 02:26:41.557 | INFO     | algorithms.offline:train:123 - 17, loss: 2.910
+2023-01-18 02:26:41.558 | INFO     | algorithms.offline:train:97 - Starting epoch 18 / 250
+2023-01-18 02:27:11.183 | INFO     | algorithms.offline:train:123 - 18, loss: 2.878
+2023-01-18 02:27:11.184 | INFO     | algorithms.offline:train:97 - Starting epoch 19 / 250
+2023-01-18 02:27:40.889 | INFO     | algorithms.offline:train:123 - 19, loss: 2.843
+2023-01-18 02:27:40.890 | INFO     | algorithms.offline:train:97 - Starting epoch 20 / 250
+2023-01-18 02:28:10.561 | INFO     | algorithms.offline:train:123 - 20, loss: 2.808
+2023-01-18 02:28:10.562 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 20
+2023-01-18 02:28:14.543 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_20_accuracy_results.json
+2023-01-18 02:28:14.545 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 3252 / 10000 samples (32.52% correct)
+2023-01-18 02:28:14.927 | INFO     | algorithms.offline:train:97 - Starting epoch 21 / 250
+2023-01-18 02:28:44.624 | INFO     | algorithms.offline:train:123 - 21, loss: 2.779
+2023-01-18 02:28:44.625 | INFO     | algorithms.offline:train:97 - Starting epoch 22 / 250
+2023-01-18 02:29:14.306 | INFO     | algorithms.offline:train:123 - 22, loss: 2.753
+2023-01-18 02:29:14.307 | INFO     | algorithms.offline:train:97 - Starting epoch 23 / 250
+2023-01-18 02:29:43.982 | INFO     | algorithms.offline:train:123 - 23, loss: 2.723
+2023-01-18 02:29:43.983 | INFO     | algorithms.offline:train:97 - Starting epoch 24 / 250
+2023-01-18 02:30:13.713 | INFO     | algorithms.offline:train:123 - 24, loss: 2.692
+2023-01-18 02:30:13.714 | INFO     | algorithms.offline:train:97 - Starting epoch 25 / 250
+2023-01-18 02:30:43.437 | INFO     | algorithms.offline:train:123 - 25, loss: 2.666
+2023-01-18 02:30:43.438 | INFO     | algorithms.offline:train:97 - Starting epoch 26 / 250
+2023-01-18 02:31:13.124 | INFO     | algorithms.offline:train:123 - 26, loss: 2.643
+2023-01-18 02:31:13.125 | INFO     | algorithms.offline:train:97 - Starting epoch 27 / 250
+2023-01-18 02:31:42.790 | INFO     | algorithms.offline:train:123 - 27, loss: 2.616
+2023-01-18 02:31:42.791 | INFO     | algorithms.offline:train:97 - Starting epoch 28 / 250
+2023-01-18 02:32:12.503 | INFO     | algorithms.offline:train:123 - 28, loss: 2.599
+2023-01-18 02:32:12.504 | INFO     | algorithms.offline:train:97 - Starting epoch 29 / 250
+2023-01-18 02:32:42.260 | INFO     | algorithms.offline:train:123 - 29, loss: 2.577
+2023-01-18 02:32:42.261 | INFO     | algorithms.offline:train:97 - Starting epoch 30 / 250
+2023-01-18 02:33:11.973 | INFO     | algorithms.offline:train:123 - 30, loss: 2.565
+2023-01-18 02:33:11.974 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 30
+2023-01-18 02:33:15.933 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_30_accuracy_results.json
+2023-01-18 02:33:15.936 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 3738 / 10000 samples (37.38% correct)
+2023-01-18 02:33:16.367 | INFO     | algorithms.offline:train:97 - Starting epoch 31 / 250
+2023-01-18 02:33:46.168 | INFO     | algorithms.offline:train:123 - 31, loss: 2.537
+2023-01-18 02:33:46.169 | INFO     | algorithms.offline:train:97 - Starting epoch 32 / 250
+2023-01-18 02:34:15.922 | INFO     | algorithms.offline:train:123 - 32, loss: 2.540
+2023-01-18 02:34:15.923 | INFO     | algorithms.offline:train:97 - Starting epoch 33 / 250
+2023-01-18 02:34:45.633 | INFO     | algorithms.offline:train:123 - 33, loss: 2.511
+2023-01-18 02:34:45.633 | INFO     | algorithms.offline:train:97 - Starting epoch 34 / 250
+2023-01-18 02:35:15.377 | INFO     | algorithms.offline:train:123 - 34, loss: 2.480
+2023-01-18 02:35:15.378 | INFO     | algorithms.offline:train:97 - Starting epoch 35 / 250
+2023-01-18 02:35:45.099 | INFO     | algorithms.offline:train:123 - 35, loss: 2.457
+2023-01-18 02:35:45.100 | INFO     | algorithms.offline:train:97 - Starting epoch 36 / 250
+2023-01-18 02:36:14.822 | INFO     | algorithms.offline:train:123 - 36, loss: 2.433
+2023-01-18 02:36:14.823 | INFO     | algorithms.offline:train:97 - Starting epoch 37 / 250
+2023-01-18 02:36:44.521 | INFO     | algorithms.offline:train:123 - 37, loss: 2.403
+2023-01-18 02:36:44.522 | INFO     | algorithms.offline:train:97 - Starting epoch 38 / 250
+2023-01-18 02:37:14.226 | INFO     | algorithms.offline:train:123 - 38, loss: 2.374
+2023-01-18 02:37:14.227 | INFO     | algorithms.offline:train:97 - Starting epoch 39 / 250
+2023-01-18 02:37:44.006 | INFO     | algorithms.offline:train:123 - 39, loss: 2.350
+2023-01-18 02:37:44.007 | INFO     | algorithms.offline:train:97 - Starting epoch 40 / 250
+2023-01-18 02:38:13.751 | INFO     | algorithms.offline:train:123 - 40, loss: 2.321
+2023-01-18 02:38:13.753 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 40
+2023-01-18 02:38:17.689 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_40_accuracy_results.json
+2023-01-18 02:38:17.690 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 4145 / 10000 samples (41.45% correct)
+2023-01-18 02:38:18.071 | INFO     | algorithms.offline:train:97 - Starting epoch 41 / 250
+2023-01-18 02:38:47.829 | INFO     | algorithms.offline:train:123 - 41, loss: 2.300
+2023-01-18 02:38:47.829 | INFO     | algorithms.offline:train:97 - Starting epoch 42 / 250
+2023-01-18 02:39:17.553 | INFO     | algorithms.offline:train:123 - 42, loss: 2.273
+2023-01-18 02:39:17.554 | INFO     | algorithms.offline:train:97 - Starting epoch 43 / 250
+2023-01-18 02:39:47.265 | INFO     | algorithms.offline:train:123 - 43, loss: 2.250
+2023-01-18 02:39:47.266 | INFO     | algorithms.offline:train:97 - Starting epoch 44 / 250
+2023-01-18 02:40:16.950 | INFO     | algorithms.offline:train:123 - 44, loss: 2.231
+2023-01-18 02:40:16.951 | INFO     | algorithms.offline:train:97 - Starting epoch 45 / 250
+2023-01-18 02:40:46.875 | INFO     | algorithms.offline:train:123 - 45, loss: 2.204
+2023-01-18 02:40:46.876 | INFO     | algorithms.offline:train:97 - Starting epoch 46 / 250
+2023-01-18 02:41:16.612 | INFO     | algorithms.offline:train:123 - 46, loss: 2.184
+2023-01-18 02:41:16.613 | INFO     | algorithms.offline:train:97 - Starting epoch 47 / 250
+2023-01-18 02:41:46.344 | INFO     | algorithms.offline:train:123 - 47, loss: 2.172
+2023-01-18 02:41:46.345 | INFO     | algorithms.offline:train:97 - Starting epoch 48 / 250
+2023-01-18 02:42:16.108 | INFO     | algorithms.offline:train:123 - 48, loss: 2.148
+2023-01-18 02:42:16.109 | INFO     | algorithms.offline:train:97 - Starting epoch 49 / 250
+2023-01-18 02:42:45.875 | INFO     | algorithms.offline:train:123 - 49, loss: 2.133
+2023-01-18 02:42:45.876 | INFO     | algorithms.offline:train:97 - Starting epoch 50 / 250
+2023-01-18 02:43:15.624 | INFO     | algorithms.offline:train:123 - 50, loss: 2.113
+2023-01-18 02:43:15.625 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 50
+2023-01-18 02:43:19.540 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_50_accuracy_results.json
+2023-01-18 02:43:19.541 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 4509 / 10000 samples (45.09% correct)
+2023-01-18 02:43:19.920 | INFO     | algorithms.offline:train:97 - Starting epoch 51 / 250
+2023-01-18 02:43:49.690 | INFO     | algorithms.offline:train:123 - 51, loss: 2.099
+2023-01-18 02:43:49.691 | INFO     | algorithms.offline:train:97 - Starting epoch 52 / 250
+2023-01-18 02:44:19.443 | INFO     | algorithms.offline:train:123 - 52, loss: 2.077
+2023-01-18 02:44:19.444 | INFO     | algorithms.offline:train:97 - Starting epoch 53 / 250
+2023-01-18 02:44:49.230 | INFO     | algorithms.offline:train:123 - 53, loss: 2.063
+2023-01-18 02:44:49.231 | INFO     | algorithms.offline:train:97 - Starting epoch 54 / 250
+2023-01-18 02:45:18.943 | INFO     | algorithms.offline:train:123 - 54, loss: 2.055
+2023-01-18 02:45:18.944 | INFO     | algorithms.offline:train:97 - Starting epoch 55 / 250
+2023-01-18 02:45:48.706 | INFO     | algorithms.offline:train:123 - 55, loss: 2.040
+2023-01-18 02:45:48.707 | INFO     | algorithms.offline:train:97 - Starting epoch 56 / 250
+2023-01-18 02:46:18.484 | INFO     | algorithms.offline:train:123 - 56, loss: 2.029
+2023-01-18 02:46:18.485 | INFO     | algorithms.offline:train:97 - Starting epoch 57 / 250
+2023-01-18 02:46:48.211 | INFO     | algorithms.offline:train:123 - 57, loss: 2.014
+2023-01-18 02:46:48.212 | INFO     | algorithms.offline:train:97 - Starting epoch 58 / 250
+2023-01-18 02:47:17.953 | INFO     | algorithms.offline:train:123 - 58, loss: 1.995
+2023-01-18 02:47:17.954 | INFO     | algorithms.offline:train:97 - Starting epoch 59 / 250
+2023-01-18 02:47:47.748 | INFO     | algorithms.offline:train:123 - 59, loss: 1.989
+2023-01-18 02:47:47.749 | INFO     | algorithms.offline:train:97 - Starting epoch 60 / 250
+2023-01-18 02:48:17.491 | INFO     | algorithms.offline:train:123 - 60, loss: 1.971
+2023-01-18 02:48:17.493 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 60
+2023-01-18 02:48:21.473 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_60_accuracy_results.json
+2023-01-18 02:48:21.475 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 4736 / 10000 samples (47.36% correct)
+2023-01-18 02:48:21.903 | INFO     | algorithms.offline:train:97 - Starting epoch 61 / 250
+2023-01-18 02:48:51.611 | INFO     | algorithms.offline:train:123 - 61, loss: 1.960
+2023-01-18 02:48:51.612 | INFO     | algorithms.offline:train:97 - Starting epoch 62 / 250
+2023-01-18 02:49:21.309 | INFO     | algorithms.offline:train:123 - 62, loss: 1.952
+2023-01-18 02:49:21.310 | INFO     | algorithms.offline:train:97 - Starting epoch 63 / 250
+2023-01-18 02:49:51.250 | INFO     | algorithms.offline:train:123 - 63, loss: 1.936
+2023-01-18 02:49:51.251 | INFO     | algorithms.offline:train:97 - Starting epoch 64 / 250
+2023-01-18 02:50:20.970 | INFO     | algorithms.offline:train:123 - 64, loss: 1.963
+2023-01-18 02:50:20.971 | INFO     | algorithms.offline:train:97 - Starting epoch 65 / 250
+2023-01-18 02:50:50.694 | INFO     | algorithms.offline:train:123 - 65, loss: 1.955
+2023-01-18 02:50:50.695 | INFO     | algorithms.offline:train:97 - Starting epoch 66 / 250
+2023-01-18 02:51:20.446 | INFO     | algorithms.offline:train:123 - 66, loss: 1.936
+2023-01-18 02:51:20.447 | INFO     | algorithms.offline:train:97 - Starting epoch 67 / 250
+2023-01-18 02:51:50.140 | INFO     | algorithms.offline:train:123 - 67, loss: 1.916
+2023-01-18 02:51:50.141 | INFO     | algorithms.offline:train:97 - Starting epoch 68 / 250
+2023-01-18 02:52:19.891 | INFO     | algorithms.offline:train:123 - 68, loss: 1.899
+2023-01-18 02:52:19.892 | INFO     | algorithms.offline:train:97 - Starting epoch 69 / 250
+2023-01-18 02:52:49.609 | INFO     | algorithms.offline:train:123 - 69, loss: 1.880
+2023-01-18 02:52:49.610 | INFO     | algorithms.offline:train:97 - Starting epoch 70 / 250
+2023-01-18 02:53:19.330 | INFO     | algorithms.offline:train:123 - 70, loss: 1.865
+2023-01-18 02:53:19.331 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 70
+2023-01-18 02:53:23.251 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_70_accuracy_results.json
+2023-01-18 02:53:23.253 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 4820 / 10000 samples (48.20% correct)
+2023-01-18 02:53:23.814 | INFO     | algorithms.offline:train:97 - Starting epoch 71 / 250
+2023-01-18 02:53:53.641 | INFO     | algorithms.offline:train:123 - 71, loss: 1.852
+2023-01-18 02:53:53.642 | INFO     | algorithms.offline:train:97 - Starting epoch 72 / 250
+2023-01-18 02:54:23.445 | INFO     | algorithms.offline:train:123 - 72, loss: 1.837
+2023-01-18 02:54:23.446 | INFO     | algorithms.offline:train:97 - Starting epoch 73 / 250
+2023-01-18 02:54:53.215 | INFO     | algorithms.offline:train:123 - 73, loss: 1.820
+2023-01-18 02:54:53.216 | INFO     | algorithms.offline:train:97 - Starting epoch 74 / 250
+2023-01-18 02:55:22.968 | INFO     | algorithms.offline:train:123 - 74, loss: 1.802
+2023-01-18 02:55:22.969 | INFO     | algorithms.offline:train:97 - Starting epoch 75 / 250
+2023-01-18 02:55:52.788 | INFO     | algorithms.offline:train:123 - 75, loss: 1.787
+2023-01-18 02:55:52.789 | INFO     | algorithms.offline:train:97 - Starting epoch 76 / 250
+2023-01-18 02:56:22.599 | INFO     | algorithms.offline:train:123 - 76, loss: 1.768
+2023-01-18 02:56:22.600 | INFO     | algorithms.offline:train:97 - Starting epoch 77 / 250
+2023-01-18 02:56:52.373 | INFO     | algorithms.offline:train:123 - 77, loss: 1.762
+2023-01-18 02:56:52.374 | INFO     | algorithms.offline:train:97 - Starting epoch 78 / 250
+2023-01-18 02:57:22.150 | INFO     | algorithms.offline:train:123 - 78, loss: 1.745
+2023-01-18 02:57:22.151 | INFO     | algorithms.offline:train:97 - Starting epoch 79 / 250
+2023-01-18 02:57:51.940 | INFO     | algorithms.offline:train:123 - 79, loss: 1.737
+2023-01-18 02:57:51.941 | INFO     | algorithms.offline:train:97 - Starting epoch 80 / 250
+2023-01-18 02:58:21.704 | INFO     | algorithms.offline:train:123 - 80, loss: 1.720
+2023-01-18 02:58:21.706 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 80
+2023-01-18 02:58:25.655 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_80_accuracy_results.json
+2023-01-18 02:58:25.657 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5097 / 10000 samples (50.97% correct)
+2023-01-18 02:58:26.038 | INFO     | algorithms.offline:train:97 - Starting epoch 81 / 250
+2023-01-18 02:58:55.810 | INFO     | algorithms.offline:train:123 - 81, loss: 1.705
+2023-01-18 02:58:55.811 | INFO     | algorithms.offline:train:97 - Starting epoch 82 / 250
+2023-01-18 02:59:25.586 | INFO     | algorithms.offline:train:123 - 82, loss: 1.686
+2023-01-18 02:59:25.587 | INFO     | algorithms.offline:train:97 - Starting epoch 83 / 250
+2023-01-18 02:59:55.346 | INFO     | algorithms.offline:train:123 - 83, loss: 1.682
+2023-01-18 02:59:55.347 | INFO     | algorithms.offline:train:97 - Starting epoch 84 / 250
+2023-01-18 03:00:25.060 | INFO     | algorithms.offline:train:123 - 84, loss: 1.667
+2023-01-18 03:00:25.061 | INFO     | algorithms.offline:train:97 - Starting epoch 85 / 250
+2023-01-18 03:00:54.839 | INFO     | algorithms.offline:train:123 - 85, loss: 1.652
+2023-01-18 03:00:54.840 | INFO     | algorithms.offline:train:97 - Starting epoch 86 / 250
+2023-01-18 03:01:24.598 | INFO     | algorithms.offline:train:123 - 86, loss: 1.644
+2023-01-18 03:01:24.599 | INFO     | algorithms.offline:train:97 - Starting epoch 87 / 250
+2023-01-18 03:01:54.356 | INFO     | algorithms.offline:train:123 - 87, loss: 1.628
+2023-01-18 03:01:54.357 | INFO     | algorithms.offline:train:97 - Starting epoch 88 / 250
+2023-01-18 03:02:24.095 | INFO     | algorithms.offline:train:123 - 88, loss: 1.626
+2023-01-18 03:02:24.096 | INFO     | algorithms.offline:train:97 - Starting epoch 89 / 250
+2023-01-18 03:02:53.877 | INFO     | algorithms.offline:train:123 - 89, loss: 1.607
+2023-01-18 03:02:53.878 | INFO     | algorithms.offline:train:97 - Starting epoch 90 / 250
+2023-01-18 03:03:23.668 | INFO     | algorithms.offline:train:123 - 90, loss: 1.592
+2023-01-18 03:03:23.670 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 90
+2023-01-18 03:03:27.595 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_90_accuracy_results.json
+2023-01-18 03:03:27.597 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5247 / 10000 samples (52.47% correct)
+2023-01-18 03:03:28.031 | INFO     | algorithms.offline:train:97 - Starting epoch 91 / 250
+2023-01-18 03:03:57.861 | INFO     | algorithms.offline:train:123 - 91, loss: 1.584
+2023-01-18 03:03:57.862 | INFO     | algorithms.offline:train:97 - Starting epoch 92 / 250
+2023-01-18 03:04:27.637 | INFO     | algorithms.offline:train:123 - 92, loss: 1.575
+2023-01-18 03:04:27.638 | INFO     | algorithms.offline:train:97 - Starting epoch 93 / 250
+2023-01-18 03:04:57.365 | INFO     | algorithms.offline:train:123 - 93, loss: 1.566
+2023-01-18 03:04:57.366 | INFO     | algorithms.offline:train:97 - Starting epoch 94 / 250
+2023-01-18 03:05:27.135 | INFO     | algorithms.offline:train:123 - 94, loss: 1.556
+2023-01-18 03:05:27.136 | INFO     | algorithms.offline:train:97 - Starting epoch 95 / 250
+2023-01-18 03:05:56.912 | INFO     | algorithms.offline:train:123 - 95, loss: 1.535
+2023-01-18 03:05:56.913 | INFO     | algorithms.offline:train:97 - Starting epoch 96 / 250
+2023-01-18 03:06:26.688 | INFO     | algorithms.offline:train:123 - 96, loss: 1.531
+2023-01-18 03:06:26.689 | INFO     | algorithms.offline:train:97 - Starting epoch 97 / 250
+2023-01-18 03:06:56.462 | INFO     | algorithms.offline:train:123 - 97, loss: 1.523
+2023-01-18 03:06:56.463 | INFO     | algorithms.offline:train:97 - Starting epoch 98 / 250
+2023-01-18 03:07:26.239 | INFO     | algorithms.offline:train:123 - 98, loss: 1.511
+2023-01-18 03:07:26.240 | INFO     | algorithms.offline:train:97 - Starting epoch 99 / 250
+2023-01-18 03:07:56.016 | INFO     | algorithms.offline:train:123 - 99, loss: 1.498
+2023-01-18 03:07:56.017 | INFO     | algorithms.offline:train:97 - Starting epoch 100 / 250
+2023-01-18 03:08:26.044 | INFO     | algorithms.offline:train:123 - 100, loss: 1.492
+2023-01-18 03:08:26.046 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 100
+2023-01-18 03:08:30.015 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_100_accuracy_results.json
+2023-01-18 03:08:30.016 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5362 / 10000 samples (53.62% correct)
+2023-01-18 03:08:30.398 | INFO     | algorithms.offline:train:97 - Starting epoch 101 / 250
+2023-01-18 03:09:00.731 | INFO     | algorithms.offline:train:123 - 101, loss: 1.489
+2023-01-18 03:09:00.731 | INFO     | algorithms.offline:train:97 - Starting epoch 102 / 250
+2023-01-18 03:09:30.519 | INFO     | algorithms.offline:train:123 - 102, loss: 1.475
+2023-01-18 03:09:30.520 | INFO     | algorithms.offline:train:97 - Starting epoch 103 / 250
+2023-01-18 03:10:00.331 | INFO     | algorithms.offline:train:123 - 103, loss: 1.464
+2023-01-18 03:10:00.332 | INFO     | algorithms.offline:train:97 - Starting epoch 104 / 250
+2023-01-18 03:10:30.138 | INFO     | algorithms.offline:train:123 - 104, loss: 1.459
+2023-01-18 03:10:30.139 | INFO     | algorithms.offline:train:97 - Starting epoch 105 / 250
+2023-01-18 03:10:59.860 | INFO     | algorithms.offline:train:123 - 105, loss: 1.457
+2023-01-18 03:10:59.861 | INFO     | algorithms.offline:train:97 - Starting epoch 106 / 250
+2023-01-18 03:11:29.620 | INFO     | algorithms.offline:train:123 - 106, loss: 1.446
+2023-01-18 03:11:29.621 | INFO     | algorithms.offline:train:97 - Starting epoch 107 / 250
+2023-01-18 03:11:59.397 | INFO     | algorithms.offline:train:123 - 107, loss: 1.439
+2023-01-18 03:11:59.398 | INFO     | algorithms.offline:train:97 - Starting epoch 108 / 250
+2023-01-18 03:12:29.230 | INFO     | algorithms.offline:train:123 - 108, loss: 1.428
+2023-01-18 03:12:29.231 | INFO     | algorithms.offline:train:97 - Starting epoch 109 / 250
+2023-01-18 03:12:59.006 | INFO     | algorithms.offline:train:123 - 109, loss: 1.416
+2023-01-18 03:12:59.007 | INFO     | algorithms.offline:train:97 - Starting epoch 110 / 250
+2023-01-18 03:13:28.748 | INFO     | algorithms.offline:train:123 - 110, loss: 1.419
+2023-01-18 03:13:28.749 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 110
+2023-01-18 03:13:32.734 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_110_accuracy_results.json
+2023-01-18 03:13:32.736 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5407 / 10000 samples (54.07% correct)
+2023-01-18 03:13:33.116 | INFO     | algorithms.offline:train:97 - Starting epoch 111 / 250
+2023-01-18 03:14:02.898 | INFO     | algorithms.offline:train:123 - 111, loss: 1.412
+2023-01-18 03:14:02.899 | INFO     | algorithms.offline:train:97 - Starting epoch 112 / 250
+2023-01-18 03:14:32.690 | INFO     | algorithms.offline:train:123 - 112, loss: 1.396
+2023-01-18 03:14:32.691 | INFO     | algorithms.offline:train:97 - Starting epoch 113 / 250
+2023-01-18 03:15:02.409 | INFO     | algorithms.offline:train:123 - 113, loss: 1.403
+2023-01-18 03:15:02.410 | INFO     | algorithms.offline:train:97 - Starting epoch 114 / 250
+2023-01-18 03:15:32.152 | INFO     | algorithms.offline:train:123 - 114, loss: 1.381
+2023-01-18 03:15:32.153 | INFO     | algorithms.offline:train:97 - Starting epoch 115 / 250
+2023-01-18 03:16:01.863 | INFO     | algorithms.offline:train:123 - 115, loss: 1.382
+2023-01-18 03:16:01.864 | INFO     | algorithms.offline:train:97 - Starting epoch 116 / 250
+2023-01-18 03:16:31.633 | INFO     | algorithms.offline:train:123 - 116, loss: 1.375
+2023-01-18 03:16:31.634 | INFO     | algorithms.offline:train:97 - Starting epoch 117 / 250
+2023-01-18 03:17:01.323 | INFO     | algorithms.offline:train:123 - 117, loss: 1.371
+2023-01-18 03:17:01.324 | INFO     | algorithms.offline:train:97 - Starting epoch 118 / 250
+2023-01-18 03:17:31.029 | INFO     | algorithms.offline:train:123 - 118, loss: 1.364
+2023-01-18 03:17:31.030 | INFO     | algorithms.offline:train:97 - Starting epoch 119 / 250
+2023-01-18 03:18:00.782 | INFO     | algorithms.offline:train:123 - 119, loss: 1.352
+2023-01-18 03:18:00.783 | INFO     | algorithms.offline:train:97 - Starting epoch 120 / 250
+2023-01-18 03:18:30.524 | INFO     | algorithms.offline:train:123 - 120, loss: 1.356
+2023-01-18 03:18:30.525 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 120
+2023-01-18 03:18:34.429 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_120_accuracy_results.json
+2023-01-18 03:18:34.430 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5502 / 10000 samples (55.02% correct)
+2023-01-18 03:18:34.862 | INFO     | algorithms.offline:train:97 - Starting epoch 121 / 250
+2023-01-18 03:19:04.600 | INFO     | algorithms.offline:train:123 - 121, loss: 1.343
+2023-01-18 03:19:04.601 | INFO     | algorithms.offline:train:97 - Starting epoch 122 / 250
+2023-01-18 03:19:34.380 | INFO     | algorithms.offline:train:123 - 122, loss: 1.340
+2023-01-18 03:19:34.381 | INFO     | algorithms.offline:train:97 - Starting epoch 123 / 250
+2023-01-18 03:20:04.100 | INFO     | algorithms.offline:train:123 - 123, loss: 1.336
+2023-01-18 03:20:04.101 | INFO     | algorithms.offline:train:97 - Starting epoch 124 / 250
+2023-01-18 03:20:33.879 | INFO     | algorithms.offline:train:123 - 124, loss: 1.333
+2023-01-18 03:20:33.880 | INFO     | algorithms.offline:train:97 - Starting epoch 125 / 250
+2023-01-18 03:21:03.611 | INFO     | algorithms.offline:train:123 - 125, loss: 1.321
+2023-01-18 03:21:03.612 | INFO     | algorithms.offline:train:97 - Starting epoch 126 / 250
+2023-01-18 03:21:33.369 | INFO     | algorithms.offline:train:123 - 126, loss: 1.320
+2023-01-18 03:21:33.370 | INFO     | algorithms.offline:train:97 - Starting epoch 127 / 250
+2023-01-18 03:22:03.130 | INFO     | algorithms.offline:train:123 - 127, loss: 1.317
+2023-01-18 03:22:03.131 | INFO     | algorithms.offline:train:97 - Starting epoch 128 / 250
+2023-01-18 03:22:32.907 | INFO     | algorithms.offline:train:123 - 128, loss: 1.370
+2023-01-18 03:22:32.908 | INFO     | algorithms.offline:train:97 - Starting epoch 129 / 250
+2023-01-18 03:23:02.619 | INFO     | algorithms.offline:train:123 - 129, loss: 1.370
+2023-01-18 03:23:02.620 | INFO     | algorithms.offline:train:97 - Starting epoch 130 / 250
+2023-01-18 03:23:32.375 | INFO     | algorithms.offline:train:123 - 130, loss: 1.354
+2023-01-18 03:23:32.376 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 130
+2023-01-18 03:23:36.304 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_130_accuracy_results.json
+2023-01-18 03:23:36.306 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5428 / 10000 samples (54.28% correct)
+2023-01-18 03:23:36.680 | INFO     | algorithms.offline:train:97 - Starting epoch 131 / 250
+2023-01-18 03:24:06.447 | INFO     | algorithms.offline:train:123 - 131, loss: 1.351
+2023-01-18 03:24:06.448 | INFO     | algorithms.offline:train:97 - Starting epoch 132 / 250
+2023-01-18 03:24:36.207 | INFO     | algorithms.offline:train:123 - 132, loss: 1.340
+2023-01-18 03:24:36.208 | INFO     | algorithms.offline:train:97 - Starting epoch 133 / 250
+2023-01-18 03:25:05.998 | INFO     | algorithms.offline:train:123 - 133, loss: 1.341
+2023-01-18 03:25:05.999 | INFO     | algorithms.offline:train:97 - Starting epoch 134 / 250
+2023-01-18 03:25:35.789 | INFO     | algorithms.offline:train:123 - 134, loss: 1.326
+2023-01-18 03:25:35.790 | INFO     | algorithms.offline:train:97 - Starting epoch 135 / 250
+2023-01-18 03:26:05.560 | INFO     | algorithms.offline:train:123 - 135, loss: 1.321
+2023-01-18 03:26:05.561 | INFO     | algorithms.offline:train:97 - Starting epoch 136 / 250
+2023-01-18 03:26:35.323 | INFO     | algorithms.offline:train:123 - 136, loss: 1.306
+2023-01-18 03:26:35.324 | INFO     | algorithms.offline:train:97 - Starting epoch 137 / 250
+2023-01-18 03:27:05.101 | INFO     | algorithms.offline:train:123 - 137, loss: 1.294
+2023-01-18 03:27:05.102 | INFO     | algorithms.offline:train:97 - Starting epoch 138 / 250
+2023-01-18 03:27:34.867 | INFO     | algorithms.offline:train:123 - 138, loss: 1.294
+2023-01-18 03:27:34.868 | INFO     | algorithms.offline:train:97 - Starting epoch 139 / 250
+2023-01-18 03:28:04.593 | INFO     | algorithms.offline:train:123 - 139, loss: 1.295
+2023-01-18 03:28:04.594 | INFO     | algorithms.offline:train:97 - Starting epoch 140 / 250
+2023-01-18 03:28:34.350 | INFO     | algorithms.offline:train:123 - 140, loss: 1.280
+2023-01-18 03:28:34.351 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 140
+2023-01-18 03:28:38.301 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_140_accuracy_results.json
+2023-01-18 03:28:38.303 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5504 / 10000 samples (55.04% correct)
+2023-01-18 03:28:38.678 | INFO     | algorithms.offline:train:97 - Starting epoch 141 / 250
+2023-01-18 03:29:08.391 | INFO     | algorithms.offline:train:123 - 141, loss: 1.280
+2023-01-18 03:29:08.392 | INFO     | algorithms.offline:train:97 - Starting epoch 142 / 250
+2023-01-18 03:29:38.118 | INFO     | algorithms.offline:train:123 - 142, loss: 1.264
+2023-01-18 03:29:38.119 | INFO     | algorithms.offline:train:97 - Starting epoch 143 / 250
+2023-01-18 03:30:07.833 | INFO     | algorithms.offline:train:123 - 143, loss: 1.256
+2023-01-18 03:30:07.834 | INFO     | algorithms.offline:train:97 - Starting epoch 144 / 250
+2023-01-18 03:30:37.518 | INFO     | algorithms.offline:train:123 - 144, loss: 1.245
+2023-01-18 03:30:37.519 | INFO     | algorithms.offline:train:97 - Starting epoch 145 / 250
+2023-01-18 03:31:07.224 | INFO     | algorithms.offline:train:123 - 145, loss: 1.245
+2023-01-18 03:31:07.225 | INFO     | algorithms.offline:train:97 - Starting epoch 146 / 250
+2023-01-18 03:31:36.951 | INFO     | algorithms.offline:train:123 - 146, loss: 1.240
+2023-01-18 03:31:36.952 | INFO     | algorithms.offline:train:97 - Starting epoch 147 / 250
+2023-01-18 03:32:06.656 | INFO     | algorithms.offline:train:123 - 147, loss: 1.229
+2023-01-18 03:32:06.657 | INFO     | algorithms.offline:train:97 - Starting epoch 148 / 250
+2023-01-18 03:32:36.383 | INFO     | algorithms.offline:train:123 - 148, loss: 1.227
+2023-01-18 03:32:36.384 | INFO     | algorithms.offline:train:97 - Starting epoch 149 / 250
+2023-01-18 03:33:06.146 | INFO     | algorithms.offline:train:123 - 149, loss: 1.221
+2023-01-18 03:33:06.147 | INFO     | algorithms.offline:train:97 - Starting epoch 150 / 250
+2023-01-18 03:33:35.918 | INFO     | algorithms.offline:train:123 - 150, loss: 1.212
+2023-01-18 03:33:35.920 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 150
+2023-01-18 03:33:39.878 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_150_accuracy_results.json
+2023-01-18 03:33:39.880 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5509 / 10000 samples (55.09% correct)
+2023-01-18 03:33:40.310 | INFO     | algorithms.offline:train:97 - Starting epoch 151 / 250
+2023-01-18 03:34:10.047 | INFO     | algorithms.offline:train:123 - 151, loss: 1.196
+2023-01-18 03:34:10.048 | INFO     | algorithms.offline:train:97 - Starting epoch 152 / 250
+2023-01-18 03:34:39.826 | INFO     | algorithms.offline:train:123 - 152, loss: 1.189
+2023-01-18 03:34:39.827 | INFO     | algorithms.offline:train:97 - Starting epoch 153 / 250
+2023-01-18 03:35:09.587 | INFO     | algorithms.offline:train:123 - 153, loss: 1.191
+2023-01-18 03:35:09.588 | INFO     | algorithms.offline:train:97 - Starting epoch 154 / 250
+2023-01-18 03:35:39.341 | INFO     | algorithms.offline:train:123 - 154, loss: 1.191
+2023-01-18 03:35:39.342 | INFO     | algorithms.offline:train:97 - Starting epoch 155 / 250
+2023-01-18 03:36:09.105 | INFO     | algorithms.offline:train:123 - 155, loss: 1.174
+2023-01-18 03:36:09.106 | INFO     | algorithms.offline:train:97 - Starting epoch 156 / 250
+2023-01-18 03:36:38.823 | INFO     | algorithms.offline:train:123 - 156, loss: 1.173
+2023-01-18 03:36:38.824 | INFO     | algorithms.offline:train:97 - Starting epoch 157 / 250
+2023-01-18 03:37:08.573 | INFO     | algorithms.offline:train:123 - 157, loss: 1.167
+2023-01-18 03:37:08.574 | INFO     | algorithms.offline:train:97 - Starting epoch 158 / 250
+2023-01-18 03:37:38.276 | INFO     | algorithms.offline:train:123 - 158, loss: 1.156
+2023-01-18 03:37:38.277 | INFO     | algorithms.offline:train:97 - Starting epoch 159 / 250
+2023-01-18 03:38:08.013 | INFO     | algorithms.offline:train:123 - 159, loss: 1.149
+2023-01-18 03:38:08.014 | INFO     | algorithms.offline:train:97 - Starting epoch 160 / 250
+2023-01-18 03:38:37.810 | INFO     | algorithms.offline:train:123 - 160, loss: 1.149
+2023-01-18 03:38:37.811 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 160
+2023-01-18 03:38:41.728 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_160_accuracy_results.json
+2023-01-18 03:38:41.730 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5595 / 10000 samples (55.95% correct)
+2023-01-18 03:38:42.109 | INFO     | algorithms.offline:train:97 - Starting epoch 161 / 250
+2023-01-18 03:39:11.820 | INFO     | algorithms.offline:train:123 - 161, loss: 1.140
+2023-01-18 03:39:11.821 | INFO     | algorithms.offline:train:97 - Starting epoch 162 / 250
+2023-01-18 03:39:41.533 | INFO     | algorithms.offline:train:123 - 162, loss: 1.138
+2023-01-18 03:39:41.534 | INFO     | algorithms.offline:train:97 - Starting epoch 163 / 250
+2023-01-18 03:40:11.224 | INFO     | algorithms.offline:train:123 - 163, loss: 1.126
+2023-01-18 03:40:11.225 | INFO     | algorithms.offline:train:97 - Starting epoch 164 / 250
+2023-01-18 03:40:40.944 | INFO     | algorithms.offline:train:123 - 164, loss: 1.115
+2023-01-18 03:40:40.945 | INFO     | algorithms.offline:train:97 - Starting epoch 165 / 250
+2023-01-18 03:41:10.723 | INFO     | algorithms.offline:train:123 - 165, loss: 1.118
+2023-01-18 03:41:10.724 | INFO     | algorithms.offline:train:97 - Starting epoch 166 / 250
+2023-01-18 03:41:40.428 | INFO     | algorithms.offline:train:123 - 166, loss: 1.113
+2023-01-18 03:41:40.429 | INFO     | algorithms.offline:train:97 - Starting epoch 167 / 250
+2023-01-18 03:42:10.153 | INFO     | algorithms.offline:train:123 - 167, loss: 1.108
+2023-01-18 03:42:10.154 | INFO     | algorithms.offline:train:97 - Starting epoch 168 / 250
+2023-01-18 03:42:39.857 | INFO     | algorithms.offline:train:123 - 168, loss: 1.098
+2023-01-18 03:42:39.858 | INFO     | algorithms.offline:train:97 - Starting epoch 169 / 250
+2023-01-18 03:43:09.634 | INFO     | algorithms.offline:train:123 - 169, loss: 1.093
+2023-01-18 03:43:09.635 | INFO     | algorithms.offline:train:97 - Starting epoch 170 / 250
+2023-01-18 03:43:39.359 | INFO     | algorithms.offline:train:123 - 170, loss: 1.086
+2023-01-18 03:43:39.360 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 170
+2023-01-18 03:43:43.310 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_170_accuracy_results.json
+2023-01-18 03:43:43.312 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5586 / 10000 samples (55.86% correct)
+2023-01-18 03:43:43.741 | INFO     | algorithms.offline:train:97 - Starting epoch 171 / 250
+2023-01-18 03:44:13.440 | INFO     | algorithms.offline:train:123 - 171, loss: 1.085
+2023-01-18 03:44:13.441 | INFO     | algorithms.offline:train:97 - Starting epoch 172 / 250
+2023-01-18 03:44:43.167 | INFO     | algorithms.offline:train:123 - 172, loss: 1.080
+2023-01-18 03:44:43.168 | INFO     | algorithms.offline:train:97 - Starting epoch 173 / 250
+2023-01-18 03:45:12.863 | INFO     | algorithms.offline:train:123 - 173, loss: 1.075
+2023-01-18 03:45:12.864 | INFO     | algorithms.offline:train:97 - Starting epoch 174 / 250
+2023-01-18 03:45:42.579 | INFO     | algorithms.offline:train:123 - 174, loss: 1.053
+2023-01-18 03:45:42.580 | INFO     | algorithms.offline:train:97 - Starting epoch 175 / 250
+2023-01-18 03:46:12.317 | INFO     | algorithms.offline:train:123 - 175, loss: 1.065
+2023-01-18 03:46:12.318 | INFO     | algorithms.offline:train:97 - Starting epoch 176 / 250
+2023-01-18 03:46:42.023 | INFO     | algorithms.offline:train:123 - 176, loss: 1.047
+2023-01-18 03:46:42.024 | INFO     | algorithms.offline:train:97 - Starting epoch 177 / 250
+2023-01-18 03:47:11.780 | INFO     | algorithms.offline:train:123 - 177, loss: 1.047
+2023-01-18 03:47:11.781 | INFO     | algorithms.offline:train:97 - Starting epoch 178 / 250
+2023-01-18 03:47:41.479 | INFO     | algorithms.offline:train:123 - 178, loss: 1.038
+2023-01-18 03:47:41.480 | INFO     | algorithms.offline:train:97 - Starting epoch 179 / 250
+2023-01-18 03:48:11.168 | INFO     | algorithms.offline:train:123 - 179, loss: 1.037
+2023-01-18 03:48:11.169 | INFO     | algorithms.offline:train:97 - Starting epoch 180 / 250
+2023-01-18 03:48:40.866 | INFO     | algorithms.offline:train:123 - 180, loss: 1.030
+2023-01-18 03:48:40.867 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 180
+2023-01-18 03:48:44.799 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_180_accuracy_results.json
+2023-01-18 03:48:44.800 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5593 / 10000 samples (55.93% correct)
+2023-01-18 03:48:45.178 | INFO     | algorithms.offline:train:97 - Starting epoch 181 / 250
+2023-01-18 03:49:14.886 | INFO     | algorithms.offline:train:123 - 181, loss: 1.025
+2023-01-18 03:49:14.887 | INFO     | algorithms.offline:train:97 - Starting epoch 182 / 250
+2023-01-18 03:49:44.606 | INFO     | algorithms.offline:train:123 - 182, loss: 1.022
+2023-01-18 03:49:44.607 | INFO     | algorithms.offline:train:97 - Starting epoch 183 / 250
+2023-01-18 03:50:14.317 | INFO     | algorithms.offline:train:123 - 183, loss: 1.019
+2023-01-18 03:50:14.318 | INFO     | algorithms.offline:train:97 - Starting epoch 184 / 250
+2023-01-18 03:50:44.048 | INFO     | algorithms.offline:train:123 - 184, loss: 1.012
+2023-01-18 03:50:44.049 | INFO     | algorithms.offline:train:97 - Starting epoch 185 / 250
+2023-01-18 03:51:13.930 | INFO     | algorithms.offline:train:123 - 185, loss: 1.004
+2023-01-18 03:51:13.931 | INFO     | algorithms.offline:train:97 - Starting epoch 186 / 250
+2023-01-18 03:51:43.677 | INFO     | algorithms.offline:train:123 - 186, loss: 1.002
+2023-01-18 03:51:43.678 | INFO     | algorithms.offline:train:97 - Starting epoch 187 / 250
+2023-01-18 03:52:13.466 | INFO     | algorithms.offline:train:123 - 187, loss: 0.994
+2023-01-18 03:52:13.467 | INFO     | algorithms.offline:train:97 - Starting epoch 188 / 250
+2023-01-18 03:52:43.149 | INFO     | algorithms.offline:train:123 - 188, loss: 0.998
+2023-01-18 03:52:43.150 | INFO     | algorithms.offline:train:97 - Starting epoch 189 / 250
+2023-01-18 03:53:12.959 | INFO     | algorithms.offline:train:123 - 189, loss: 0.981
+2023-01-18 03:53:12.960 | INFO     | algorithms.offline:train:97 - Starting epoch 190 / 250
+2023-01-18 03:53:42.659 | INFO     | algorithms.offline:train:123 - 190, loss: 0.985
+2023-01-18 03:53:42.661 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 190
+2023-01-18 03:53:46.599 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_190_accuracy_results.json
+2023-01-18 03:53:46.601 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5653 / 10000 samples (56.53% correct)
+2023-01-18 03:53:46.982 | INFO     | algorithms.offline:train:97 - Starting epoch 191 / 250
+2023-01-18 03:54:16.697 | INFO     | algorithms.offline:train:123 - 191, loss: 0.980
+2023-01-18 03:54:16.698 | INFO     | algorithms.offline:train:97 - Starting epoch 192 / 250
+2023-01-18 03:54:46.402 | INFO     | algorithms.offline:train:123 - 192, loss: 0.975
+2023-01-18 03:54:46.403 | INFO     | algorithms.offline:train:97 - Starting epoch 193 / 250
+2023-01-18 03:55:16.074 | INFO     | algorithms.offline:train:123 - 193, loss: 0.972
+2023-01-18 03:55:16.075 | INFO     | algorithms.offline:train:97 - Starting epoch 194 / 250
+2023-01-18 03:55:45.840 | INFO     | algorithms.offline:train:123 - 194, loss: 0.962
+2023-01-18 03:55:45.841 | INFO     | algorithms.offline:train:97 - Starting epoch 195 / 250
+2023-01-18 03:56:15.514 | INFO     | algorithms.offline:train:123 - 195, loss: 0.962
+2023-01-18 03:56:15.515 | INFO     | algorithms.offline:train:97 - Starting epoch 196 / 250
+2023-01-18 03:56:45.182 | INFO     | algorithms.offline:train:123 - 196, loss: 0.955
+2023-01-18 03:56:45.183 | INFO     | algorithms.offline:train:97 - Starting epoch 197 / 250
+2023-01-18 03:57:14.916 | INFO     | algorithms.offline:train:123 - 197, loss: 0.948
+2023-01-18 03:57:14.918 | INFO     | algorithms.offline:train:97 - Starting epoch 198 / 250
+2023-01-18 03:57:44.645 | INFO     | algorithms.offline:train:123 - 198, loss: 0.948
+2023-01-18 03:57:44.646 | INFO     | algorithms.offline:train:97 - Starting epoch 199 / 250
+2023-01-18 03:58:14.343 | INFO     | algorithms.offline:train:123 - 199, loss: 0.947
+2023-01-18 03:58:14.344 | INFO     | algorithms.offline:train:97 - Starting epoch 200 / 250
+2023-01-18 03:58:44.018 | INFO     | algorithms.offline:train:123 - 200, loss: 0.936
+2023-01-18 03:58:44.019 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 200
+2023-01-18 03:58:47.948 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_200_accuracy_results.json
+2023-01-18 03:58:47.949 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5658 / 10000 samples (56.58% correct)
+2023-01-18 03:58:48.388 | INFO     | algorithms.offline:train:97 - Starting epoch 201 / 250
+2023-01-18 03:59:18.082 | INFO     | algorithms.offline:train:123 - 201, loss: 0.930
+2023-01-18 03:59:18.083 | INFO     | algorithms.offline:train:97 - Starting epoch 202 / 250
+2023-01-18 03:59:47.793 | INFO     | algorithms.offline:train:123 - 202, loss: 0.935
+2023-01-18 03:59:47.794 | INFO     | algorithms.offline:train:97 - Starting epoch 203 / 250
+2023-01-18 04:00:17.521 | INFO     | algorithms.offline:train:123 - 203, loss: 0.931
+2023-01-18 04:00:17.522 | INFO     | algorithms.offline:train:97 - Starting epoch 204 / 250
+2023-01-18 04:00:47.257 | INFO     | algorithms.offline:train:123 - 204, loss: 0.923
+2023-01-18 04:00:47.258 | INFO     | algorithms.offline:train:97 - Starting epoch 205 / 250
+2023-01-18 04:01:17.019 | INFO     | algorithms.offline:train:123 - 205, loss: 0.919
+2023-01-18 04:01:17.020 | INFO     | algorithms.offline:train:97 - Starting epoch 206 / 250
+2023-01-18 04:01:46.711 | INFO     | algorithms.offline:train:123 - 206, loss: 0.912
+2023-01-18 04:01:46.712 | INFO     | algorithms.offline:train:97 - Starting epoch 207 / 250
+2023-01-18 04:02:16.389 | INFO     | algorithms.offline:train:123 - 207, loss: 0.905
+2023-01-18 04:02:16.390 | INFO     | algorithms.offline:train:97 - Starting epoch 208 / 250
+2023-01-18 04:02:46.097 | INFO     | algorithms.offline:train:123 - 208, loss: 0.903
+2023-01-18 04:02:46.098 | INFO     | algorithms.offline:train:97 - Starting epoch 209 / 250
+2023-01-18 04:03:15.786 | INFO     | algorithms.offline:train:123 - 209, loss: 0.904
+2023-01-18 04:03:15.787 | INFO     | algorithms.offline:train:97 - Starting epoch 210 / 250
+2023-01-18 04:03:45.568 | INFO     | algorithms.offline:train:123 - 210, loss: 0.896
+2023-01-18 04:03:45.569 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 210
+2023-01-18 04:03:49.512 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_210_accuracy_results.json
+2023-01-18 04:03:49.514 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5754 / 10000 samples (57.54% correct)
+2023-01-18 04:03:49.891 | INFO     | algorithms.offline:train:97 - Starting epoch 211 / 250
+2023-01-18 04:04:19.639 | INFO     | algorithms.offline:train:123 - 211, loss: 0.900
+2023-01-18 04:04:19.640 | INFO     | algorithms.offline:train:97 - Starting epoch 212 / 250
+2023-01-18 04:04:49.394 | INFO     | algorithms.offline:train:123 - 212, loss: 0.882
+2023-01-18 04:04:49.395 | INFO     | algorithms.offline:train:97 - Starting epoch 213 / 250
+2023-01-18 04:05:19.086 | INFO     | algorithms.offline:train:123 - 213, loss: 0.891
+2023-01-18 04:05:19.087 | INFO     | algorithms.offline:train:97 - Starting epoch 214 / 250
+2023-01-18 04:05:48.782 | INFO     | algorithms.offline:train:123 - 214, loss: 0.886
+2023-01-18 04:05:48.783 | INFO     | algorithms.offline:train:97 - Starting epoch 215 / 250
+2023-01-18 04:06:18.543 | INFO     | algorithms.offline:train:123 - 215, loss: 0.884
+2023-01-18 04:06:18.544 | INFO     | algorithms.offline:train:97 - Starting epoch 216 / 250
+2023-01-18 04:06:48.262 | INFO     | algorithms.offline:train:123 - 216, loss: 0.874
+2023-01-18 04:06:48.263 | INFO     | algorithms.offline:train:97 - Starting epoch 217 / 250
+2023-01-18 04:07:17.990 | INFO     | algorithms.offline:train:123 - 217, loss: 0.881
+2023-01-18 04:07:17.991 | INFO     | algorithms.offline:train:97 - Starting epoch 218 / 250
+2023-01-18 04:07:47.696 | INFO     | algorithms.offline:train:123 - 218, loss: 0.867
+2023-01-18 04:07:47.697 | INFO     | algorithms.offline:train:97 - Starting epoch 219 / 250
+2023-01-18 04:08:17.423 | INFO     | algorithms.offline:train:123 - 219, loss: 0.869
+2023-01-18 04:08:17.424 | INFO     | algorithms.offline:train:97 - Starting epoch 220 / 250
+2023-01-18 04:08:47.420 | INFO     | algorithms.offline:train:123 - 220, loss: 0.858
+2023-01-18 04:08:47.422 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 220
+2023-01-18 04:08:51.433 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_220_accuracy_results.json
+2023-01-18 04:08:51.435 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5740 / 10000 samples (57.40% correct)
+2023-01-18 04:08:51.816 | INFO     | algorithms.offline:train:97 - Starting epoch 221 / 250
+2023-01-18 04:09:21.974 | INFO     | algorithms.offline:train:123 - 221, loss: 0.866
+2023-01-18 04:09:21.975 | INFO     | algorithms.offline:train:97 - Starting epoch 222 / 250
+2023-01-18 04:09:51.793 | INFO     | algorithms.offline:train:123 - 222, loss: 0.855
+2023-01-18 04:09:51.794 | INFO     | algorithms.offline:train:97 - Starting epoch 223 / 250
+2023-01-18 04:10:21.496 | INFO     | algorithms.offline:train:123 - 223, loss: 0.850
+2023-01-18 04:10:21.497 | INFO     | algorithms.offline:train:97 - Starting epoch 224 / 250
+2023-01-18 04:10:51.220 | INFO     | algorithms.offline:train:123 - 224, loss: 0.841
+2023-01-18 04:10:51.221 | INFO     | algorithms.offline:train:97 - Starting epoch 225 / 250
+2023-01-18 04:11:20.937 | INFO     | algorithms.offline:train:123 - 225, loss: 0.843
+2023-01-18 04:11:20.938 | INFO     | algorithms.offline:train:97 - Starting epoch 226 / 250
+2023-01-18 04:11:50.680 | INFO     | algorithms.offline:train:123 - 226, loss: 0.847
+2023-01-18 04:11:50.681 | INFO     | algorithms.offline:train:97 - Starting epoch 227 / 250
+2023-01-18 04:12:20.393 | INFO     | algorithms.offline:train:123 - 227, loss: 0.844
+2023-01-18 04:12:20.394 | INFO     | algorithms.offline:train:97 - Starting epoch 228 / 250
+2023-01-18 04:12:50.099 | INFO     | algorithms.offline:train:123 - 228, loss: 0.831
+2023-01-18 04:12:50.100 | INFO     | algorithms.offline:train:97 - Starting epoch 229 / 250
+2023-01-18 04:13:19.716 | INFO     | algorithms.offline:train:123 - 229, loss: 0.839
+2023-01-18 04:13:19.717 | INFO     | algorithms.offline:train:97 - Starting epoch 230 / 250
+2023-01-18 04:13:49.397 | INFO     | algorithms.offline:train:123 - 230, loss: 0.831
+2023-01-18 04:13:49.398 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 230
+2023-01-18 04:13:53.324 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_230_accuracy_results.json
+2023-01-18 04:13:53.326 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5759 / 10000 samples (57.59% correct)
+2023-01-18 04:13:53.773 | INFO     | algorithms.offline:train:97 - Starting epoch 231 / 250
+2023-01-18 04:14:23.389 | INFO     | algorithms.offline:train:123 - 231, loss: 0.830
+2023-01-18 04:14:23.390 | INFO     | algorithms.offline:train:97 - Starting epoch 232 / 250
+2023-01-18 04:14:53.056 | INFO     | algorithms.offline:train:123 - 232, loss: 0.823
+2023-01-18 04:14:53.057 | INFO     | algorithms.offline:train:97 - Starting epoch 233 / 250
+2023-01-18 04:15:22.764 | INFO     | algorithms.offline:train:123 - 233, loss: 0.826
+2023-01-18 04:15:22.765 | INFO     | algorithms.offline:train:97 - Starting epoch 234 / 250
+2023-01-18 04:15:52.417 | INFO     | algorithms.offline:train:123 - 234, loss: 0.817
+2023-01-18 04:15:52.418 | INFO     | algorithms.offline:train:97 - Starting epoch 235 / 250
+2023-01-18 04:16:22.113 | INFO     | algorithms.offline:train:123 - 235, loss: 0.813
+2023-01-18 04:16:22.114 | INFO     | algorithms.offline:train:97 - Starting epoch 236 / 250
+2023-01-18 04:16:51.784 | INFO     | algorithms.offline:train:123 - 236, loss: 0.815
+2023-01-18 04:16:51.785 | INFO     | algorithms.offline:train:97 - Starting epoch 237 / 250
+2023-01-18 04:17:21.456 | INFO     | algorithms.offline:train:123 - 237, loss: 0.817
+2023-01-18 04:17:21.457 | INFO     | algorithms.offline:train:97 - Starting epoch 238 / 250
+2023-01-18 04:17:51.199 | INFO     | algorithms.offline:train:123 - 238, loss: 0.805
+2023-01-18 04:17:51.200 | INFO     | algorithms.offline:train:97 - Starting epoch 239 / 250
+2023-01-18 04:18:20.886 | INFO     | algorithms.offline:train:123 - 239, loss: 0.807
+2023-01-18 04:18:20.887 | INFO     | algorithms.offline:train:97 - Starting epoch 240 / 250
+2023-01-18 04:18:50.655 | INFO     | algorithms.offline:train:123 - 240, loss: 0.808
+2023-01-18 04:18:50.656 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 240
+2023-01-18 04:18:54.610 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_240_accuracy_results.json
+2023-01-18 04:18:54.611 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5753 / 10000 samples (57.53% correct)
+2023-01-18 04:18:54.989 | INFO     | algorithms.offline:train:97 - Starting epoch 241 / 250
+2023-01-18 04:19:24.713 | INFO     | algorithms.offline:train:123 - 241, loss: 0.801
+2023-01-18 04:19:24.714 | INFO     | algorithms.offline:train:97 - Starting epoch 242 / 250
+2023-01-18 04:19:54.494 | INFO     | algorithms.offline:train:123 - 242, loss: 0.794
+2023-01-18 04:19:54.495 | INFO     | algorithms.offline:train:97 - Starting epoch 243 / 250
+2023-01-18 04:20:24.187 | INFO     | algorithms.offline:train:123 - 243, loss: 0.795
+2023-01-18 04:20:24.188 | INFO     | algorithms.offline:train:97 - Starting epoch 244 / 250
+2023-01-18 04:20:53.892 | INFO     | algorithms.offline:train:123 - 244, loss: 0.801
+2023-01-18 04:20:53.893 | INFO     | algorithms.offline:train:97 - Starting epoch 245 / 250
+2023-01-18 04:21:23.607 | INFO     | algorithms.offline:train:123 - 245, loss: 0.794
+2023-01-18 04:21:23.608 | INFO     | algorithms.offline:train:97 - Starting epoch 246 / 250
+2023-01-18 04:21:53.451 | INFO     | algorithms.offline:train:123 - 246, loss: 0.790
+2023-01-18 04:21:53.452 | INFO     | algorithms.offline:train:97 - Starting epoch 247 / 250
+2023-01-18 04:22:23.196 | INFO     | algorithms.offline:train:123 - 247, loss: 0.793
+2023-01-18 04:22:23.197 | INFO     | algorithms.offline:train:97 - Starting epoch 248 / 250
+2023-01-18 04:22:52.908 | INFO     | algorithms.offline:train:123 - 248, loss: 0.785
+2023-01-18 04:22:52.909 | INFO     | algorithms.offline:train:97 - Starting epoch 249 / 250
+2023-01-18 04:23:22.625 | INFO     | algorithms.offline:train:123 - 249, loss: 0.777
+2023-01-18 04:23:22.626 | INFO     | algorithms.offline:train:97 - Starting epoch 250 / 250
+2023-01-18 04:23:52.363 | INFO     | algorithms.offline:train:123 - 250, loss: 0.776
+2023-01-18 04:23:52.365 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 250
+2023-01-18 04:23:56.329 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_250_accuracy_results.json
+2023-01-18 04:23:56.331 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5742 / 10000 samples (57.42% correct)
+2023-01-18 04:23:56.711 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 250
+2023-01-18 04:24:00.701 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/offline/1674008291.148677_CIFAR100_OFFICIAL_RUN/task_250_accuracy_results.json
+2023-01-18 04:24:00.702 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 5742 / 10000 samples (57.42% correct)
+2023-01-18 04:24:01.140 | INFO     | algorithms.offline:train:140 - Training complete
+2023-01-18 04:24:01.148 | INFO     | __main__:run_experiment:253 - Training and evaluation completed!
+2023-01-18 04:24:01.149 | INFO     | __main__:run_experiment:267 - Wrote usage stats to file
+2023-01-18 04:24:01.150 | INFO     | __main__:main:307 - Complete
+2023-01-18 04:24:01.151 | INFO     | __main__:close_tensorboard_writer:215 - Shut down TensorBoard

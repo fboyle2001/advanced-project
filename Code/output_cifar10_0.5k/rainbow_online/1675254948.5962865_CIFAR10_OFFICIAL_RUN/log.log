@@ -1,0 +1,855 @@
+2023-02-01 12:35:48.600 | INFO     | __main__:setup_files:206 - Experiment Name: OFFICIAL_RUN
+2023-02-01 12:35:48.602 | INFO     | __main__:main:311 - Command line arguments: Configuration(algorithm='rainbow', dataset='cifar10', classes_per_task=2, seed=9767)
+2023-02-01 12:35:48.604 | INFO     | __main__:main:315 - Seeded random to 9767
+2023-02-01 12:35:48.604 | INFO     | __main__:main:319 - Got CUDA device
+2023-02-01 12:35:48.605 | INFO     | __main__:force_cuda_load:254 - Forcing CUDA initialisation...
+2023-02-01 12:35:48.669 | INFO     | __main__:main:323 - CUDA initialised
+2023-02-01 12:35:48.670 | INFO     | __main__:setup_shutdown_hook:250 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN
+2023-02-01 12:35:48.676 | INFO     | __main__:main:327 - Setup shutdown hooks
+2023-02-01 12:35:48.800 | INFO     | __main__:main:332 - Model is setup
+2023-02-01 12:35:48.801 | INFO     | __main__:main:334 - Complete pre-setup, starting experiment
+2023-02-01 12:35:50.028 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-02-01 12:35:50.030 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-02-01 12:35:50.049 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      0,
+      6
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      9,
+      8
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "plane",
+      "frog"
+    ],
+    [
+      "deer",
+      "dog"
+    ],
+    [
+      "horse",
+      "bird"
+    ],
+    [
+      "car",
+      "cat"
+    ],
+    [
+      "truck",
+      "ship"
+    ]
+  ]
+}
+2023-02-01 12:35:50.053 | DEBUG    | __main__:run_experiment:278 - PID: 26496
+2023-02-01 12:35:50.054 | INFO     | __main__:run_experiment:280 - Starting...
+2023-02-01 12:35:50.055 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.rainbow_online.RainbowOnline",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "batch_size": 32,
+  "max_memory_samples": 500,
+  "epochs_per_task": "50 (On Exemplar Buffer Only)",
+  "gradient_clip": 10,
+  "max_lr": 0.05,
+  "min_lr": 0.0005,
+  "cutmix_probability": 0.5,
+  "sampling_technique": "diverse"
+}
+2023-02-01 12:35:50.058 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-02-01 12:35:50.058 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-02-01 12:35:50.059 | INFO     | algorithms.rainbow_online:train:334 - Starting Task 1 / 5
+2023-02-01 12:35:50.060 | INFO     | algorithms.rainbow_online:train:338 - Updating memory...
+2023-02-01 12:35:50.061 | DEBUG    | algorithms.rainbow_online:train:341 - T_b: None
+2023-02-01 12:35:50.074 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:189 - Segmenting classes
+2023-02-01 12:35:50.103 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:215 - Seen classes: 2
+2023-02-01 12:35:50.104 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:218 - Sorting class samples by uncertainty and generating next buffer: memory size per class 250
+2023-02-01 12:35:50.106 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 0 under sampling strategy diverse
+2023-02-01 12:39:16.245 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600, 620, 640, 660, 680, 700, 720, 740, 760, 780, 800, 820, 840, 860, 880, 900, 920, 940, 960, 980, 1000, 1020, 1040, 1060, 1080, 1100, 1120, 1140, 1160, 1180, 1200, 1220, 1240, 1260, 1280, 1300, 1320, 1340, 1360, 1380, 1400, 1420, 1440, 1460, 1480, 1500, 1520, 1540, 1560, 1580, 1600, 1620, 1640, 1660, 1680, 1700, 1720, 1740, 1760, 1780, 1800, 1820, 1840, 1860, 1880, 1900, 1920, 1940, 1960, 1980, 2000, 2020, 2040, 2060, 2080, 2100, 2120, 2140, 2160, 2180, 2200, 2220, 2240, 2260, 2280, 2300, 2320, 2340, 2360, 2380, 2400, 2420, 2440, 2460, 2480, 2500, 2520, 2540, 2560, 2580, 2600, 2620, 2640, 2660, 2680, 2700, 2720, 2740, 2760, 2780, 2800, 2820, 2840, 2860, 2880, 2900, 2920, 2940, 2960, 2980, 3000, 3020, 3040, 3060, 3080, 3100, 3120, 3140, 3160, 3180, 3200, 3220, 3240, 3260, 3280, 3300, 3320, 3340, 3360, 3380, 3400, 3420, 3440, 3460, 3480, 3500, 3520, 3540, 3560, 3580, 3600, 3620, 3640, 3660, 3680, 3700, 3720, 3740, 3760, 3780, 3800, 3820, 3840, 3860, 3880, 3900, 3920, 3940, 3960, 3980, 4000, 4020, 4040, 4060, 4080, 4100, 4120, 4140, 4160, 4180, 4200, 4220, 4240, 4260, 4280, 4300, 4320, 4340, 4360, 4380, 4400, 4420, 4440, 4460, 4480, 4500, 4520, 4540, 4560, 4580, 4600, 4620, 4640, 4660, 4680, 4700, 4720, 4740, 4760, 4780, 4800, 4820, 4840, 4860, 4880, 4900, 4920, 4940, 4960, 4980]
+2023-02-01 12:39:16.315 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:39:16.315 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 250 samples from class 0
+2023-02-01 12:39:16.316 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 6 under sampling strategy diverse
+2023-02-01 12:42:39.563 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600, 620, 640, 660, 680, 700, 720, 740, 760, 780, 800, 820, 840, 860, 880, 900, 920, 940, 960, 980, 1000, 1020, 1040, 1060, 1080, 1100, 1120, 1140, 1160, 1180, 1200, 1220, 1240, 1260, 1280, 1300, 1320, 1340, 1360, 1380, 1400, 1420, 1440, 1460, 1480, 1500, 1520, 1540, 1560, 1580, 1600, 1620, 1640, 1660, 1680, 1700, 1720, 1740, 1760, 1780, 1800, 1820, 1840, 1860, 1880, 1900, 1920, 1940, 1960, 1980, 2000, 2020, 2040, 2060, 2080, 2100, 2120, 2140, 2160, 2180, 2200, 2220, 2240, 2260, 2280, 2300, 2320, 2340, 2360, 2380, 2400, 2420, 2440, 2460, 2480, 2500, 2520, 2540, 2560, 2580, 2600, 2620, 2640, 2660, 2680, 2700, 2720, 2740, 2760, 2780, 2800, 2820, 2840, 2860, 2880, 2900, 2920, 2940, 2960, 2980, 3000, 3020, 3040, 3060, 3080, 3100, 3120, 3140, 3160, 3180, 3200, 3220, 3240, 3260, 3280, 3300, 3320, 3340, 3360, 3380, 3400, 3420, 3440, 3460, 3480, 3500, 3520, 3540, 3560, 3580, 3600, 3620, 3640, 3660, 3680, 3700, 3720, 3740, 3760, 3780, 3800, 3820, 3840, 3860, 3880, 3900, 3920, 3940, 3960, 3980, 4000, 4020, 4040, 4060, 4080, 4100, 4120, 4140, 4160, 4180, 4200, 4220, 4240, 4260, 4280, 4300, 4320, 4340, 4360, 4380, 4400, 4420, 4440, 4460, 4480, 4500, 4520, 4540, 4560, 4580, 4600, 4620, 4640, 4660, 4680, 4700, 4720, 4740, 4760, 4780, 4800, 4820, 4840, 4860, 4880, 4900, 4920, 4940, 4960, 4980]
+2023-02-01 12:42:39.653 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:42:39.654 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 250 samples from class 6
+2023-02-01 12:42:39.655 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:325 - Generated next exemplar buffer
+2023-02-01 12:42:39.655 | DEBUG    | algorithms.rainbow_online:train:345 - T_a: <class 'numpy.ndarray'>
+2023-02-01 12:42:39.657 | INFO     | algorithms.rainbow_online:train:350 - Using memory buffer exclusively
+2023-02-01 12:42:39.658 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 1 / 50
+2023-02-01 12:42:41.045 | INFO     | algorithms.rainbow_online:train:412 - 1, loss: 1.656
+2023-02-01 12:42:41.047 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 2 / 50
+2023-02-01 12:42:41.603 | INFO     | algorithms.rainbow_online:train:412 - 2, loss: 0.813
+2023-02-01 12:42:41.605 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 3 / 50
+2023-02-01 12:42:42.159 | INFO     | algorithms.rainbow_online:train:412 - 3, loss: 0.816
+2023-02-01 12:42:42.161 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 4 / 50
+2023-02-01 12:42:42.716 | INFO     | algorithms.rainbow_online:train:412 - 4, loss: 0.810
+2023-02-01 12:42:42.718 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 5 / 50
+2023-02-01 12:42:43.275 | INFO     | algorithms.rainbow_online:train:412 - 5, loss: 0.822
+2023-02-01 12:42:43.276 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 6 / 50
+2023-02-01 12:42:43.827 | INFO     | algorithms.rainbow_online:train:412 - 6, loss: 0.746
+2023-02-01 12:42:43.829 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 7 / 50
+2023-02-01 12:42:44.383 | INFO     | algorithms.rainbow_online:train:412 - 7, loss: 0.750
+2023-02-01 12:42:44.385 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 8 / 50
+2023-02-01 12:42:44.939 | INFO     | algorithms.rainbow_online:train:412 - 8, loss: 0.711
+2023-02-01 12:42:44.940 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 9 / 50
+2023-02-01 12:42:45.489 | INFO     | algorithms.rainbow_online:train:412 - 9, loss: 0.728
+2023-02-01 12:42:45.490 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 10 / 50
+2023-02-01 12:42:46.036 | INFO     | algorithms.rainbow_online:train:412 - 10, loss: 0.738
+2023-02-01 12:42:46.038 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 10
+2023-02-01 12:42:50.826 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_10_accuracy_results.json
+2023-02-01 12:42:50.828 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1792 / 10000 samples (17.92% correct)
+2023-02-01 12:42:51.018 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 11 / 50
+2023-02-01 12:42:51.574 | INFO     | algorithms.rainbow_online:train:412 - 11, loss: 0.681
+2023-02-01 12:42:51.575 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 12 / 50
+2023-02-01 12:42:52.130 | INFO     | algorithms.rainbow_online:train:412 - 12, loss: 0.722
+2023-02-01 12:42:52.131 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 13 / 50
+2023-02-01 12:42:52.682 | INFO     | algorithms.rainbow_online:train:412 - 13, loss: 0.743
+2023-02-01 12:42:52.684 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 14 / 50
+2023-02-01 12:42:53.236 | INFO     | algorithms.rainbow_online:train:412 - 14, loss: 0.773
+2023-02-01 12:42:53.238 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 15 / 50
+2023-02-01 12:42:53.789 | INFO     | algorithms.rainbow_online:train:412 - 15, loss: 0.690
+2023-02-01 12:42:53.791 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 16 / 50
+2023-02-01 12:42:54.343 | INFO     | algorithms.rainbow_online:train:412 - 16, loss: 0.738
+2023-02-01 12:42:54.344 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 17 / 50
+2023-02-01 12:42:54.894 | INFO     | algorithms.rainbow_online:train:412 - 17, loss: 0.755
+2023-02-01 12:42:54.896 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 18 / 50
+2023-02-01 12:42:55.446 | INFO     | algorithms.rainbow_online:train:412 - 18, loss: 0.726
+2023-02-01 12:42:55.448 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 19 / 50
+2023-02-01 12:42:56.004 | INFO     | algorithms.rainbow_online:train:412 - 19, loss: 0.676
+2023-02-01 12:42:56.005 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 20 / 50
+2023-02-01 12:42:56.557 | INFO     | algorithms.rainbow_online:train:412 - 20, loss: 0.678
+2023-02-01 12:42:56.558 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 20
+2023-02-01 12:43:01.224 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_20_accuracy_results.json
+2023-02-01 12:43:01.227 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1797 / 10000 samples (17.97% correct)
+2023-02-01 12:43:01.368 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 21 / 50
+2023-02-01 12:43:01.924 | INFO     | algorithms.rainbow_online:train:412 - 21, loss: 0.705
+2023-02-01 12:43:01.925 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 22 / 50
+2023-02-01 12:43:02.476 | INFO     | algorithms.rainbow_online:train:412 - 22, loss: 0.691
+2023-02-01 12:43:02.477 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 23 / 50
+2023-02-01 12:43:03.031 | INFO     | algorithms.rainbow_online:train:412 - 23, loss: 0.652
+2023-02-01 12:43:03.033 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 24 / 50
+2023-02-01 12:43:03.587 | INFO     | algorithms.rainbow_online:train:412 - 24, loss: 0.690
+2023-02-01 12:43:03.589 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 25 / 50
+2023-02-01 12:43:04.140 | INFO     | algorithms.rainbow_online:train:412 - 25, loss: 0.545
+2023-02-01 12:43:04.142 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 26 / 50
+2023-02-01 12:43:04.691 | INFO     | algorithms.rainbow_online:train:412 - 26, loss: 0.675
+2023-02-01 12:43:04.693 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 27 / 50
+2023-02-01 12:43:05.245 | INFO     | algorithms.rainbow_online:train:412 - 27, loss: 0.602
+2023-02-01 12:43:05.247 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 28 / 50
+2023-02-01 12:43:05.797 | INFO     | algorithms.rainbow_online:train:412 - 28, loss: 0.619
+2023-02-01 12:43:05.799 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 29 / 50
+2023-02-01 12:43:06.347 | INFO     | algorithms.rainbow_online:train:412 - 29, loss: 0.674
+2023-02-01 12:43:06.349 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 30 / 50
+2023-02-01 12:43:06.905 | INFO     | algorithms.rainbow_online:train:412 - 30, loss: 0.566
+2023-02-01 12:43:06.907 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 30
+2023-02-01 12:43:11.577 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_30_accuracy_results.json
+2023-02-01 12:43:11.578 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1834 / 10000 samples (18.34% correct)
+2023-02-01 12:43:11.712 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 31 / 50
+2023-02-01 12:43:12.271 | INFO     | algorithms.rainbow_online:train:412 - 31, loss: 0.582
+2023-02-01 12:43:12.272 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 32 / 50
+2023-02-01 12:43:12.829 | INFO     | algorithms.rainbow_online:train:412 - 32, loss: 0.763
+2023-02-01 12:43:12.830 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 33 / 50
+2023-02-01 12:43:13.381 | INFO     | algorithms.rainbow_online:train:412 - 33, loss: 0.555
+2023-02-01 12:43:13.383 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 34 / 50
+2023-02-01 12:43:13.936 | INFO     | algorithms.rainbow_online:train:412 - 34, loss: 0.559
+2023-02-01 12:43:13.937 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 35 / 50
+2023-02-01 12:43:14.490 | INFO     | algorithms.rainbow_online:train:412 - 35, loss: 0.652
+2023-02-01 12:43:14.492 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 36 / 50
+2023-02-01 12:43:15.047 | INFO     | algorithms.rainbow_online:train:412 - 36, loss: 0.539
+2023-02-01 12:43:15.049 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 37 / 50
+2023-02-01 12:43:15.599 | INFO     | algorithms.rainbow_online:train:412 - 37, loss: 0.558
+2023-02-01 12:43:15.601 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 38 / 50
+2023-02-01 12:43:16.159 | INFO     | algorithms.rainbow_online:train:412 - 38, loss: 0.557
+2023-02-01 12:43:16.160 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 39 / 50
+2023-02-01 12:43:16.713 | INFO     | algorithms.rainbow_online:train:412 - 39, loss: 0.543
+2023-02-01 12:43:16.715 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 40 / 50
+2023-02-01 12:43:17.266 | INFO     | algorithms.rainbow_online:train:412 - 40, loss: 0.564
+2023-02-01 12:43:17.267 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 40
+2023-02-01 12:43:21.983 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_40_accuracy_results.json
+2023-02-01 12:43:21.985 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1841 / 10000 samples (18.41% correct)
+2023-02-01 12:43:22.121 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 41 / 50
+2023-02-01 12:43:22.676 | INFO     | algorithms.rainbow_online:train:412 - 41, loss: 0.526
+2023-02-01 12:43:22.677 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 42 / 50
+2023-02-01 12:43:23.230 | INFO     | algorithms.rainbow_online:train:412 - 42, loss: 0.614
+2023-02-01 12:43:23.232 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 43 / 50
+2023-02-01 12:43:23.785 | INFO     | algorithms.rainbow_online:train:412 - 43, loss: 0.543
+2023-02-01 12:43:23.786 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 44 / 50
+2023-02-01 12:43:24.341 | INFO     | algorithms.rainbow_online:train:412 - 44, loss: 0.560
+2023-02-01 12:43:24.342 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 45 / 50
+2023-02-01 12:43:24.894 | INFO     | algorithms.rainbow_online:train:412 - 45, loss: 0.581
+2023-02-01 12:43:24.896 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 46 / 50
+2023-02-01 12:43:25.448 | INFO     | algorithms.rainbow_online:train:412 - 46, loss: 0.621
+2023-02-01 12:43:25.449 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 47 / 50
+2023-02-01 12:43:26.000 | INFO     | algorithms.rainbow_online:train:412 - 47, loss: 0.590
+2023-02-01 12:43:26.002 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 48 / 50
+2023-02-01 12:43:26.551 | INFO     | algorithms.rainbow_online:train:412 - 48, loss: 0.560
+2023-02-01 12:43:26.553 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 49 / 50
+2023-02-01 12:43:27.102 | INFO     | algorithms.rainbow_online:train:412 - 49, loss: 0.589
+2023-02-01 12:43:27.104 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 50 / 50
+2023-02-01 12:43:27.659 | INFO     | algorithms.rainbow_online:train:412 - 50, loss: 0.670
+2023-02-01 12:43:27.661 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 50
+2023-02-01 12:43:32.343 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_50_accuracy_results.json
+2023-02-01 12:43:32.344 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1848 / 10000 samples (18.48% correct)
+2023-02-01 12:43:32.480 | INFO     | algorithms.rainbow_online:train:334 - Starting Task 2 / 5
+2023-02-01 12:43:32.484 | INFO     | algorithms.rainbow_online:train:338 - Updating memory...
+2023-02-01 12:43:32.485 | DEBUG    | algorithms.rainbow_online:train:341 - T_b: <class 'numpy.ndarray'>
+2023-02-01 12:43:32.497 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:189 - Segmenting classes
+2023-02-01 12:43:32.498 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0])
+2023-02-01 12:43:32.499 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6])
+2023-02-01 12:43:32.524 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:215 - Seen classes: 4
+2023-02-01 12:43:32.526 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:218 - Sorting class samples by uncertainty and generating next buffer: memory size per class 125
+2023-02-01 12:43:32.526 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 0 under sampling strategy diverse
+2023-02-01 12:43:42.752 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 234, 236, 238, 240, 242, 244, 246, 248]
+2023-02-01 12:43:42.788 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:43:42.789 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 125 samples from class 0
+2023-02-01 12:43:42.790 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 6 under sampling strategy diverse
+2023-02-01 12:43:53.083 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 234, 236, 238, 240, 242, 244, 246, 248]
+2023-02-01 12:43:53.126 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:43:53.126 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 125 samples from class 6
+2023-02-01 12:43:53.127 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 4 under sampling strategy diverse
+2023-02-01 12:47:18.772 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760, 800, 840, 880, 920, 960, 1000, 1040, 1080, 1120, 1160, 1200, 1240, 1280, 1320, 1360, 1400, 1440, 1480, 1520, 1560, 1600, 1640, 1680, 1720, 1760, 1800, 1840, 1880, 1920, 1960, 2000, 2040, 2080, 2120, 2160, 2200, 2240, 2280, 2320, 2360, 2400, 2440, 2480, 2520, 2560, 2600, 2640, 2680, 2720, 2760, 2800, 2840, 2880, 2920, 2960, 3000, 3040, 3080, 3120, 3160, 3200, 3240, 3280, 3320, 3360, 3400, 3440, 3480, 3520, 3560, 3600, 3640, 3680, 3720, 3760, 3800, 3840, 3880, 3920, 3960, 4000, 4040, 4080, 4120, 4160, 4200, 4240, 4280, 4320, 4360, 4400, 4440, 4480, 4520, 4560, 4600, 4640, 4680, 4720, 4760, 4800, 4840, 4880, 4920, 4960]
+2023-02-01 12:47:18.813 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:47:18.814 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 125 samples from class 4
+2023-02-01 12:47:18.815 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 5 under sampling strategy diverse
+2023-02-01 12:50:44.296 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760, 800, 840, 880, 920, 960, 1000, 1040, 1080, 1120, 1160, 1200, 1240, 1280, 1320, 1360, 1400, 1440, 1480, 1520, 1560, 1600, 1640, 1680, 1720, 1760, 1800, 1840, 1880, 1920, 1960, 2000, 2040, 2080, 2120, 2160, 2200, 2240, 2280, 2320, 2360, 2400, 2440, 2480, 2520, 2560, 2600, 2640, 2680, 2720, 2760, 2800, 2840, 2880, 2920, 2960, 3000, 3040, 3080, 3120, 3160, 3200, 3240, 3280, 3320, 3360, 3400, 3440, 3480, 3520, 3560, 3600, 3640, 3680, 3720, 3760, 3800, 3840, 3880, 3920, 3960, 4000, 4040, 4080, 4120, 4160, 4200, 4240, 4280, 4320, 4360, 4400, 4440, 4480, 4520, 4560, 4600, 4640, 4680, 4720, 4760, 4800, 4840, 4880, 4920, 4960]
+2023-02-01 12:50:44.337 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:50:44.338 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 125 samples from class 5
+2023-02-01 12:50:44.339 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:325 - Generated next exemplar buffer
+2023-02-01 12:50:44.339 | DEBUG    | algorithms.rainbow_online:train:345 - T_a: <class 'numpy.ndarray'>
+2023-02-01 12:50:44.340 | INFO     | algorithms.rainbow_online:train:350 - Using memory buffer exclusively
+2023-02-01 12:50:44.341 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 1 / 50
+2023-02-01 12:50:44.897 | INFO     | algorithms.rainbow_online:train:412 - 1, loss: 2.264
+2023-02-01 12:50:44.899 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 2 / 50
+2023-02-01 12:50:45.454 | INFO     | algorithms.rainbow_online:train:412 - 2, loss: 1.750
+2023-02-01 12:50:45.455 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 3 / 50
+2023-02-01 12:50:46.008 | INFO     | algorithms.rainbow_online:train:412 - 3, loss: 1.721
+2023-02-01 12:50:46.010 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 4 / 50
+2023-02-01 12:50:46.565 | INFO     | algorithms.rainbow_online:train:412 - 4, loss: 1.717
+2023-02-01 12:50:46.567 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 5 / 50
+2023-02-01 12:50:47.120 | INFO     | algorithms.rainbow_online:train:412 - 5, loss: 1.747
+2023-02-01 12:50:47.122 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 6 / 50
+2023-02-01 12:50:47.674 | INFO     | algorithms.rainbow_online:train:412 - 6, loss: 1.683
+2023-02-01 12:50:47.676 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 7 / 50
+2023-02-01 12:50:48.228 | INFO     | algorithms.rainbow_online:train:412 - 7, loss: 1.668
+2023-02-01 12:50:48.229 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 8 / 50
+2023-02-01 12:50:48.784 | INFO     | algorithms.rainbow_online:train:412 - 8, loss: 1.643
+2023-02-01 12:50:48.785 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 9 / 50
+2023-02-01 12:50:49.336 | INFO     | algorithms.rainbow_online:train:412 - 9, loss: 1.652
+2023-02-01 12:50:49.337 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 10 / 50
+2023-02-01 12:50:49.887 | INFO     | algorithms.rainbow_online:train:412 - 10, loss: 1.627
+2023-02-01 12:50:49.889 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 60
+2023-02-01 12:50:54.568 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_60_accuracy_results.json
+2023-02-01 12:50:54.569 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1748 / 10000 samples (17.48% correct)
+2023-02-01 12:50:54.705 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 11 / 50
+2023-02-01 12:50:55.264 | INFO     | algorithms.rainbow_online:train:412 - 11, loss: 1.616
+2023-02-01 12:50:55.266 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 12 / 50
+2023-02-01 12:50:55.818 | INFO     | algorithms.rainbow_online:train:412 - 12, loss: 1.593
+2023-02-01 12:50:55.819 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 13 / 50
+2023-02-01 12:50:56.372 | INFO     | algorithms.rainbow_online:train:412 - 13, loss: 1.630
+2023-02-01 12:50:56.374 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 14 / 50
+2023-02-01 12:50:56.920 | INFO     | algorithms.rainbow_online:train:412 - 14, loss: 1.556
+2023-02-01 12:50:56.922 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 15 / 50
+2023-02-01 12:50:57.473 | INFO     | algorithms.rainbow_online:train:412 - 15, loss: 1.572
+2023-02-01 12:50:57.475 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 16 / 50
+2023-02-01 12:50:58.029 | INFO     | algorithms.rainbow_online:train:412 - 16, loss: 1.557
+2023-02-01 12:50:58.031 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 17 / 50
+2023-02-01 12:50:58.583 | INFO     | algorithms.rainbow_online:train:412 - 17, loss: 1.503
+2023-02-01 12:50:58.584 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 18 / 50
+2023-02-01 12:50:59.135 | INFO     | algorithms.rainbow_online:train:412 - 18, loss: 1.567
+2023-02-01 12:50:59.137 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 19 / 50
+2023-02-01 12:50:59.688 | INFO     | algorithms.rainbow_online:train:412 - 19, loss: 1.490
+2023-02-01 12:50:59.689 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 20 / 50
+2023-02-01 12:51:00.240 | INFO     | algorithms.rainbow_online:train:412 - 20, loss: 1.565
+2023-02-01 12:51:00.242 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 70
+2023-02-01 12:51:04.937 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_70_accuracy_results.json
+2023-02-01 12:51:04.938 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1831 / 10000 samples (18.31% correct)
+2023-02-01 12:51:05.077 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 21 / 50
+2023-02-01 12:51:05.636 | INFO     | algorithms.rainbow_online:train:412 - 21, loss: 1.540
+2023-02-01 12:51:05.637 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 22 / 50
+2023-02-01 12:51:06.187 | INFO     | algorithms.rainbow_online:train:412 - 22, loss: 1.490
+2023-02-01 12:51:06.189 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 23 / 50
+2023-02-01 12:51:06.739 | INFO     | algorithms.rainbow_online:train:412 - 23, loss: 1.477
+2023-02-01 12:51:06.740 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 24 / 50
+2023-02-01 12:51:07.293 | INFO     | algorithms.rainbow_online:train:412 - 24, loss: 1.476
+2023-02-01 12:51:07.295 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 25 / 50
+2023-02-01 12:51:07.849 | INFO     | algorithms.rainbow_online:train:412 - 25, loss: 1.568
+2023-02-01 12:51:07.851 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 26 / 50
+2023-02-01 12:51:08.407 | INFO     | algorithms.rainbow_online:train:412 - 26, loss: 1.446
+2023-02-01 12:51:08.409 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 27 / 50
+2023-02-01 12:51:08.959 | INFO     | algorithms.rainbow_online:train:412 - 27, loss: 1.509
+2023-02-01 12:51:08.961 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 28 / 50
+2023-02-01 12:51:09.510 | INFO     | algorithms.rainbow_online:train:412 - 28, loss: 1.499
+2023-02-01 12:51:09.512 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 29 / 50
+2023-02-01 12:51:10.065 | INFO     | algorithms.rainbow_online:train:412 - 29, loss: 1.446
+2023-02-01 12:51:10.067 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 30 / 50
+2023-02-01 12:51:10.618 | INFO     | algorithms.rainbow_online:train:412 - 30, loss: 1.453
+2023-02-01 12:51:10.620 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 80
+2023-02-01 12:51:15.299 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_80_accuracy_results.json
+2023-02-01 12:51:15.301 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1849 / 10000 samples (18.49% correct)
+2023-02-01 12:51:15.437 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 31 / 50
+2023-02-01 12:51:15.998 | INFO     | algorithms.rainbow_online:train:412 - 31, loss: 1.454
+2023-02-01 12:51:15.999 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 32 / 50
+2023-02-01 12:51:16.550 | INFO     | algorithms.rainbow_online:train:412 - 32, loss: 1.497
+2023-02-01 12:51:16.552 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 33 / 50
+2023-02-01 12:51:17.103 | INFO     | algorithms.rainbow_online:train:412 - 33, loss: 1.436
+2023-02-01 12:51:17.104 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 34 / 50
+2023-02-01 12:51:17.658 | INFO     | algorithms.rainbow_online:train:412 - 34, loss: 1.485
+2023-02-01 12:51:17.659 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 35 / 50
+2023-02-01 12:51:18.215 | INFO     | algorithms.rainbow_online:train:412 - 35, loss: 1.406
+2023-02-01 12:51:18.217 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 36 / 50
+2023-02-01 12:51:18.764 | INFO     | algorithms.rainbow_online:train:412 - 36, loss: 1.407
+2023-02-01 12:51:18.765 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 37 / 50
+2023-02-01 12:51:19.315 | INFO     | algorithms.rainbow_online:train:412 - 37, loss: 1.467
+2023-02-01 12:51:19.317 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 38 / 50
+2023-02-01 12:51:19.866 | INFO     | algorithms.rainbow_online:train:412 - 38, loss: 1.410
+2023-02-01 12:51:19.868 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 39 / 50
+2023-02-01 12:51:20.421 | INFO     | algorithms.rainbow_online:train:412 - 39, loss: 1.410
+2023-02-01 12:51:20.422 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 40 / 50
+2023-02-01 12:51:20.970 | INFO     | algorithms.rainbow_online:train:412 - 40, loss: 1.361
+2023-02-01 12:51:20.972 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 90
+2023-02-01 12:51:25.644 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_90_accuracy_results.json
+2023-02-01 12:51:25.645 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2015 / 10000 samples (20.15% correct)
+2023-02-01 12:51:25.780 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 41 / 50
+2023-02-01 12:51:26.338 | INFO     | algorithms.rainbow_online:train:412 - 41, loss: 1.387
+2023-02-01 12:51:26.339 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 42 / 50
+2023-02-01 12:51:26.890 | INFO     | algorithms.rainbow_online:train:412 - 42, loss: 1.363
+2023-02-01 12:51:26.891 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 43 / 50
+2023-02-01 12:51:27.441 | INFO     | algorithms.rainbow_online:train:412 - 43, loss: 1.333
+2023-02-01 12:51:27.443 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 44 / 50
+2023-02-01 12:51:27.999 | INFO     | algorithms.rainbow_online:train:412 - 44, loss: 1.385
+2023-02-01 12:51:28.001 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 45 / 50
+2023-02-01 12:51:28.555 | INFO     | algorithms.rainbow_online:train:412 - 45, loss: 1.366
+2023-02-01 12:51:28.556 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 46 / 50
+2023-02-01 12:51:29.111 | INFO     | algorithms.rainbow_online:train:412 - 46, loss: 1.375
+2023-02-01 12:51:29.112 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 47 / 50
+2023-02-01 12:51:29.664 | INFO     | algorithms.rainbow_online:train:412 - 47, loss: 1.366
+2023-02-01 12:51:29.666 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 48 / 50
+2023-02-01 12:51:30.216 | INFO     | algorithms.rainbow_online:train:412 - 48, loss: 1.413
+2023-02-01 12:51:30.217 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 49 / 50
+2023-02-01 12:51:30.764 | INFO     | algorithms.rainbow_online:train:412 - 49, loss: 1.346
+2023-02-01 12:51:30.766 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 50 / 50
+2023-02-01 12:51:31.316 | INFO     | algorithms.rainbow_online:train:412 - 50, loss: 1.369
+2023-02-01 12:51:31.318 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 100
+2023-02-01 12:51:36.009 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_100_accuracy_results.json
+2023-02-01 12:51:36.010 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2162 / 10000 samples (21.62% correct)
+2023-02-01 12:51:36.146 | INFO     | algorithms.rainbow_online:train:334 - Starting Task 3 / 5
+2023-02-01 12:51:36.150 | INFO     | algorithms.rainbow_online:train:338 - Updating memory...
+2023-02-01 12:51:36.151 | DEBUG    | algorithms.rainbow_online:train:341 - T_b: <class 'numpy.ndarray'>
+2023-02-01 12:51:36.162 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:189 - Segmenting classes
+2023-02-01 12:51:36.163 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0])
+2023-02-01 12:51:36.164 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6])
+2023-02-01 12:51:36.165 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4])
+2023-02-01 12:51:36.165 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5])
+2023-02-01 12:51:36.192 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:215 - Seen classes: 6
+2023-02-01 12:51:36.193 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:218 - Sorting class samples by uncertainty and generating next buffer: memory size per class 83
+2023-02-01 12:51:36.194 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 0 under sampling strategy diverse
+2023-02-01 12:51:41.326 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48, 49, 51, 52, 54, 55, 57, 58, 60, 61, 63, 64, 66, 67, 69, 70, 72, 73, 75, 76, 78, 79, 81, 82, 84, 85, 87, 88, 90, 91, 93, 94, 96, 97, 99, 100, 102, 103, 105, 106, 108, 109, 111, 112, 114, 115, 117, 118, 120, 121, 123]
+2023-02-01 12:51:41.351 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:51:41.352 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 0
+2023-02-01 12:51:41.352 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 6 under sampling strategy diverse
+2023-02-01 12:51:46.485 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48, 49, 51, 52, 54, 55, 57, 58, 60, 61, 63, 64, 66, 67, 69, 70, 72, 73, 75, 76, 78, 79, 81, 82, 84, 85, 87, 88, 90, 91, 93, 94, 96, 97, 99, 100, 102, 103, 105, 106, 108, 109, 111, 112, 114, 115, 117, 118, 120, 121, 123]
+2023-02-01 12:51:46.515 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:51:46.515 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 6
+2023-02-01 12:51:46.516 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 4 under sampling strategy diverse
+2023-02-01 12:51:51.694 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48, 49, 51, 52, 54, 55, 57, 58, 60, 61, 63, 64, 66, 67, 69, 70, 72, 73, 75, 76, 78, 79, 81, 82, 84, 85, 87, 88, 90, 91, 93, 94, 96, 97, 99, 100, 102, 103, 105, 106, 108, 109, 111, 112, 114, 115, 117, 118, 120, 121, 123]
+2023-02-01 12:51:51.721 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:51:51.722 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 4
+2023-02-01 12:51:51.722 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 5 under sampling strategy diverse
+2023-02-01 12:51:56.905 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48, 49, 51, 52, 54, 55, 57, 58, 60, 61, 63, 64, 66, 67, 69, 70, 72, 73, 75, 76, 78, 79, 81, 82, 84, 85, 87, 88, 90, 91, 93, 94, 96, 97, 99, 100, 102, 103, 105, 106, 108, 109, 111, 112, 114, 115, 117, 118, 120, 121, 123]
+2023-02-01 12:51:56.935 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:51:56.936 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 5
+2023-02-01 12:51:56.936 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 7 under sampling strategy diverse
+2023-02-01 12:55:23.074 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 60, 120, 180, 240, 301, 361, 421, 481, 542, 602, 662, 722, 783, 843, 903, 963, 1024, 1084, 1144, 1204, 1265, 1325, 1385, 1445, 1506, 1566, 1626, 1686, 1746, 1807, 1867, 1927, 1987, 2048, 2108, 2168, 2228, 2289, 2349, 2409, 2469, 2530, 2590, 2650, 2710, 2771, 2831, 2891, 2951, 3012, 3072, 3132, 3192, 3253, 3313, 3373, 3433, 3493, 3554, 3614, 3674, 3734, 3795, 3855, 3915, 3975, 4036, 4096, 4156, 4216, 4277, 4337, 4397, 4457, 4518, 4578, 4638, 4698, 4759, 4819, 4879, 4939]
+2023-02-01 12:55:23.104 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:55:23.104 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 7
+2023-02-01 12:55:23.105 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 2 under sampling strategy diverse
+2023-02-01 12:58:49.161 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 60, 120, 180, 240, 301, 361, 421, 481, 542, 602, 662, 722, 783, 843, 903, 963, 1024, 1084, 1144, 1204, 1265, 1325, 1385, 1445, 1506, 1566, 1626, 1686, 1746, 1807, 1867, 1927, 1987, 2048, 2108, 2168, 2228, 2289, 2349, 2409, 2469, 2530, 2590, 2650, 2710, 2771, 2831, 2891, 2951, 3012, 3072, 3132, 3192, 3253, 3313, 3373, 3433, 3493, 3554, 3614, 3674, 3734, 3795, 3855, 3915, 3975, 4036, 4096, 4156, 4216, 4277, 4337, 4397, 4457, 4518, 4578, 4638, 4698, 4759, 4819, 4879, 4939]
+2023-02-01 12:58:49.187 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:58:49.187 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 83 samples from class 2
+2023-02-01 12:58:49.188 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:325 - Generated next exemplar buffer
+2023-02-01 12:58:49.189 | DEBUG    | algorithms.rainbow_online:train:345 - T_a: <class 'numpy.ndarray'>
+2023-02-01 12:58:49.190 | INFO     | algorithms.rainbow_online:train:350 - Using memory buffer exclusively
+2023-02-01 12:58:49.191 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 1 / 50
+2023-02-01 12:58:50.084 | INFO     | algorithms.rainbow_online:train:412 - 1, loss: 2.204
+2023-02-01 12:58:50.086 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 2 / 50
+2023-02-01 12:58:50.642 | INFO     | algorithms.rainbow_online:train:412 - 2, loss: 2.041
+2023-02-01 12:58:50.643 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 3 / 50
+2023-02-01 12:58:51.196 | INFO     | algorithms.rainbow_online:train:412 - 3, loss: 1.989
+2023-02-01 12:58:51.196 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 4 / 50
+2023-02-01 12:58:51.752 | INFO     | algorithms.rainbow_online:train:412 - 4, loss: 2.036
+2023-02-01 12:58:51.754 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 5 / 50
+2023-02-01 12:58:52.307 | INFO     | algorithms.rainbow_online:train:412 - 5, loss: 1.992
+2023-02-01 12:58:52.309 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 6 / 50
+2023-02-01 12:58:52.858 | INFO     | algorithms.rainbow_online:train:412 - 6, loss: 1.954
+2023-02-01 12:58:52.860 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 7 / 50
+2023-02-01 12:58:53.413 | INFO     | algorithms.rainbow_online:train:412 - 7, loss: 1.961
+2023-02-01 12:58:53.414 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 8 / 50
+2023-02-01 12:58:53.970 | INFO     | algorithms.rainbow_online:train:412 - 8, loss: 1.979
+2023-02-01 12:58:53.972 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 9 / 50
+2023-02-01 12:58:54.524 | INFO     | algorithms.rainbow_online:train:412 - 9, loss: 1.913
+2023-02-01 12:58:54.525 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 10 / 50
+2023-02-01 12:58:55.078 | INFO     | algorithms.rainbow_online:train:412 - 10, loss: 1.905
+2023-02-01 12:58:55.080 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 110
+2023-02-01 12:58:59.761 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_110_accuracy_results.json
+2023-02-01 12:58:59.761 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2327 / 10000 samples (23.27% correct)
+2023-02-01 12:58:59.951 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 11 / 50
+2023-02-01 12:59:00.512 | INFO     | algorithms.rainbow_online:train:412 - 11, loss: 1.896
+2023-02-01 12:59:00.514 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 12 / 50
+2023-02-01 12:59:01.064 | INFO     | algorithms.rainbow_online:train:412 - 12, loss: 1.876
+2023-02-01 12:59:01.065 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 13 / 50
+2023-02-01 12:59:01.618 | INFO     | algorithms.rainbow_online:train:412 - 13, loss: 1.860
+2023-02-01 12:59:01.619 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 14 / 50
+2023-02-01 12:59:02.172 | INFO     | algorithms.rainbow_online:train:412 - 14, loss: 1.903
+2023-02-01 12:59:02.174 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 15 / 50
+2023-02-01 12:59:02.728 | INFO     | algorithms.rainbow_online:train:412 - 15, loss: 1.887
+2023-02-01 12:59:02.730 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 16 / 50
+2023-02-01 12:59:03.286 | INFO     | algorithms.rainbow_online:train:412 - 16, loss: 1.850
+2023-02-01 12:59:03.287 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 17 / 50
+2023-02-01 12:59:03.839 | INFO     | algorithms.rainbow_online:train:412 - 17, loss: 1.931
+2023-02-01 12:59:03.840 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 18 / 50
+2023-02-01 12:59:04.388 | INFO     | algorithms.rainbow_online:train:412 - 18, loss: 1.816
+2023-02-01 12:59:04.389 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 19 / 50
+2023-02-01 12:59:04.943 | INFO     | algorithms.rainbow_online:train:412 - 19, loss: 1.838
+2023-02-01 12:59:04.944 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 20 / 50
+2023-02-01 12:59:05.499 | INFO     | algorithms.rainbow_online:train:412 - 20, loss: 1.871
+2023-02-01 12:59:05.501 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 120
+2023-02-01 12:59:10.184 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_120_accuracy_results.json
+2023-02-01 12:59:10.185 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2376 / 10000 samples (23.76% correct)
+2023-02-01 12:59:10.325 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 21 / 50
+2023-02-01 12:59:10.880 | INFO     | algorithms.rainbow_online:train:412 - 21, loss: 1.790
+2023-02-01 12:59:10.882 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 22 / 50
+2023-02-01 12:59:11.434 | INFO     | algorithms.rainbow_online:train:412 - 22, loss: 1.800
+2023-02-01 12:59:11.436 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 23 / 50
+2023-02-01 12:59:11.993 | INFO     | algorithms.rainbow_online:train:412 - 23, loss: 1.810
+2023-02-01 12:59:11.995 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 24 / 50
+2023-02-01 12:59:12.548 | INFO     | algorithms.rainbow_online:train:412 - 24, loss: 1.772
+2023-02-01 12:59:12.549 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 25 / 50
+2023-02-01 12:59:13.103 | INFO     | algorithms.rainbow_online:train:412 - 25, loss: 1.801
+2023-02-01 12:59:13.104 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 26 / 50
+2023-02-01 12:59:13.658 | INFO     | algorithms.rainbow_online:train:412 - 26, loss: 1.750
+2023-02-01 12:59:13.660 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 27 / 50
+2023-02-01 12:59:14.214 | INFO     | algorithms.rainbow_online:train:412 - 27, loss: 1.754
+2023-02-01 12:59:14.215 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 28 / 50
+2023-02-01 12:59:14.767 | INFO     | algorithms.rainbow_online:train:412 - 28, loss: 1.837
+2023-02-01 12:59:14.769 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 29 / 50
+2023-02-01 12:59:15.321 | INFO     | algorithms.rainbow_online:train:412 - 29, loss: 1.774
+2023-02-01 12:59:15.323 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 30 / 50
+2023-02-01 12:59:15.876 | INFO     | algorithms.rainbow_online:train:412 - 30, loss: 1.761
+2023-02-01 12:59:15.878 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 130
+2023-02-01 12:59:20.531 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_130_accuracy_results.json
+2023-02-01 12:59:20.533 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2439 / 10000 samples (24.39% correct)
+2023-02-01 12:59:20.676 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 31 / 50
+2023-02-01 12:59:21.230 | INFO     | algorithms.rainbow_online:train:412 - 31, loss: 1.811
+2023-02-01 12:59:21.231 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 32 / 50
+2023-02-01 12:59:21.781 | INFO     | algorithms.rainbow_online:train:412 - 32, loss: 1.792
+2023-02-01 12:59:21.783 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 33 / 50
+2023-02-01 12:59:22.332 | INFO     | algorithms.rainbow_online:train:412 - 33, loss: 1.729
+2023-02-01 12:59:22.333 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 34 / 50
+2023-02-01 12:59:22.887 | INFO     | algorithms.rainbow_online:train:412 - 34, loss: 1.773
+2023-02-01 12:59:22.889 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 35 / 50
+2023-02-01 12:59:23.441 | INFO     | algorithms.rainbow_online:train:412 - 35, loss: 1.708
+2023-02-01 12:59:23.443 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 36 / 50
+2023-02-01 12:59:23.993 | INFO     | algorithms.rainbow_online:train:412 - 36, loss: 1.657
+2023-02-01 12:59:23.994 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 37 / 50
+2023-02-01 12:59:24.550 | INFO     | algorithms.rainbow_online:train:412 - 37, loss: 1.734
+2023-02-01 12:59:24.552 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 38 / 50
+2023-02-01 12:59:25.101 | INFO     | algorithms.rainbow_online:train:412 - 38, loss: 1.705
+2023-02-01 12:59:25.103 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 39 / 50
+2023-02-01 12:59:25.660 | INFO     | algorithms.rainbow_online:train:412 - 39, loss: 1.637
+2023-02-01 12:59:25.661 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 40 / 50
+2023-02-01 12:59:26.216 | INFO     | algorithms.rainbow_online:train:412 - 40, loss: 1.734
+2023-02-01 12:59:26.217 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 140
+2023-02-01 12:59:30.925 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_140_accuracy_results.json
+2023-02-01 12:59:30.927 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2522 / 10000 samples (25.22% correct)
+2023-02-01 12:59:31.068 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 41 / 50
+2023-02-01 12:59:31.625 | INFO     | algorithms.rainbow_online:train:412 - 41, loss: 1.693
+2023-02-01 12:59:31.626 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 42 / 50
+2023-02-01 12:59:32.178 | INFO     | algorithms.rainbow_online:train:412 - 42, loss: 1.658
+2023-02-01 12:59:32.180 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 43 / 50
+2023-02-01 12:59:32.729 | INFO     | algorithms.rainbow_online:train:412 - 43, loss: 1.544
+2023-02-01 12:59:32.731 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 44 / 50
+2023-02-01 12:59:33.284 | INFO     | algorithms.rainbow_online:train:412 - 44, loss: 1.703
+2023-02-01 12:59:33.286 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 45 / 50
+2023-02-01 12:59:33.840 | INFO     | algorithms.rainbow_online:train:412 - 45, loss: 1.593
+2023-02-01 12:59:33.842 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 46 / 50
+2023-02-01 12:59:34.396 | INFO     | algorithms.rainbow_online:train:412 - 46, loss: 1.645
+2023-02-01 12:59:34.398 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 47 / 50
+2023-02-01 12:59:34.949 | INFO     | algorithms.rainbow_online:train:412 - 47, loss: 1.647
+2023-02-01 12:59:34.950 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 48 / 50
+2023-02-01 12:59:35.500 | INFO     | algorithms.rainbow_online:train:412 - 48, loss: 1.557
+2023-02-01 12:59:35.501 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 49 / 50
+2023-02-01 12:59:36.053 | INFO     | algorithms.rainbow_online:train:412 - 49, loss: 1.551
+2023-02-01 12:59:36.054 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 50 / 50
+2023-02-01 12:59:36.606 | INFO     | algorithms.rainbow_online:train:412 - 50, loss: 1.624
+2023-02-01 12:59:36.608 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 150
+2023-02-01 12:59:41.309 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_150_accuracy_results.json
+2023-02-01 12:59:41.311 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2792 / 10000 samples (27.92% correct)
+2023-02-01 12:59:41.450 | INFO     | algorithms.rainbow_online:train:334 - Starting Task 4 / 5
+2023-02-01 12:59:41.455 | INFO     | algorithms.rainbow_online:train:338 - Updating memory...
+2023-02-01 12:59:41.456 | DEBUG    | algorithms.rainbow_online:train:341 - T_b: <class 'numpy.ndarray'>
+2023-02-01 12:59:41.467 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:189 - Segmenting classes
+2023-02-01 12:59:41.468 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0])
+2023-02-01 12:59:41.469 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6])
+2023-02-01 12:59:41.470 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4])
+2023-02-01 12:59:41.471 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5])
+2023-02-01 12:59:41.471 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7])
+2023-02-01 12:59:41.472 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7, 2])
+2023-02-01 12:59:41.499 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:215 - Seen classes: 8
+2023-02-01 12:59:41.500 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:218 - Sorting class samples by uncertainty and generating next buffer: memory size per class 62
+2023-02-01 12:59:41.501 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 0 under sampling strategy diverse
+2023-02-01 12:59:44.943 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 12:59:44.962 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:59:44.963 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 0
+2023-02-01 12:59:44.964 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 6 under sampling strategy diverse
+2023-02-01 12:59:48.384 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 12:59:48.406 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:59:48.407 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 6
+2023-02-01 12:59:48.407 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 4 under sampling strategy diverse
+2023-02-01 12:59:51.833 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 12:59:51.854 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:59:51.855 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 4
+2023-02-01 12:59:51.855 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 5 under sampling strategy diverse
+2023-02-01 12:59:55.268 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 12:59:55.289 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:59:55.290 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 5
+2023-02-01 12:59:55.291 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 7 under sampling strategy diverse
+2023-02-01 12:59:58.724 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 12:59:58.747 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 12:59:58.748 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 7
+2023-02-01 12:59:58.749 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 2 under sampling strategy diverse
+2023-02-01 13:00:02.175 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36, 37, 38, 40, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81]
+2023-02-01 13:00:02.195 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:00:02.196 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 2
+2023-02-01 13:00:02.197 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 1 under sampling strategy diverse
+2023-02-01 13:03:27.358 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 80, 161, 241, 322, 403, 483, 564, 645, 725, 806, 887, 967, 1048, 1129, 1209, 1290, 1370, 1451, 1532, 1612, 1693, 1774, 1854, 1935, 2016, 2096, 2177, 2258, 2338, 2419, 2500, 2580, 2661, 2741, 2822, 2903, 2983, 3064, 3145, 3225, 3306, 3387, 3467, 3548, 3629, 3709, 3790, 3870, 3951, 4032, 4112, 4193, 4274, 4354, 4435, 4516, 4596, 4677, 4758, 4838, 4919]
+2023-02-01 13:03:27.379 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:03:27.380 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 1
+2023-02-01 13:03:27.380 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 3 under sampling strategy diverse
+2023-02-01 13:06:54.241 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 80, 161, 241, 322, 403, 483, 564, 645, 725, 806, 887, 967, 1048, 1129, 1209, 1290, 1370, 1451, 1532, 1612, 1693, 1774, 1854, 1935, 2016, 2096, 2177, 2258, 2338, 2419, 2500, 2580, 2661, 2741, 2822, 2903, 2983, 3064, 3145, 3225, 3306, 3387, 3467, 3548, 3629, 3709, 3790, 3870, 3951, 4032, 4112, 4193, 4274, 4354, 4435, 4516, 4596, 4677, 4758, 4838, 4919]
+2023-02-01 13:06:54.263 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:06:54.263 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 62 samples from class 3
+2023-02-01 13:06:54.264 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:325 - Generated next exemplar buffer
+2023-02-01 13:06:54.265 | DEBUG    | algorithms.rainbow_online:train:345 - T_a: <class 'numpy.ndarray'>
+2023-02-01 13:06:54.266 | INFO     | algorithms.rainbow_online:train:350 - Using memory buffer exclusively
+2023-02-01 13:06:54.267 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 1 / 50
+2023-02-01 13:06:55.007 | INFO     | algorithms.rainbow_online:train:412 - 1, loss: 2.338
+2023-02-01 13:06:55.009 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 2 / 50
+2023-02-01 13:06:55.566 | INFO     | algorithms.rainbow_online:train:412 - 2, loss: 2.108
+2023-02-01 13:06:55.568 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 3 / 50
+2023-02-01 13:06:56.120 | INFO     | algorithms.rainbow_online:train:412 - 3, loss: 2.052
+2023-02-01 13:06:56.122 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 4 / 50
+2023-02-01 13:06:56.672 | INFO     | algorithms.rainbow_online:train:412 - 4, loss: 2.046
+2023-02-01 13:06:56.674 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 5 / 50
+2023-02-01 13:06:57.225 | INFO     | algorithms.rainbow_online:train:412 - 5, loss: 2.030
+2023-02-01 13:06:57.227 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 6 / 50
+2023-02-01 13:06:57.776 | INFO     | algorithms.rainbow_online:train:412 - 6, loss: 2.021
+2023-02-01 13:06:57.778 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 7 / 50
+2023-02-01 13:06:58.324 | INFO     | algorithms.rainbow_online:train:412 - 7, loss: 2.023
+2023-02-01 13:06:58.325 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 8 / 50
+2023-02-01 13:06:58.879 | INFO     | algorithms.rainbow_online:train:412 - 8, loss: 2.032
+2023-02-01 13:06:58.881 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 9 / 50
+2023-02-01 13:06:59.431 | INFO     | algorithms.rainbow_online:train:412 - 9, loss: 2.006
+2023-02-01 13:06:59.433 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 10 / 50
+2023-02-01 13:06:59.986 | INFO     | algorithms.rainbow_online:train:412 - 10, loss: 1.955
+2023-02-01 13:06:59.988 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 160
+2023-02-01 13:07:04.691 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_160_accuracy_results.json
+2023-02-01 13:07:04.693 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2723 / 10000 samples (27.23% correct)
+2023-02-01 13:07:04.836 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 11 / 50
+2023-02-01 13:07:05.393 | INFO     | algorithms.rainbow_online:train:412 - 11, loss: 2.000
+2023-02-01 13:07:05.394 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 12 / 50
+2023-02-01 13:07:05.940 | INFO     | algorithms.rainbow_online:train:412 - 12, loss: 1.953
+2023-02-01 13:07:05.942 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 13 / 50
+2023-02-01 13:07:06.491 | INFO     | algorithms.rainbow_online:train:412 - 13, loss: 1.983
+2023-02-01 13:07:06.492 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 14 / 50
+2023-02-01 13:07:07.041 | INFO     | algorithms.rainbow_online:train:412 - 14, loss: 1.918
+2023-02-01 13:07:07.042 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 15 / 50
+2023-02-01 13:07:07.593 | INFO     | algorithms.rainbow_online:train:412 - 15, loss: 1.995
+2023-02-01 13:07:07.595 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 16 / 50
+2023-02-01 13:07:08.145 | INFO     | algorithms.rainbow_online:train:412 - 16, loss: 1.961
+2023-02-01 13:07:08.146 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 17 / 50
+2023-02-01 13:07:08.693 | INFO     | algorithms.rainbow_online:train:412 - 17, loss: 1.937
+2023-02-01 13:07:08.695 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 18 / 50
+2023-02-01 13:07:09.250 | INFO     | algorithms.rainbow_online:train:412 - 18, loss: 1.881
+2023-02-01 13:07:09.251 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 19 / 50
+2023-02-01 13:07:09.801 | INFO     | algorithms.rainbow_online:train:412 - 19, loss: 1.933
+2023-02-01 13:07:09.802 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 20 / 50
+2023-02-01 13:07:10.353 | INFO     | algorithms.rainbow_online:train:412 - 20, loss: 1.863
+2023-02-01 13:07:10.355 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 170
+2023-02-01 13:07:15.016 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_170_accuracy_results.json
+2023-02-01 13:07:15.018 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2911 / 10000 samples (29.11% correct)
+2023-02-01 13:07:15.158 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 21 / 50
+2023-02-01 13:07:15.714 | INFO     | algorithms.rainbow_online:train:412 - 21, loss: 1.907
+2023-02-01 13:07:15.715 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 22 / 50
+2023-02-01 13:07:16.264 | INFO     | algorithms.rainbow_online:train:412 - 22, loss: 1.993
+2023-02-01 13:07:16.266 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 23 / 50
+2023-02-01 13:07:16.817 | INFO     | algorithms.rainbow_online:train:412 - 23, loss: 1.845
+2023-02-01 13:07:16.818 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 24 / 50
+2023-02-01 13:07:17.372 | INFO     | algorithms.rainbow_online:train:412 - 24, loss: 1.848
+2023-02-01 13:07:17.374 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 25 / 50
+2023-02-01 13:07:17.927 | INFO     | algorithms.rainbow_online:train:412 - 25, loss: 1.875
+2023-02-01 13:07:17.929 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 26 / 50
+2023-02-01 13:07:18.484 | INFO     | algorithms.rainbow_online:train:412 - 26, loss: 1.968
+2023-02-01 13:07:18.485 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 27 / 50
+2023-02-01 13:07:19.036 | INFO     | algorithms.rainbow_online:train:412 - 27, loss: 1.885
+2023-02-01 13:07:19.037 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 28 / 50
+2023-02-01 13:07:19.586 | INFO     | algorithms.rainbow_online:train:412 - 28, loss: 1.828
+2023-02-01 13:07:19.588 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 29 / 50
+2023-02-01 13:07:20.142 | INFO     | algorithms.rainbow_online:train:412 - 29, loss: 1.880
+2023-02-01 13:07:20.144 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 30 / 50
+2023-02-01 13:07:20.694 | INFO     | algorithms.rainbow_online:train:412 - 30, loss: 1.918
+2023-02-01 13:07:20.696 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 180
+2023-02-01 13:07:25.404 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_180_accuracy_results.json
+2023-02-01 13:07:25.406 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3022 / 10000 samples (30.22% correct)
+2023-02-01 13:07:25.546 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 31 / 50
+2023-02-01 13:07:26.102 | INFO     | algorithms.rainbow_online:train:412 - 31, loss: 1.858
+2023-02-01 13:07:26.103 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 32 / 50
+2023-02-01 13:07:26.653 | INFO     | algorithms.rainbow_online:train:412 - 32, loss: 1.845
+2023-02-01 13:07:26.654 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 33 / 50
+2023-02-01 13:07:27.205 | INFO     | algorithms.rainbow_online:train:412 - 33, loss: 1.921
+2023-02-01 13:07:27.206 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 34 / 50
+2023-02-01 13:07:27.759 | INFO     | algorithms.rainbow_online:train:412 - 34, loss: 1.790
+2023-02-01 13:07:27.761 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 35 / 50
+2023-02-01 13:07:28.309 | INFO     | algorithms.rainbow_online:train:412 - 35, loss: 1.818
+2023-02-01 13:07:28.310 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 36 / 50
+2023-02-01 13:07:28.861 | INFO     | algorithms.rainbow_online:train:412 - 36, loss: 1.800
+2023-02-01 13:07:28.863 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 37 / 50
+2023-02-01 13:07:29.409 | INFO     | algorithms.rainbow_online:train:412 - 37, loss: 1.699
+2023-02-01 13:07:29.410 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 38 / 50
+2023-02-01 13:07:29.956 | INFO     | algorithms.rainbow_online:train:412 - 38, loss: 1.743
+2023-02-01 13:07:29.958 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 39 / 50
+2023-02-01 13:07:30.508 | INFO     | algorithms.rainbow_online:train:412 - 39, loss: 1.742
+2023-02-01 13:07:30.510 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 40 / 50
+2023-02-01 13:07:31.060 | INFO     | algorithms.rainbow_online:train:412 - 40, loss: 1.794
+2023-02-01 13:07:31.061 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 190
+2023-02-01 13:07:35.735 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_190_accuracy_results.json
+2023-02-01 13:07:35.737 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3199 / 10000 samples (31.99% correct)
+2023-02-01 13:07:35.877 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 41 / 50
+2023-02-01 13:07:36.431 | INFO     | algorithms.rainbow_online:train:412 - 41, loss: 1.785
+2023-02-01 13:07:36.432 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 42 / 50
+2023-02-01 13:07:36.981 | INFO     | algorithms.rainbow_online:train:412 - 42, loss: 1.737
+2023-02-01 13:07:36.983 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 43 / 50
+2023-02-01 13:07:37.536 | INFO     | algorithms.rainbow_online:train:412 - 43, loss: 1.723
+2023-02-01 13:07:37.537 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 44 / 50
+2023-02-01 13:07:38.085 | INFO     | algorithms.rainbow_online:train:412 - 44, loss: 1.806
+2023-02-01 13:07:38.086 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 45 / 50
+2023-02-01 13:07:38.640 | INFO     | algorithms.rainbow_online:train:412 - 45, loss: 1.736
+2023-02-01 13:07:38.642 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 46 / 50
+2023-02-01 13:07:39.186 | INFO     | algorithms.rainbow_online:train:412 - 46, loss: 1.730
+2023-02-01 13:07:39.188 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 47 / 50
+2023-02-01 13:07:39.736 | INFO     | algorithms.rainbow_online:train:412 - 47, loss: 1.795
+2023-02-01 13:07:39.737 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 48 / 50
+2023-02-01 13:07:40.287 | INFO     | algorithms.rainbow_online:train:412 - 48, loss: 1.677
+2023-02-01 13:07:40.289 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 49 / 50
+2023-02-01 13:07:40.837 | INFO     | algorithms.rainbow_online:train:412 - 49, loss: 1.730
+2023-02-01 13:07:40.839 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 50 / 50
+2023-02-01 13:07:41.385 | INFO     | algorithms.rainbow_online:train:412 - 50, loss: 1.752
+2023-02-01 13:07:41.386 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 200
+2023-02-01 13:07:46.078 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_200_accuracy_results.json
+2023-02-01 13:07:46.080 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3300 / 10000 samples (33.00% correct)
+2023-02-01 13:07:46.219 | INFO     | algorithms.rainbow_online:train:334 - Starting Task 5 / 5
+2023-02-01 13:07:46.224 | INFO     | algorithms.rainbow_online:train:338 - Updating memory...
+2023-02-01 13:07:46.225 | DEBUG    | algorithms.rainbow_online:train:341 - T_b: <class 'numpy.ndarray'>
+2023-02-01 13:07:46.233 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:189 - Segmenting classes
+2023-02-01 13:07:46.235 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0])
+2023-02-01 13:07:46.236 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6])
+2023-02-01 13:07:46.236 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4])
+2023-02-01 13:07:46.237 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5])
+2023-02-01 13:07:46.238 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7])
+2023-02-01 13:07:46.239 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7, 2])
+2023-02-01 13:07:46.239 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7, 2, 1])
+2023-02-01 13:07:46.240 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:200 - Keys dict_keys([0, 6, 4, 5, 7, 2, 1, 3])
+2023-02-01 13:07:46.265 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:215 - Seen classes: 10
+2023-02-01 13:07:46.268 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:218 - Sorting class samples by uncertainty and generating next buffer: memory size per class 50
+2023-02-01 13:07:46.269 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 0 under sampling strategy diverse
+2023-02-01 13:07:48.846 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:07:48.861 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:07:48.862 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 0
+2023-02-01 13:07:48.862 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 6 under sampling strategy diverse
+2023-02-01 13:07:51.450 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:07:51.469 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:07:51.470 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 6
+2023-02-01 13:07:51.470 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 4 under sampling strategy diverse
+2023-02-01 13:07:54.061 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:07:54.079 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:07:54.079 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 4
+2023-02-01 13:07:54.080 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 5 under sampling strategy diverse
+2023-02-01 13:07:56.699 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:07:56.718 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:07:56.718 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 5
+2023-02-01 13:07:56.719 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 7 under sampling strategy diverse
+2023-02-01 13:07:59.326 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:07:59.344 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:07:59.345 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 7
+2023-02-01 13:07:59.345 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 2 under sampling strategy diverse
+2023-02-01 13:08:01.953 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:08:01.969 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:08:01.970 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 2
+2023-02-01 13:08:01.971 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 1 under sampling strategy diverse
+2023-02-01 13:08:04.542 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:08:04.559 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:08:04.560 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 1
+2023-02-01 13:08:04.561 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 3 under sampling strategy diverse
+2023-02-01 13:08:07.149 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60]
+2023-02-01 13:08:07.167 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:08:07.167 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 3
+2023-02-01 13:08:07.168 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 9 under sampling strategy diverse
+2023-02-01 13:11:35.803 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900]
+2023-02-01 13:11:35.820 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:11:35.821 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 9
+2023-02-01 13:11:35.821 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:298 - Class 8 under sampling strategy diverse
+2023-02-01 13:14:59.896 | DEBUG    | algorithms.rainbow_online:perform_diversity_aware_memory_update:321 - Indexes: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900]
+2023-02-01 13:14:59.912 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:322 - Saved sample images to Tensorboard
+2023-02-01 13:14:59.912 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:323 - There are 50 samples from class 8
+2023-02-01 13:14:59.913 | INFO     | algorithms.rainbow_online:perform_diversity_aware_memory_update:325 - Generated next exemplar buffer
+2023-02-01 13:14:59.914 | DEBUG    | algorithms.rainbow_online:train:345 - T_a: <class 'numpy.ndarray'>
+2023-02-01 13:14:59.915 | INFO     | algorithms.rainbow_online:train:350 - Using memory buffer exclusively
+2023-02-01 13:14:59.916 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 1 / 50
+2023-02-01 13:15:00.470 | INFO     | algorithms.rainbow_online:train:412 - 1, loss: 2.240
+2023-02-01 13:15:00.471 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 2 / 50
+2023-02-01 13:15:01.020 | INFO     | algorithms.rainbow_online:train:412 - 2, loss: 2.103
+2023-02-01 13:15:01.021 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 3 / 50
+2023-02-01 13:15:01.567 | INFO     | algorithms.rainbow_online:train:412 - 3, loss: 2.027
+2023-02-01 13:15:01.569 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 4 / 50
+2023-02-01 13:15:02.115 | INFO     | algorithms.rainbow_online:train:412 - 4, loss: 2.142
+2023-02-01 13:15:02.116 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 5 / 50
+2023-02-01 13:15:02.664 | INFO     | algorithms.rainbow_online:train:412 - 5, loss: 2.039
+2023-02-01 13:15:02.665 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 6 / 50
+2023-02-01 13:15:03.213 | INFO     | algorithms.rainbow_online:train:412 - 6, loss: 2.025
+2023-02-01 13:15:03.214 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 7 / 50
+2023-02-01 13:15:03.758 | INFO     | algorithms.rainbow_online:train:412 - 7, loss: 1.915
+2023-02-01 13:15:03.760 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 8 / 50
+2023-02-01 13:15:04.308 | INFO     | algorithms.rainbow_online:train:412 - 8, loss: 2.068
+2023-02-01 13:15:04.309 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 9 / 50
+2023-02-01 13:15:04.855 | INFO     | algorithms.rainbow_online:train:412 - 9, loss: 1.933
+2023-02-01 13:15:04.857 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 10 / 50
+2023-02-01 13:15:05.401 | INFO     | algorithms.rainbow_online:train:412 - 10, loss: 1.900
+2023-02-01 13:15:05.402 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 210
+2023-02-01 13:15:10.069 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_210_accuracy_results.json
+2023-02-01 13:15:10.071 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3289 / 10000 samples (32.89% correct)
+2023-02-01 13:15:10.203 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 11 / 50
+2023-02-01 13:15:10.753 | INFO     | algorithms.rainbow_online:train:412 - 11, loss: 1.984
+2023-02-01 13:15:10.754 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 12 / 50
+2023-02-01 13:15:11.301 | INFO     | algorithms.rainbow_online:train:412 - 12, loss: 1.966
+2023-02-01 13:15:11.303 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 13 / 50
+2023-02-01 13:15:11.850 | INFO     | algorithms.rainbow_online:train:412 - 13, loss: 1.924
+2023-02-01 13:15:11.852 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 14 / 50
+2023-02-01 13:15:12.395 | INFO     | algorithms.rainbow_online:train:412 - 14, loss: 1.970
+2023-02-01 13:15:12.398 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 15 / 50
+2023-02-01 13:15:12.947 | INFO     | algorithms.rainbow_online:train:412 - 15, loss: 1.946
+2023-02-01 13:15:12.949 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 16 / 50
+2023-02-01 13:15:13.495 | INFO     | algorithms.rainbow_online:train:412 - 16, loss: 1.905
+2023-02-01 13:15:13.496 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 17 / 50
+2023-02-01 13:15:14.041 | INFO     | algorithms.rainbow_online:train:412 - 17, loss: 1.966
+2023-02-01 13:15:14.043 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 18 / 50
+2023-02-01 13:15:14.590 | INFO     | algorithms.rainbow_online:train:412 - 18, loss: 1.941
+2023-02-01 13:15:14.592 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 19 / 50
+2023-02-01 13:15:15.136 | INFO     | algorithms.rainbow_online:train:412 - 19, loss: 1.948
+2023-02-01 13:15:15.138 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 20 / 50
+2023-02-01 13:15:15.686 | INFO     | algorithms.rainbow_online:train:412 - 20, loss: 1.855
+2023-02-01 13:15:15.688 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 220
+2023-02-01 13:15:20.487 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_220_accuracy_results.json
+2023-02-01 13:15:20.488 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3474 / 10000 samples (34.74% correct)
+2023-02-01 13:15:20.675 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 21 / 50
+2023-02-01 13:15:21.226 | INFO     | algorithms.rainbow_online:train:412 - 21, loss: 1.918
+2023-02-01 13:15:21.228 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 22 / 50
+2023-02-01 13:15:21.776 | INFO     | algorithms.rainbow_online:train:412 - 22, loss: 1.868
+2023-02-01 13:15:21.777 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 23 / 50
+2023-02-01 13:15:22.323 | INFO     | algorithms.rainbow_online:train:412 - 23, loss: 1.943
+2023-02-01 13:15:22.325 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 24 / 50
+2023-02-01 13:15:22.870 | INFO     | algorithms.rainbow_online:train:412 - 24, loss: 1.888
+2023-02-01 13:15:22.872 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 25 / 50
+2023-02-01 13:15:23.421 | INFO     | algorithms.rainbow_online:train:412 - 25, loss: 1.901
+2023-02-01 13:15:23.422 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 26 / 50
+2023-02-01 13:15:23.970 | INFO     | algorithms.rainbow_online:train:412 - 26, loss: 1.838
+2023-02-01 13:15:23.972 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 27 / 50
+2023-02-01 13:15:24.518 | INFO     | algorithms.rainbow_online:train:412 - 27, loss: 1.866
+2023-02-01 13:15:24.520 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 28 / 50
+2023-02-01 13:15:25.069 | INFO     | algorithms.rainbow_online:train:412 - 28, loss: 1.842
+2023-02-01 13:15:25.071 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 29 / 50
+2023-02-01 13:15:25.615 | INFO     | algorithms.rainbow_online:train:412 - 29, loss: 1.721
+2023-02-01 13:15:25.617 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 30 / 50
+2023-02-01 13:15:26.161 | INFO     | algorithms.rainbow_online:train:412 - 30, loss: 1.800
+2023-02-01 13:15:26.162 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 230
+2023-02-01 13:15:30.840 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_230_accuracy_results.json
+2023-02-01 13:15:30.842 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3648 / 10000 samples (36.48% correct)
+2023-02-01 13:15:30.973 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 31 / 50
+2023-02-01 13:15:31.526 | INFO     | algorithms.rainbow_online:train:412 - 31, loss: 1.813
+2023-02-01 13:15:31.527 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 32 / 50
+2023-02-01 13:15:32.072 | INFO     | algorithms.rainbow_online:train:412 - 32, loss: 1.712
+2023-02-01 13:15:32.074 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 33 / 50
+2023-02-01 13:15:32.620 | INFO     | algorithms.rainbow_online:train:412 - 33, loss: 1.860
+2023-02-01 13:15:32.621 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 34 / 50
+2023-02-01 13:15:33.168 | INFO     | algorithms.rainbow_online:train:412 - 34, loss: 1.756
+2023-02-01 13:15:33.170 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 35 / 50
+2023-02-01 13:15:33.714 | INFO     | algorithms.rainbow_online:train:412 - 35, loss: 1.730
+2023-02-01 13:15:33.716 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 36 / 50
+2023-02-01 13:15:34.261 | INFO     | algorithms.rainbow_online:train:412 - 36, loss: 1.749
+2023-02-01 13:15:34.262 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 37 / 50
+2023-02-01 13:15:34.809 | INFO     | algorithms.rainbow_online:train:412 - 37, loss: 1.702
+2023-02-01 13:15:34.811 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 38 / 50
+2023-02-01 13:15:35.360 | INFO     | algorithms.rainbow_online:train:412 - 38, loss: 1.710
+2023-02-01 13:15:35.361 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 39 / 50
+2023-02-01 13:15:35.906 | INFO     | algorithms.rainbow_online:train:412 - 39, loss: 1.789
+2023-02-01 13:15:35.908 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 40 / 50
+2023-02-01 13:15:36.451 | INFO     | algorithms.rainbow_online:train:412 - 40, loss: 1.774
+2023-02-01 13:15:36.453 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 240
+2023-02-01 13:15:41.117 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_240_accuracy_results.json
+2023-02-01 13:15:41.118 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3812 / 10000 samples (38.12% correct)
+2023-02-01 13:15:41.250 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 41 / 50
+2023-02-01 13:15:41.801 | INFO     | algorithms.rainbow_online:train:412 - 41, loss: 1.689
+2023-02-01 13:15:41.802 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 42 / 50
+2023-02-01 13:15:42.357 | INFO     | algorithms.rainbow_online:train:412 - 42, loss: 1.800
+2023-02-01 13:15:42.359 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 43 / 50
+2023-02-01 13:15:42.904 | INFO     | algorithms.rainbow_online:train:412 - 43, loss: 1.675
+2023-02-01 13:15:42.906 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 44 / 50
+2023-02-01 13:15:43.453 | INFO     | algorithms.rainbow_online:train:412 - 44, loss: 1.695
+2023-02-01 13:15:43.454 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 45 / 50
+2023-02-01 13:15:44.000 | INFO     | algorithms.rainbow_online:train:412 - 45, loss: 1.675
+2023-02-01 13:15:44.002 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 46 / 50
+2023-02-01 13:15:44.549 | INFO     | algorithms.rainbow_online:train:412 - 46, loss: 1.770
+2023-02-01 13:15:44.551 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 47 / 50
+2023-02-01 13:15:45.097 | INFO     | algorithms.rainbow_online:train:412 - 47, loss: 1.671
+2023-02-01 13:15:45.099 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 48 / 50
+2023-02-01 13:15:45.642 | INFO     | algorithms.rainbow_online:train:412 - 48, loss: 1.781
+2023-02-01 13:15:45.644 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 49 / 50
+2023-02-01 13:15:46.194 | INFO     | algorithms.rainbow_online:train:412 - 49, loss: 1.756
+2023-02-01 13:15:46.196 | INFO     | algorithms.rainbow_online:train:358 - Starting epoch 50 / 50
+2023-02-01 13:15:46.750 | INFO     | algorithms.rainbow_online:train:412 - 50, loss: 1.685
+2023-02-01 13:15:46.753 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 250
+2023-02-01 13:15:53.416 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/rainbow_online/1675254948.5962865_CIFAR10_OFFICIAL_RUN/task_250_accuracy_results.json
+2023-02-01 13:15:53.418 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3916 / 10000 samples (39.16% correct)
+2023-02-01 13:15:53.550 | INFO     | algorithms.rainbow_online:train:421 - Training complete
+2023-02-01 13:15:53.554 | INFO     | __main__:run_experiment:286 - Training and evaluation completed!
+2023-02-01 13:15:53.556 | INFO     | __main__:run_experiment:300 - Wrote usage stats to file
+2023-02-01 13:15:53.556 | INFO     | __main__:main:340 - Complete
+2023-02-01 13:15:53.557 | INFO     | __main__:close_tensorboard_writer:248 - Shut down TensorBoard

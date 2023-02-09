@@ -1,0 +1,750 @@
+2023-01-16 12:32:04.362 | INFO     | __main__:setup_files:173 - Experiment Name: OFFICIAL_RUN
+2023-01-16 12:32:04.363 | INFO     | __main__:main:278 - Command line arguments: Configuration(algorithm='scr', dataset='cifar100', classes_per_task=20, seed=2214)
+2023-01-16 12:32:04.365 | INFO     | __main__:main:282 - Seeded random to 2214
+2023-01-16 12:32:04.366 | INFO     | __main__:main:286 - Got CUDA device
+2023-01-16 12:32:04.367 | INFO     | __main__:force_cuda_load:221 - Forcing CUDA initialisation...
+2023-01-16 12:32:04.431 | INFO     | __main__:main:290 - CUDA initialised
+2023-01-16 12:32:04.432 | INFO     | __main__:setup_shutdown_hook:217 - To access TensorBoard, run the command: tensorboard --logdir=./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN
+2023-01-16 12:32:04.434 | INFO     | __main__:main:294 - Setup shutdown hooks
+2023-01-16 12:32:04.455 | INFO     | __main__:main:299 - Model is setup
+2023-01-16 12:32:04.456 | INFO     | __main__:main:301 - Complete pre-setup, starting experiment
+2023-01-16 12:32:05.646 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 20 (5 tasks) with a randomised split
+2023-01-16 12:32:05.648 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-01-16 12:32:05.667 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar100.CIFAR100",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR100",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n)",
+  "classes": "apple, aquarium_fish, baby, bear, beaver, bed, bee, beetle, bicycle, bottle, bowl, boy, bridge, bus, butterfly, camel, can, castle, caterpillar, cattle, chair, chimpanzee, clock, cloud, cockroach, couch, crab, crocodile, cup, dinosaur, dolphin, elephant, flatfish, forest, fox, girl, hamster, house, kangaroo, keyboard, lamp, lawn_mower, leopard, lion, lizard, lobster, man, maple_tree, motorcycle, mountain, mouse, mushroom, oak_tree, orange, orchid, otter, palm_tree, pear, pickup_truck, pine_tree, plain, plate, poppy, porcupine, possum, rabbit, raccoon, ray, road, rocket, rose, sea, seal, shark, shrew, skunk, skyscraper, snail, snake, spider, squirrel, streetcar, sunflower, sweet_pepper, table, tank, telephone, television, tiger, tractor, train, trout, tulip, turtle, wardrobe, whale, willow_tree, wolf, woman, worm",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    20
+  ],
+  "task_split_indices": [
+    [
+      83,
+      48,
+      78,
+      11,
+      67,
+      62,
+      66,
+      85,
+      2,
+      53,
+      76,
+      96,
+      17,
+      92,
+      3,
+      63,
+      97,
+      45,
+      61,
+      6
+    ],
+    [
+      77,
+      13,
+      90,
+      75,
+      44,
+      18,
+      98,
+      8,
+      91,
+      64,
+      4,
+      57,
+      24,
+      80,
+      25,
+      1,
+      99,
+      21,
+      46,
+      95
+    ],
+    [
+      86,
+      42,
+      22,
+      65,
+      58,
+      20,
+      9,
+      87,
+      79,
+      27,
+      29,
+      7,
+      51,
+      37,
+      50,
+      38,
+      40,
+      60,
+      68,
+      15
+    ],
+    [
+      84,
+      32,
+      49,
+      41,
+      30,
+      69,
+      33,
+      82,
+      55,
+      93,
+      28,
+      26,
+      0,
+      52,
+      36,
+      39,
+      94,
+      70,
+      43,
+      72
+    ],
+    [
+      81,
+      5,
+      74,
+      10,
+      73,
+      71,
+      23,
+      34,
+      47,
+      14,
+      88,
+      54,
+      31,
+      19,
+      16,
+      56,
+      12,
+      59,
+      89,
+      35
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "sweet_pepper",
+      "motorcycle",
+      "snake",
+      "boy",
+      "ray",
+      "poppy",
+      "raccoon",
+      "tank",
+      "baby",
+      "orange",
+      "skyscraper",
+      "willow_tree",
+      "castle",
+      "tulip",
+      "bear",
+      "porcupine",
+      "wolf",
+      "lobster",
+      "plate",
+      "bee"
+    ],
+    [
+      "snail",
+      "bus",
+      "train",
+      "skunk",
+      "lizard",
+      "caterpillar",
+      "woman",
+      "bicycle",
+      "trout",
+      "possum",
+      "beaver",
+      "pear",
+      "cockroach",
+      "squirrel",
+      "couch",
+      "aquarium_fish",
+      "worm",
+      "chimpanzee",
+      "man",
+      "whale"
+    ],
+    [
+      "telephone",
+      "leopard",
+      "clock",
+      "rabbit",
+      "pickup_truck",
+      "chair",
+      "bottle",
+      "television",
+      "spider",
+      "crocodile",
+      "dinosaur",
+      "beetle",
+      "mushroom",
+      "house",
+      "mouse",
+      "kangaroo",
+      "lamp",
+      "plain",
+      "road",
+      "camel"
+    ],
+    [
+      "table",
+      "flatfish",
+      "mountain",
+      "lawn_mower",
+      "dolphin",
+      "rocket",
+      "forest",
+      "sunflower",
+      "otter",
+      "turtle",
+      "cup",
+      "crab",
+      "apple",
+      "oak_tree",
+      "hamster",
+      "keyboard",
+      "wardrobe",
+      "rose",
+      "lion",
+      "seal"
+    ],
+    [
+      "streetcar",
+      "bed",
+      "shrew",
+      "bowl",
+      "shark",
+      "sea",
+      "cloud",
+      "fox",
+      "maple_tree",
+      "butterfly",
+      "tiger",
+      "orchid",
+      "elephant",
+      "cattle",
+      "can",
+      "palm_tree",
+      "bridge",
+      "pine_tree",
+      "tractor",
+      "girl"
+    ]
+  ]
+}
+2023-01-16 12:32:05.690 | DEBUG    | __main__:run_experiment:245 - PID: 7480
+2023-01-16 12:32:05.691 | INFO     | __main__:run_experiment:247 - Starting...
+2023-01-16 12:32:05.693 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.scr.SupervisedContrastiveReplay",
+  "model_class": "models.scr.scr_resnet.SupConResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar100.CIFAR100",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "epochs_per_task": 1,
+  "batch_size": 10,
+  "max_memory_samples": 5000,
+  "memory_batch_size": 100,
+  "tau (temperature)": 0.07,
+  "lr": 0.1
+}
+2023-01-16 12:32:05.694 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-01-16 12:32:05.695 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-01-16 12:32:05.696 | INFO     | algorithms.scr:train:126 - Task 1 / 5
+2023-01-16 12:32:05.696 | INFO     | algorithms.scr:train:127 - Classes in task: ['sweet_pepper', 'motorcycle', 'snake', 'boy', 'ray', 'poppy', 'raccoon', 'tank', 'baby', 'orange', 'skyscraper', 'willow_tree', 'castle', 'tulip', 'bear', 'porcupine', 'wolf', 'lobster', 'plate', 'bee']
+2023-01-16 12:32:05.697 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-16 12:32:15.414 | INFO     | algorithms.scr:train:180 - 0:1:40, loss: 4.081
+2023-01-16 12:32:25.203 | INFO     | algorithms.scr:train:180 - 0:1:80, loss: 5.172
+2023-01-16 12:32:35.005 | INFO     | algorithms.scr:train:180 - 0:1:120, loss: 5.124
+2023-01-16 12:32:44.816 | INFO     | algorithms.scr:train:180 - 0:1:160, loss: 5.111
+2023-01-16 12:32:54.882 | INFO     | algorithms.scr:train:180 - 0:1:200, loss: 5.080
+2023-01-16 12:33:05.068 | INFO     | algorithms.scr:train:180 - 0:1:240, loss: 5.057
+2023-01-16 12:33:15.256 | INFO     | algorithms.scr:train:180 - 0:1:280, loss: 5.069
+2023-01-16 12:33:25.459 | INFO     | algorithms.scr:train:180 - 0:1:320, loss: 5.026
+2023-01-16 12:33:35.673 | INFO     | algorithms.scr:train:180 - 0:1:360, loss: 5.010
+2023-01-16 12:33:45.944 | INFO     | algorithms.scr:train:180 - 0:1:400, loss: 5.016
+2023-01-16 12:33:56.170 | INFO     | algorithms.scr:train:180 - 0:1:440, loss: 4.993
+2023-01-16 12:34:06.432 | INFO     | algorithms.scr:train:180 - 0:1:480, loss: 4.976
+2023-01-16 12:34:16.640 | INFO     | algorithms.scr:train:180 - 0:1:520, loss: 4.963
+2023-01-16 12:34:26.938 | INFO     | algorithms.scr:train:180 - 0:1:560, loss: 4.959
+2023-01-16 12:34:37.251 | INFO     | algorithms.scr:train:180 - 0:1:600, loss: 4.931
+2023-01-16 12:34:47.564 | INFO     | algorithms.scr:train:180 - 0:1:640, loss: 4.934
+2023-01-16 12:34:57.797 | INFO     | algorithms.scr:train:180 - 0:1:680, loss: 4.916
+2023-01-16 12:35:08.022 | INFO     | algorithms.scr:train:180 - 0:1:720, loss: 4.919
+2023-01-16 12:35:18.236 | INFO     | algorithms.scr:train:180 - 0:1:760, loss: 4.872
+2023-01-16 12:35:28.469 | INFO     | algorithms.scr:train:180 - 0:1:800, loss: 4.860
+2023-01-16 12:35:38.705 | INFO     | algorithms.scr:train:180 - 0:1:840, loss: 4.855
+2023-01-16 12:35:48.920 | INFO     | algorithms.scr:train:180 - 0:1:880, loss: 4.869
+2023-01-16 12:35:59.146 | INFO     | algorithms.scr:train:180 - 0:1:920, loss: 4.819
+2023-01-16 12:36:09.387 | INFO     | algorithms.scr:train:180 - 0:1:960, loss: 4.807
+2023-01-16 12:36:19.374 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-16 12:36:19.374 | DEBUG    | algorithms.scr:train:186 - 85 has 250 samples
+2023-01-16 12:36:19.375 | DEBUG    | algorithms.scr:train:186 - 45 has 250 samples
+2023-01-16 12:36:19.376 | DEBUG    | algorithms.scr:train:186 - 92 has 250 samples
+2023-01-16 12:36:19.377 | DEBUG    | algorithms.scr:train:186 - 3 has 250 samples
+2023-01-16 12:36:19.377 | DEBUG    | algorithms.scr:train:186 - 66 has 250 samples
+2023-01-16 12:36:19.378 | DEBUG    | algorithms.scr:train:186 - 17 has 250 samples
+2023-01-16 12:36:19.379 | DEBUG    | algorithms.scr:train:186 - 62 has 250 samples
+2023-01-16 12:36:19.379 | DEBUG    | algorithms.scr:train:186 - 83 has 250 samples
+2023-01-16 12:36:19.380 | DEBUG    | algorithms.scr:train:186 - 67 has 250 samples
+2023-01-16 12:36:19.381 | DEBUG    | algorithms.scr:train:186 - 11 has 250 samples
+2023-01-16 12:36:19.382 | DEBUG    | algorithms.scr:train:186 - 63 has 250 samples
+2023-01-16 12:36:19.382 | DEBUG    | algorithms.scr:train:186 - 97 has 250 samples
+2023-01-16 12:36:19.383 | DEBUG    | algorithms.scr:train:186 - 96 has 250 samples
+2023-01-16 12:36:19.384 | DEBUG    | algorithms.scr:train:186 - 6 has 250 samples
+2023-01-16 12:36:19.385 | DEBUG    | algorithms.scr:train:186 - 2 has 250 samples
+2023-01-16 12:36:19.385 | DEBUG    | algorithms.scr:train:186 - 76 has 250 samples
+2023-01-16 12:36:19.386 | DEBUG    | algorithms.scr:train:186 - 48 has 250 samples
+2023-01-16 12:36:19.386 | DEBUG    | algorithms.scr:train:186 - 78 has 250 samples
+2023-01-16 12:36:19.386 | DEBUG    | algorithms.scr:train:186 - 53 has 250 samples
+2023-01-16 12:36:19.388 | DEBUG    | algorithms.scr:train:186 - 61 has 250 samples
+2023-01-16 12:36:19.389 | INFO     | algorithms.scr:train:192 - 1, loss: 4.929
+2023-01-16 12:36:19.390 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 0
+2023-01-16 12:36:19.397 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-16 12:36:32.595 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([85, 45, 92, 3, 66, 17, 62, 83, 67, 11, 63, 97, 96, 6, 2, 76, 48, 78, 53, 61])
+2023-01-16 12:37:20.346 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-01-16 12:37:20.348 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 1012 / 10000 samples (10.12% correct)
+2023-01-16 12:37:20.781 | INFO     | algorithms.scr:train:126 - Task 2 / 5
+2023-01-16 12:37:20.785 | INFO     | algorithms.scr:train:127 - Classes in task: ['snail', 'bus', 'train', 'skunk', 'lizard', 'caterpillar', 'woman', 'bicycle', 'trout', 'possum', 'beaver', 'pear', 'cockroach', 'squirrel', 'couch', 'aquarium_fish', 'worm', 'chimpanzee', 'man', 'whale']
+2023-01-16 12:37:20.786 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-16 12:37:31.277 | INFO     | algorithms.scr:train:180 - 1:1:40, loss: 4.890
+2023-01-16 12:37:41.503 | INFO     | algorithms.scr:train:180 - 1:1:80, loss: 4.758
+2023-01-16 12:37:51.675 | INFO     | algorithms.scr:train:180 - 1:1:120, loss: 4.758
+2023-01-16 12:38:01.953 | INFO     | algorithms.scr:train:180 - 1:1:160, loss: 4.781
+2023-01-16 12:38:12.180 | INFO     | algorithms.scr:train:180 - 1:1:200, loss: 4.785
+2023-01-16 12:38:22.432 | INFO     | algorithms.scr:train:180 - 1:1:240, loss: 4.761
+2023-01-16 12:38:26.009 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: 8683389196358832836
+2023-01-16 12:38:32.639 | INFO     | algorithms.scr:train:180 - 1:1:280, loss: 4.753
+2023-01-16 12:38:42.858 | INFO     | algorithms.scr:train:180 - 1:1:320, loss: 4.740
+2023-01-16 12:38:53.105 | INFO     | algorithms.scr:train:180 - 1:1:360, loss: 4.743
+2023-01-16 12:39:03.318 | INFO     | algorithms.scr:train:180 - 1:1:400, loss: 4.724
+2023-01-16 12:39:13.541 | INFO     | algorithms.scr:train:180 - 1:1:440, loss: 4.686
+2023-01-16 12:39:19.156 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: 1606613953996138426
+2023-01-16 12:39:21.448 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: -981177329766234756
+2023-01-16 12:39:23.755 | INFO     | algorithms.scr:train:180 - 1:1:480, loss: 4.704
+2023-01-16 12:39:33.965 | INFO     | algorithms.scr:train:180 - 1:1:520, loss: 4.671
+2023-01-16 12:39:44.196 | INFO     | algorithms.scr:train:180 - 1:1:560, loss: 4.645
+2023-01-16 12:39:54.411 | INFO     | algorithms.scr:train:180 - 1:1:600, loss: 4.661
+2023-01-16 12:40:04.618 | INFO     | algorithms.scr:train:180 - 1:1:640, loss: 4.618
+2023-01-16 12:40:14.846 | INFO     | algorithms.scr:train:180 - 1:1:680, loss: 4.570
+2023-01-16 12:40:18.167 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: 936604873840873308
+2023-01-16 12:40:25.073 | INFO     | algorithms.scr:train:180 - 1:1:720, loss: 4.596
+2023-01-16 12:40:30.975 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: -6036402117189235797
+2023-01-16 12:40:35.317 | INFO     | algorithms.scr:train:180 - 1:1:760, loss: 4.593
+2023-01-16 12:40:45.529 | INFO     | algorithms.scr:train:180 - 1:1:800, loss: 4.582
+2023-01-16 12:40:55.753 | INFO     | algorithms.scr:train:180 - 1:1:840, loss: 4.523
+2023-01-16 12:41:05.987 | INFO     | algorithms.scr:train:180 - 1:1:880, loss: 4.543
+2023-01-16 12:41:16.204 | INFO     | algorithms.scr:train:180 - 1:1:920, loss: 4.525
+2023-01-16 12:41:26.471 | INFO     | algorithms.scr:train:180 - 1:1:960, loss: 4.556
+2023-01-16 12:41:36.429 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-16 12:41:36.430 | DEBUG    | algorithms.scr:train:186 - 85 has 125 samples
+2023-01-16 12:41:36.431 | DEBUG    | algorithms.scr:train:186 - 45 has 125 samples
+2023-01-16 12:41:36.432 | DEBUG    | algorithms.scr:train:186 - 92 has 125 samples
+2023-01-16 12:41:36.432 | DEBUG    | algorithms.scr:train:186 - 3 has 125 samples
+2023-01-16 12:41:36.433 | DEBUG    | algorithms.scr:train:186 - 66 has 125 samples
+2023-01-16 12:41:36.434 | DEBUG    | algorithms.scr:train:186 - 17 has 125 samples
+2023-01-16 12:41:36.434 | DEBUG    | algorithms.scr:train:186 - 62 has 125 samples
+2023-01-16 12:41:36.435 | DEBUG    | algorithms.scr:train:186 - 83 has 125 samples
+2023-01-16 12:41:36.436 | DEBUG    | algorithms.scr:train:186 - 67 has 125 samples
+2023-01-16 12:41:36.437 | DEBUG    | algorithms.scr:train:186 - 11 has 125 samples
+2023-01-16 12:41:36.437 | DEBUG    | algorithms.scr:train:186 - 63 has 125 samples
+2023-01-16 12:41:36.438 | DEBUG    | algorithms.scr:train:186 - 97 has 125 samples
+2023-01-16 12:41:36.439 | DEBUG    | algorithms.scr:train:186 - 96 has 125 samples
+2023-01-16 12:41:36.439 | DEBUG    | algorithms.scr:train:186 - 6 has 125 samples
+2023-01-16 12:41:36.440 | DEBUG    | algorithms.scr:train:186 - 2 has 125 samples
+2023-01-16 12:41:36.441 | DEBUG    | algorithms.scr:train:186 - 76 has 125 samples
+2023-01-16 12:41:36.442 | DEBUG    | algorithms.scr:train:186 - 48 has 125 samples
+2023-01-16 12:41:36.442 | DEBUG    | algorithms.scr:train:186 - 78 has 125 samples
+2023-01-16 12:41:36.443 | DEBUG    | algorithms.scr:train:186 - 53 has 125 samples
+2023-01-16 12:41:36.444 | DEBUG    | algorithms.scr:train:186 - 61 has 125 samples
+2023-01-16 12:41:36.445 | DEBUG    | algorithms.scr:train:186 - 1 has 125 samples
+2023-01-16 12:41:36.446 | DEBUG    | algorithms.scr:train:186 - 8 has 125 samples
+2023-01-16 12:41:36.446 | DEBUG    | algorithms.scr:train:186 - 91 has 125 samples
+2023-01-16 12:41:36.447 | DEBUG    | algorithms.scr:train:186 - 18 has 125 samples
+2023-01-16 12:41:36.448 | DEBUG    | algorithms.scr:train:186 - 24 has 125 samples
+2023-01-16 12:41:36.449 | DEBUG    | algorithms.scr:train:186 - 64 has 125 samples
+2023-01-16 12:41:36.450 | DEBUG    | algorithms.scr:train:186 - 98 has 125 samples
+2023-01-16 12:41:36.450 | DEBUG    | algorithms.scr:train:186 - 46 has 125 samples
+2023-01-16 12:41:36.451 | DEBUG    | algorithms.scr:train:186 - 21 has 125 samples
+2023-01-16 12:41:36.452 | DEBUG    | algorithms.scr:train:186 - 25 has 125 samples
+2023-01-16 12:41:36.452 | DEBUG    | algorithms.scr:train:186 - 75 has 125 samples
+2023-01-16 12:41:36.453 | DEBUG    | algorithms.scr:train:186 - 90 has 125 samples
+2023-01-16 12:41:36.454 | DEBUG    | algorithms.scr:train:186 - 4 has 125 samples
+2023-01-16 12:41:36.455 | DEBUG    | algorithms.scr:train:186 - 99 has 125 samples
+2023-01-16 12:41:36.455 | DEBUG    | algorithms.scr:train:186 - 77 has 125 samples
+2023-01-16 12:41:36.456 | DEBUG    | algorithms.scr:train:186 - 95 has 125 samples
+2023-01-16 12:41:36.457 | DEBUG    | algorithms.scr:train:186 - 57 has 125 samples
+2023-01-16 12:41:36.458 | DEBUG    | algorithms.scr:train:186 - 44 has 125 samples
+2023-01-16 12:41:36.458 | DEBUG    | algorithms.scr:train:186 - 80 has 125 samples
+2023-01-16 12:41:36.460 | DEBUG    | algorithms.scr:train:186 - 13 has 125 samples
+2023-01-16 12:41:36.461 | INFO     | algorithms.scr:train:192 - 1, loss: 4.668
+2023-01-16 12:41:36.461 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 1
+2023-01-16 12:41:36.469 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-16 12:41:49.657 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([85, 45, 92, 3, 66, 17, 62, 83, 67, 11, 63, 97, 96, 6, 2, 76, 48, 78, 53, 61, 1, 8, 91, 18, 24, 64, 98, 46, 21, 25, 75, 90, 4, 99, 77, 95, 57, 44, 80, 13])
+2023-01-16 12:42:58.327 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-01-16 12:42:58.328 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 1638 / 10000 samples (16.38% correct)
+2023-01-16 12:42:58.704 | INFO     | algorithms.scr:train:126 - Task 3 / 5
+2023-01-16 12:42:58.710 | INFO     | algorithms.scr:train:127 - Classes in task: ['telephone', 'leopard', 'clock', 'rabbit', 'pickup_truck', 'chair', 'bottle', 'television', 'spider', 'crocodile', 'dinosaur', 'beetle', 'mushroom', 'house', 'mouse', 'kangaroo', 'lamp', 'plain', 'road', 'camel']
+2023-01-16 12:42:58.711 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-16 12:43:09.166 | INFO     | algorithms.scr:train:180 - 2:1:40, loss: 4.482
+2023-01-16 12:43:19.381 | INFO     | algorithms.scr:train:180 - 2:1:80, loss: 4.347
+2023-01-16 12:43:29.601 | INFO     | algorithms.scr:train:180 - 2:1:120, loss: 4.314
+2023-01-16 12:43:39.878 | INFO     | algorithms.scr:train:180 - 2:1:160, loss: 4.365
+2023-01-16 12:43:50.087 | INFO     | algorithms.scr:train:180 - 2:1:200, loss: 4.313
+2023-01-16 12:44:00.290 | INFO     | algorithms.scr:train:180 - 2:1:240, loss: 4.302
+2023-01-16 12:44:10.509 | INFO     | algorithms.scr:train:180 - 2:1:280, loss: 4.366
+2023-01-16 12:44:20.714 | INFO     | algorithms.scr:train:180 - 2:1:320, loss: 4.306
+2023-01-16 12:44:30.957 | INFO     | algorithms.scr:train:180 - 2:1:360, loss: 4.302
+2023-01-16 12:44:41.180 | INFO     | algorithms.scr:train:180 - 2:1:400, loss: 4.269
+2023-01-16 12:44:51.405 | INFO     | algorithms.scr:train:180 - 2:1:440, loss: 4.240
+2023-01-16 12:45:01.622 | INFO     | algorithms.scr:train:180 - 2:1:480, loss: 4.258
+2023-01-16 12:45:11.823 | INFO     | algorithms.scr:train:180 - 2:1:520, loss: 4.233
+2023-01-16 12:45:22.034 | INFO     | algorithms.scr:train:180 - 2:1:560, loss: 4.218
+2023-01-16 12:45:32.234 | INFO     | algorithms.scr:train:180 - 2:1:600, loss: 4.213
+2023-01-16 12:45:42.455 | INFO     | algorithms.scr:train:180 - 2:1:640, loss: 4.155
+2023-01-16 12:45:52.678 | INFO     | algorithms.scr:train:180 - 2:1:680, loss: 4.210
+2023-01-16 12:46:02.905 | INFO     | algorithms.scr:train:180 - 2:1:720, loss: 4.159
+2023-01-16 12:46:13.155 | INFO     | algorithms.scr:train:180 - 2:1:760, loss: 4.192
+2023-01-16 12:46:23.351 | INFO     | algorithms.scr:train:180 - 2:1:800, loss: 4.174
+2023-01-16 12:46:33.548 | INFO     | algorithms.scr:train:180 - 2:1:840, loss: 4.121
+2023-01-16 12:46:43.753 | INFO     | algorithms.scr:train:180 - 2:1:880, loss: 4.129
+2023-01-16 12:46:53.936 | INFO     | algorithms.scr:train:180 - 2:1:920, loss: 4.179
+2023-01-16 12:47:04.186 | INFO     | algorithms.scr:train:180 - 2:1:960, loss: 4.139
+2023-01-16 12:47:14.162 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-16 12:47:14.163 | DEBUG    | algorithms.scr:train:186 - 85 has 83 samples
+2023-01-16 12:47:14.163 | DEBUG    | algorithms.scr:train:186 - 45 has 83 samples
+2023-01-16 12:47:14.164 | DEBUG    | algorithms.scr:train:186 - 92 has 83 samples
+2023-01-16 12:47:14.165 | DEBUG    | algorithms.scr:train:186 - 3 has 83 samples
+2023-01-16 12:47:14.166 | DEBUG    | algorithms.scr:train:186 - 66 has 83 samples
+2023-01-16 12:47:14.166 | DEBUG    | algorithms.scr:train:186 - 17 has 83 samples
+2023-01-16 12:47:14.167 | DEBUG    | algorithms.scr:train:186 - 62 has 83 samples
+2023-01-16 12:47:14.168 | DEBUG    | algorithms.scr:train:186 - 83 has 83 samples
+2023-01-16 12:47:14.169 | DEBUG    | algorithms.scr:train:186 - 67 has 83 samples
+2023-01-16 12:47:14.169 | DEBUG    | algorithms.scr:train:186 - 11 has 83 samples
+2023-01-16 12:47:14.170 | DEBUG    | algorithms.scr:train:186 - 63 has 83 samples
+2023-01-16 12:47:14.171 | DEBUG    | algorithms.scr:train:186 - 97 has 83 samples
+2023-01-16 12:47:14.171 | DEBUG    | algorithms.scr:train:186 - 96 has 83 samples
+2023-01-16 12:47:14.172 | DEBUG    | algorithms.scr:train:186 - 6 has 83 samples
+2023-01-16 12:47:14.173 | DEBUG    | algorithms.scr:train:186 - 2 has 83 samples
+2023-01-16 12:47:14.174 | DEBUG    | algorithms.scr:train:186 - 76 has 83 samples
+2023-01-16 12:47:14.174 | DEBUG    | algorithms.scr:train:186 - 48 has 83 samples
+2023-01-16 12:47:14.175 | DEBUG    | algorithms.scr:train:186 - 78 has 83 samples
+2023-01-16 12:47:14.176 | DEBUG    | algorithms.scr:train:186 - 53 has 83 samples
+2023-01-16 12:47:14.176 | DEBUG    | algorithms.scr:train:186 - 61 has 83 samples
+2023-01-16 12:47:14.177 | DEBUG    | algorithms.scr:train:186 - 1 has 83 samples
+2023-01-16 12:47:14.178 | DEBUG    | algorithms.scr:train:186 - 8 has 83 samples
+2023-01-16 12:47:14.179 | DEBUG    | algorithms.scr:train:186 - 91 has 83 samples
+2023-01-16 12:47:14.179 | DEBUG    | algorithms.scr:train:186 - 18 has 83 samples
+2023-01-16 12:47:14.180 | DEBUG    | algorithms.scr:train:186 - 24 has 83 samples
+2023-01-16 12:47:14.181 | DEBUG    | algorithms.scr:train:186 - 64 has 83 samples
+2023-01-16 12:47:14.182 | DEBUG    | algorithms.scr:train:186 - 98 has 83 samples
+2023-01-16 12:47:14.182 | DEBUG    | algorithms.scr:train:186 - 46 has 83 samples
+2023-01-16 12:47:14.183 | DEBUG    | algorithms.scr:train:186 - 21 has 83 samples
+2023-01-16 12:47:14.184 | DEBUG    | algorithms.scr:train:186 - 25 has 83 samples
+2023-01-16 12:47:14.184 | DEBUG    | algorithms.scr:train:186 - 75 has 83 samples
+2023-01-16 12:47:14.185 | DEBUG    | algorithms.scr:train:186 - 90 has 83 samples
+2023-01-16 12:47:14.186 | DEBUG    | algorithms.scr:train:186 - 4 has 83 samples
+2023-01-16 12:47:14.187 | DEBUG    | algorithms.scr:train:186 - 99 has 83 samples
+2023-01-16 12:47:14.187 | DEBUG    | algorithms.scr:train:186 - 77 has 83 samples
+2023-01-16 12:47:14.188 | DEBUG    | algorithms.scr:train:186 - 95 has 83 samples
+2023-01-16 12:47:14.189 | DEBUG    | algorithms.scr:train:186 - 57 has 83 samples
+2023-01-16 12:47:14.189 | DEBUG    | algorithms.scr:train:186 - 44 has 83 samples
+2023-01-16 12:47:14.190 | DEBUG    | algorithms.scr:train:186 - 80 has 83 samples
+2023-01-16 12:47:14.192 | DEBUG    | algorithms.scr:train:186 - 13 has 83 samples
+2023-01-16 12:47:14.192 | DEBUG    | algorithms.scr:train:186 - 37 has 84 samples
+2023-01-16 12:47:14.194 | DEBUG    | algorithms.scr:train:186 - 29 has 84 samples
+2023-01-16 12:47:14.194 | DEBUG    | algorithms.scr:train:186 - 51 has 84 samples
+2023-01-16 12:47:14.195 | DEBUG    | algorithms.scr:train:186 - 20 has 84 samples
+2023-01-16 12:47:14.196 | DEBUG    | algorithms.scr:train:186 - 60 has 84 samples
+2023-01-16 12:47:14.196 | DEBUG    | algorithms.scr:train:186 - 22 has 84 samples
+2023-01-16 12:47:14.197 | DEBUG    | algorithms.scr:train:186 - 27 has 84 samples
+2023-01-16 12:47:14.198 | DEBUG    | algorithms.scr:train:186 - 50 has 84 samples
+2023-01-16 12:47:14.199 | DEBUG    | algorithms.scr:train:186 - 7 has 84 samples
+2023-01-16 12:47:14.199 | DEBUG    | algorithms.scr:train:186 - 15 has 84 samples
+2023-01-16 12:47:14.200 | DEBUG    | algorithms.scr:train:186 - 87 has 84 samples
+2023-01-16 12:47:14.201 | DEBUG    | algorithms.scr:train:186 - 68 has 84 samples
+2023-01-16 12:47:14.202 | DEBUG    | algorithms.scr:train:186 - 42 has 84 samples
+2023-01-16 12:47:14.202 | DEBUG    | algorithms.scr:train:186 - 40 has 84 samples
+2023-01-16 12:47:14.203 | DEBUG    | algorithms.scr:train:186 - 79 has 84 samples
+2023-01-16 12:47:14.204 | DEBUG    | algorithms.scr:train:186 - 58 has 84 samples
+2023-01-16 12:47:14.204 | DEBUG    | algorithms.scr:train:186 - 65 has 84 samples
+2023-01-16 12:47:14.205 | DEBUG    | algorithms.scr:train:186 - 86 has 84 samples
+2023-01-16 12:47:14.206 | DEBUG    | algorithms.scr:train:186 - 9 has 84 samples
+2023-01-16 12:47:14.207 | DEBUG    | algorithms.scr:train:186 - 38 has 84 samples
+2023-01-16 12:47:14.207 | INFO     | algorithms.scr:train:192 - 1, loss: 4.246
+2023-01-16 12:47:14.208 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 2
+2023-01-16 12:47:14.216 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-16 12:47:27.938 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([85, 45, 92, 3, 66, 17, 62, 83, 67, 11, 63, 97, 96, 6, 2, 76, 48, 78, 53, 61, 1, 8, 91, 18, 24, 64, 98, 46, 21, 25, 75, 90, 4, 99, 77, 95, 57, 44, 80, 13, 37, 29, 51, 20, 60, 22, 27, 50, 7, 15, 87, 68, 42, 40, 79, 58, 65, 86, 9, 38])
+2023-01-16 12:48:58.162 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-01-16 12:48:58.163 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 2176 / 10000 samples (21.76% correct)
+2023-01-16 12:48:58.538 | INFO     | algorithms.scr:train:126 - Task 4 / 5
+2023-01-16 12:48:58.545 | INFO     | algorithms.scr:train:127 - Classes in task: ['table', 'flatfish', 'mountain', 'lawn_mower', 'dolphin', 'rocket', 'forest', 'sunflower', 'otter', 'turtle', 'cup', 'crab', 'apple', 'oak_tree', 'hamster', 'keyboard', 'wardrobe', 'rose', 'lion', 'seal']
+2023-01-16 12:48:58.546 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-16 12:49:09.008 | INFO     | algorithms.scr:train:180 - 3:1:40, loss: 4.020
+2023-01-16 12:49:19.215 | INFO     | algorithms.scr:train:180 - 3:1:80, loss: 3.880
+2023-01-16 12:49:29.421 | INFO     | algorithms.scr:train:180 - 3:1:120, loss: 3.873
+2023-01-16 12:49:39.686 | INFO     | algorithms.scr:train:180 - 3:1:160, loss: 3.861
+2023-01-16 12:49:49.879 | INFO     | algorithms.scr:train:180 - 3:1:200, loss: 3.889
+2023-01-16 12:50:00.088 | INFO     | algorithms.scr:train:180 - 3:1:240, loss: 3.874
+2023-01-16 12:50:10.278 | INFO     | algorithms.scr:train:180 - 3:1:280, loss: 3.845
+2023-01-16 12:50:20.489 | INFO     | algorithms.scr:train:180 - 3:1:320, loss: 3.854
+2023-01-16 12:50:30.719 | INFO     | algorithms.scr:train:180 - 3:1:360, loss: 3.849
+2023-01-16 12:50:40.930 | INFO     | algorithms.scr:train:180 - 3:1:400, loss: 3.833
+2023-01-16 12:50:51.126 | INFO     | algorithms.scr:train:180 - 3:1:440, loss: 3.849
+2023-01-16 12:51:01.334 | INFO     | algorithms.scr:train:180 - 3:1:480, loss: 3.822
+2023-01-16 12:51:11.525 | INFO     | algorithms.scr:train:180 - 3:1:520, loss: 3.801
+2023-01-16 12:51:21.727 | INFO     | algorithms.scr:train:180 - 3:1:560, loss: 3.828
+2023-01-16 12:51:31.932 | INFO     | algorithms.scr:train:180 - 3:1:600, loss: 3.769
+2023-01-16 12:51:42.128 | INFO     | algorithms.scr:train:180 - 3:1:640, loss: 3.813
+2023-01-16 12:51:52.327 | INFO     | algorithms.scr:train:180 - 3:1:680, loss: 3.764
+2023-01-16 12:51:53.092 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: -2041229800710558164
+2023-01-16 12:52:02.553 | INFO     | algorithms.scr:train:180 - 3:1:720, loss: 3.804
+2023-01-16 12:52:12.771 | INFO     | algorithms.scr:train:180 - 3:1:760, loss: 3.734
+2023-01-16 12:52:22.966 | INFO     | algorithms.scr:train:180 - 3:1:800, loss: 3.781
+2023-01-16 12:52:33.152 | INFO     | algorithms.scr:train:180 - 3:1:840, loss: 3.765
+2023-01-16 12:52:43.359 | INFO     | algorithms.scr:train:180 - 3:1:880, loss: 3.719
+2023-01-16 12:52:53.556 | INFO     | algorithms.scr:train:180 - 3:1:920, loss: 3.747
+2023-01-16 12:53:03.773 | INFO     | algorithms.scr:train:180 - 3:1:960, loss: 3.749
+2023-01-16 12:53:13.740 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-16 12:53:13.741 | DEBUG    | algorithms.scr:train:186 - 85 has 62 samples
+2023-01-16 12:53:13.742 | DEBUG    | algorithms.scr:train:186 - 45 has 62 samples
+2023-01-16 12:53:13.743 | DEBUG    | algorithms.scr:train:186 - 92 has 62 samples
+2023-01-16 12:53:13.743 | DEBUG    | algorithms.scr:train:186 - 3 has 62 samples
+2023-01-16 12:53:13.744 | DEBUG    | algorithms.scr:train:186 - 66 has 62 samples
+2023-01-16 12:53:13.745 | DEBUG    | algorithms.scr:train:186 - 17 has 62 samples
+2023-01-16 12:53:13.746 | DEBUG    | algorithms.scr:train:186 - 62 has 62 samples
+2023-01-16 12:53:13.746 | DEBUG    | algorithms.scr:train:186 - 83 has 62 samples
+2023-01-16 12:53:13.747 | DEBUG    | algorithms.scr:train:186 - 67 has 62 samples
+2023-01-16 12:53:13.748 | DEBUG    | algorithms.scr:train:186 - 11 has 62 samples
+2023-01-16 12:53:13.748 | DEBUG    | algorithms.scr:train:186 - 63 has 62 samples
+2023-01-16 12:53:13.749 | DEBUG    | algorithms.scr:train:186 - 97 has 62 samples
+2023-01-16 12:53:13.750 | DEBUG    | algorithms.scr:train:186 - 96 has 62 samples
+2023-01-16 12:53:13.751 | DEBUG    | algorithms.scr:train:186 - 6 has 62 samples
+2023-01-16 12:53:13.751 | DEBUG    | algorithms.scr:train:186 - 2 has 62 samples
+2023-01-16 12:53:13.752 | DEBUG    | algorithms.scr:train:186 - 76 has 62 samples
+2023-01-16 12:53:13.753 | DEBUG    | algorithms.scr:train:186 - 48 has 62 samples
+2023-01-16 12:53:13.753 | DEBUG    | algorithms.scr:train:186 - 78 has 62 samples
+2023-01-16 12:53:13.754 | DEBUG    | algorithms.scr:train:186 - 53 has 62 samples
+2023-01-16 12:53:13.755 | DEBUG    | algorithms.scr:train:186 - 61 has 62 samples
+2023-01-16 12:53:13.756 | DEBUG    | algorithms.scr:train:186 - 1 has 62 samples
+2023-01-16 12:53:13.757 | DEBUG    | algorithms.scr:train:186 - 8 has 62 samples
+2023-01-16 12:53:13.757 | DEBUG    | algorithms.scr:train:186 - 91 has 62 samples
+2023-01-16 12:53:13.758 | DEBUG    | algorithms.scr:train:186 - 18 has 62 samples
+2023-01-16 12:53:13.759 | DEBUG    | algorithms.scr:train:186 - 24 has 62 samples
+2023-01-16 12:53:13.760 | DEBUG    | algorithms.scr:train:186 - 64 has 62 samples
+2023-01-16 12:53:13.760 | DEBUG    | algorithms.scr:train:186 - 98 has 62 samples
+2023-01-16 12:53:13.761 | DEBUG    | algorithms.scr:train:186 - 46 has 62 samples
+2023-01-16 12:53:13.762 | DEBUG    | algorithms.scr:train:186 - 21 has 62 samples
+2023-01-16 12:53:13.762 | DEBUG    | algorithms.scr:train:186 - 25 has 62 samples
+2023-01-16 12:53:13.763 | DEBUG    | algorithms.scr:train:186 - 75 has 62 samples
+2023-01-16 12:53:13.764 | DEBUG    | algorithms.scr:train:186 - 90 has 62 samples
+2023-01-16 12:53:13.764 | DEBUG    | algorithms.scr:train:186 - 4 has 62 samples
+2023-01-16 12:53:13.765 | DEBUG    | algorithms.scr:train:186 - 99 has 62 samples
+2023-01-16 12:53:13.766 | DEBUG    | algorithms.scr:train:186 - 77 has 62 samples
+2023-01-16 12:53:13.766 | DEBUG    | algorithms.scr:train:186 - 95 has 62 samples
+2023-01-16 12:53:13.767 | DEBUG    | algorithms.scr:train:186 - 57 has 62 samples
+2023-01-16 12:53:13.768 | DEBUG    | algorithms.scr:train:186 - 44 has 62 samples
+2023-01-16 12:53:13.769 | DEBUG    | algorithms.scr:train:186 - 80 has 62 samples
+2023-01-16 12:53:13.769 | DEBUG    | algorithms.scr:train:186 - 13 has 62 samples
+2023-01-16 12:53:13.771 | DEBUG    | algorithms.scr:train:186 - 37 has 63 samples
+2023-01-16 12:53:13.771 | DEBUG    | algorithms.scr:train:186 - 29 has 63 samples
+2023-01-16 12:53:13.772 | DEBUG    | algorithms.scr:train:186 - 51 has 63 samples
+2023-01-16 12:53:13.773 | DEBUG    | algorithms.scr:train:186 - 20 has 63 samples
+2023-01-16 12:53:13.774 | DEBUG    | algorithms.scr:train:186 - 60 has 63 samples
+2023-01-16 12:53:13.775 | DEBUG    | algorithms.scr:train:186 - 22 has 63 samples
+2023-01-16 12:53:13.775 | DEBUG    | algorithms.scr:train:186 - 27 has 63 samples
+2023-01-16 12:53:13.776 | DEBUG    | algorithms.scr:train:186 - 50 has 63 samples
+2023-01-16 12:53:13.777 | DEBUG    | algorithms.scr:train:186 - 7 has 63 samples
+2023-01-16 12:53:13.777 | DEBUG    | algorithms.scr:train:186 - 15 has 63 samples
+2023-01-16 12:53:13.778 | DEBUG    | algorithms.scr:train:186 - 87 has 63 samples
+2023-01-16 12:53:13.779 | DEBUG    | algorithms.scr:train:186 - 68 has 63 samples
+2023-01-16 12:53:13.779 | DEBUG    | algorithms.scr:train:186 - 42 has 63 samples
+2023-01-16 12:53:13.780 | DEBUG    | algorithms.scr:train:186 - 40 has 63 samples
+2023-01-16 12:53:13.781 | DEBUG    | algorithms.scr:train:186 - 79 has 63 samples
+2023-01-16 12:53:13.782 | DEBUG    | algorithms.scr:train:186 - 58 has 63 samples
+2023-01-16 12:53:13.782 | DEBUG    | algorithms.scr:train:186 - 65 has 63 samples
+2023-01-16 12:53:13.783 | DEBUG    | algorithms.scr:train:186 - 86 has 63 samples
+2023-01-16 12:53:13.784 | DEBUG    | algorithms.scr:train:186 - 9 has 63 samples
+2023-01-16 12:53:13.784 | DEBUG    | algorithms.scr:train:186 - 38 has 63 samples
+2023-01-16 12:53:13.785 | DEBUG    | algorithms.scr:train:186 - 84 has 63 samples
+2023-01-16 12:53:13.786 | DEBUG    | algorithms.scr:train:186 - 70 has 63 samples
+2023-01-16 12:53:13.787 | DEBUG    | algorithms.scr:train:186 - 55 has 63 samples
+2023-01-16 12:53:13.787 | DEBUG    | algorithms.scr:train:186 - 69 has 63 samples
+2023-01-16 12:53:13.788 | DEBUG    | algorithms.scr:train:186 - 39 has 63 samples
+2023-01-16 12:53:13.789 | DEBUG    | algorithms.scr:train:186 - 49 has 63 samples
+2023-01-16 12:53:13.790 | DEBUG    | algorithms.scr:train:186 - 72 has 63 samples
+2023-01-16 12:53:13.790 | DEBUG    | algorithms.scr:train:186 - 82 has 63 samples
+2023-01-16 12:53:13.791 | DEBUG    | algorithms.scr:train:186 - 41 has 63 samples
+2023-01-16 12:53:13.792 | DEBUG    | algorithms.scr:train:186 - 26 has 63 samples
+2023-01-16 12:53:13.792 | DEBUG    | algorithms.scr:train:186 - 52 has 63 samples
+2023-01-16 12:53:13.793 | DEBUG    | algorithms.scr:train:186 - 94 has 63 samples
+2023-01-16 12:53:13.794 | DEBUG    | algorithms.scr:train:186 - 33 has 63 samples
+2023-01-16 12:53:13.794 | DEBUG    | algorithms.scr:train:186 - 32 has 63 samples
+2023-01-16 12:53:13.795 | DEBUG    | algorithms.scr:train:186 - 30 has 63 samples
+2023-01-16 12:53:13.796 | DEBUG    | algorithms.scr:train:186 - 36 has 63 samples
+2023-01-16 12:53:13.797 | DEBUG    | algorithms.scr:train:186 - 0 has 63 samples
+2023-01-16 12:53:13.797 | DEBUG    | algorithms.scr:train:186 - 93 has 63 samples
+2023-01-16 12:53:13.798 | DEBUG    | algorithms.scr:train:186 - 43 has 63 samples
+2023-01-16 12:53:13.799 | DEBUG    | algorithms.scr:train:186 - 28 has 63 samples
+2023-01-16 12:53:13.799 | INFO     | algorithms.scr:train:192 - 1, loss: 3.818
+2023-01-16 12:53:13.800 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 3
+2023-01-16 12:53:13.808 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-16 12:53:26.958 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([85, 45, 92, 3, 66, 17, 62, 83, 67, 11, 63, 97, 96, 6, 2, 76, 48, 78, 53, 61, 1, 8, 91, 18, 24, 64, 98, 46, 21, 25, 75, 90, 4, 99, 77, 95, 57, 44, 80, 13, 37, 29, 51, 20, 60, 22, 27, 50, 7, 15, 87, 68, 42, 40, 79, 58, 65, 86, 9, 38, 84, 70, 55, 69, 39, 49, 72, 82, 41, 26, 52, 94, 33, 32, 30, 36, 0, 93, 43, 28])
+2023-01-16 12:55:16.891 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-01-16 12:55:16.893 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 2642 / 10000 samples (26.42% correct)
+2023-01-16 12:55:17.269 | INFO     | algorithms.scr:train:126 - Task 5 / 5
+2023-01-16 12:55:17.276 | INFO     | algorithms.scr:train:127 - Classes in task: ['streetcar', 'bed', 'shrew', 'bowl', 'shark', 'sea', 'cloud', 'fox', 'maple_tree', 'butterfly', 'tiger', 'orchid', 'elephant', 'cattle', 'can', 'palm_tree', 'bridge', 'pine_tree', 'tractor', 'girl']
+2023-01-16 12:55:17.276 | INFO     | algorithms.scr:train:134 - Starting epoch 1 / 1
+2023-01-16 12:55:27.765 | INFO     | algorithms.scr:train:180 - 4:1:40, loss: 3.688
+2023-01-16 12:55:37.976 | INFO     | algorithms.scr:train:180 - 4:1:80, loss: 3.535
+2023-01-16 12:55:48.184 | INFO     | algorithms.scr:train:180 - 4:1:120, loss: 3.549
+2023-01-16 12:55:58.419 | INFO     | algorithms.scr:train:180 - 4:1:160, loss: 3.462
+2023-01-16 12:56:08.610 | INFO     | algorithms.scr:train:180 - 4:1:200, loss: 3.525
+2023-01-16 12:56:18.797 | INFO     | algorithms.scr:train:180 - 4:1:240, loss: 3.513
+2023-01-16 12:56:28.983 | INFO     | algorithms.scr:train:180 - 4:1:280, loss: 3.528
+2023-01-16 12:56:39.178 | INFO     | algorithms.scr:train:180 - 4:1:320, loss: 3.490
+2023-01-16 12:56:49.385 | INFO     | algorithms.scr:train:180 - 4:1:360, loss: 3.488
+2023-01-16 12:56:59.560 | INFO     | algorithms.scr:train:180 - 4:1:400, loss: 3.493
+2023-01-16 12:57:09.727 | INFO     | algorithms.scr:train:180 - 4:1:440, loss: 3.558
+2023-01-16 12:57:19.936 | INFO     | algorithms.scr:train:180 - 4:1:480, loss: 3.459
+2023-01-16 12:57:30.130 | INFO     | algorithms.scr:train:180 - 4:1:520, loss: 3.478
+2023-01-16 12:57:40.323 | INFO     | algorithms.scr:train:180 - 4:1:560, loss: 3.483
+2023-01-16 12:57:50.504 | INFO     | algorithms.scr:train:180 - 4:1:600, loss: 3.429
+2023-01-16 12:58:00.689 | INFO     | algorithms.scr:train:180 - 4:1:640, loss: 3.420
+2023-01-16 12:58:10.876 | INFO     | algorithms.scr:train:180 - 4:1:680, loss: 3.450
+2023-01-16 12:58:21.061 | INFO     | algorithms.scr:train:180 - 4:1:720, loss: 3.425
+2023-01-16 12:58:31.296 | INFO     | algorithms.scr:train:180 - 4:1:760, loss: 3.453
+2023-01-16 12:58:41.478 | INFO     | algorithms.scr:train:180 - 4:1:800, loss: 3.385
+2023-01-16 12:58:51.654 | INFO     | algorithms.scr:train:180 - 4:1:840, loss: 3.426
+2023-01-16 12:59:01.844 | INFO     | algorithms.scr:train:180 - 4:1:880, loss: 3.393
+2023-01-16 12:59:12.034 | INFO     | algorithms.scr:train:180 - 4:1:920, loss: 3.403
+2023-01-16 12:59:17.374 | WARNING  | algorithms.buffers:add_sample:52 - Duplicate hash: -1175704806179341138
+2023-01-16 12:59:22.251 | INFO     | algorithms.scr:train:180 - 4:1:960, loss: 3.427
+2023-01-16 12:59:32.188 | DEBUG    | algorithms.scr:train:183 - Current sample stats:
+2023-01-16 12:59:32.189 | DEBUG    | algorithms.scr:train:186 - 85 has 50 samples
+2023-01-16 12:59:32.190 | DEBUG    | algorithms.scr:train:186 - 45 has 50 samples
+2023-01-16 12:59:32.191 | DEBUG    | algorithms.scr:train:186 - 92 has 50 samples
+2023-01-16 12:59:32.191 | DEBUG    | algorithms.scr:train:186 - 3 has 50 samples
+2023-01-16 12:59:32.192 | DEBUG    | algorithms.scr:train:186 - 66 has 50 samples
+2023-01-16 12:59:32.193 | DEBUG    | algorithms.scr:train:186 - 17 has 50 samples
+2023-01-16 12:59:32.193 | DEBUG    | algorithms.scr:train:186 - 62 has 50 samples
+2023-01-16 12:59:32.194 | DEBUG    | algorithms.scr:train:186 - 83 has 50 samples
+2023-01-16 12:59:32.195 | DEBUG    | algorithms.scr:train:186 - 67 has 50 samples
+2023-01-16 12:59:32.196 | DEBUG    | algorithms.scr:train:186 - 11 has 50 samples
+2023-01-16 12:59:32.196 | DEBUG    | algorithms.scr:train:186 - 63 has 50 samples
+2023-01-16 12:59:32.197 | DEBUG    | algorithms.scr:train:186 - 97 has 50 samples
+2023-01-16 12:59:32.198 | DEBUG    | algorithms.scr:train:186 - 96 has 50 samples
+2023-01-16 12:59:32.198 | DEBUG    | algorithms.scr:train:186 - 6 has 50 samples
+2023-01-16 12:59:32.199 | DEBUG    | algorithms.scr:train:186 - 2 has 50 samples
+2023-01-16 12:59:32.200 | DEBUG    | algorithms.scr:train:186 - 76 has 50 samples
+2023-01-16 12:59:32.201 | DEBUG    | algorithms.scr:train:186 - 48 has 50 samples
+2023-01-16 12:59:32.201 | DEBUG    | algorithms.scr:train:186 - 78 has 50 samples
+2023-01-16 12:59:32.202 | DEBUG    | algorithms.scr:train:186 - 53 has 50 samples
+2023-01-16 12:59:32.203 | DEBUG    | algorithms.scr:train:186 - 61 has 50 samples
+2023-01-16 12:59:32.203 | DEBUG    | algorithms.scr:train:186 - 1 has 50 samples
+2023-01-16 12:59:32.204 | DEBUG    | algorithms.scr:train:186 - 8 has 50 samples
+2023-01-16 12:59:32.205 | DEBUG    | algorithms.scr:train:186 - 91 has 50 samples
+2023-01-16 12:59:32.206 | DEBUG    | algorithms.scr:train:186 - 18 has 50 samples
+2023-01-16 12:59:32.206 | DEBUG    | algorithms.scr:train:186 - 24 has 50 samples
+2023-01-16 12:59:32.207 | DEBUG    | algorithms.scr:train:186 - 64 has 50 samples
+2023-01-16 12:59:32.208 | DEBUG    | algorithms.scr:train:186 - 98 has 50 samples
+2023-01-16 12:59:32.208 | DEBUG    | algorithms.scr:train:186 - 46 has 50 samples
+2023-01-16 12:59:32.209 | DEBUG    | algorithms.scr:train:186 - 21 has 50 samples
+2023-01-16 12:59:32.210 | DEBUG    | algorithms.scr:train:186 - 25 has 50 samples
+2023-01-16 12:59:32.211 | DEBUG    | algorithms.scr:train:186 - 75 has 50 samples
+2023-01-16 12:59:32.211 | DEBUG    | algorithms.scr:train:186 - 90 has 50 samples
+2023-01-16 12:59:32.212 | DEBUG    | algorithms.scr:train:186 - 4 has 50 samples
+2023-01-16 12:59:32.213 | DEBUG    | algorithms.scr:train:186 - 99 has 50 samples
+2023-01-16 12:59:32.214 | DEBUG    | algorithms.scr:train:186 - 77 has 50 samples
+2023-01-16 12:59:32.214 | DEBUG    | algorithms.scr:train:186 - 95 has 50 samples
+2023-01-16 12:59:32.215 | DEBUG    | algorithms.scr:train:186 - 57 has 50 samples
+2023-01-16 12:59:32.216 | DEBUG    | algorithms.scr:train:186 - 44 has 50 samples
+2023-01-16 12:59:32.216 | DEBUG    | algorithms.scr:train:186 - 80 has 50 samples
+2023-01-16 12:59:32.218 | DEBUG    | algorithms.scr:train:186 - 13 has 50 samples
+2023-01-16 12:59:32.218 | DEBUG    | algorithms.scr:train:186 - 37 has 50 samples
+2023-01-16 12:59:32.219 | DEBUG    | algorithms.scr:train:186 - 29 has 50 samples
+2023-01-16 12:59:32.220 | DEBUG    | algorithms.scr:train:186 - 51 has 50 samples
+2023-01-16 12:59:32.221 | DEBUG    | algorithms.scr:train:186 - 20 has 50 samples
+2023-01-16 12:59:32.222 | DEBUG    | algorithms.scr:train:186 - 60 has 50 samples
+2023-01-16 12:59:32.222 | DEBUG    | algorithms.scr:train:186 - 22 has 50 samples
+2023-01-16 12:59:32.223 | DEBUG    | algorithms.scr:train:186 - 27 has 50 samples
+2023-01-16 12:59:32.224 | DEBUG    | algorithms.scr:train:186 - 50 has 50 samples
+2023-01-16 12:59:32.225 | DEBUG    | algorithms.scr:train:186 - 7 has 50 samples
+2023-01-16 12:59:32.226 | DEBUG    | algorithms.scr:train:186 - 15 has 50 samples
+2023-01-16 12:59:32.227 | DEBUG    | algorithms.scr:train:186 - 87 has 50 samples
+2023-01-16 12:59:32.227 | DEBUG    | algorithms.scr:train:186 - 68 has 50 samples
+2023-01-16 12:59:32.228 | DEBUG    | algorithms.scr:train:186 - 42 has 50 samples
+2023-01-16 12:59:32.229 | DEBUG    | algorithms.scr:train:186 - 40 has 50 samples
+2023-01-16 12:59:32.230 | DEBUG    | algorithms.scr:train:186 - 79 has 50 samples
+2023-01-16 12:59:32.230 | DEBUG    | algorithms.scr:train:186 - 58 has 50 samples
+2023-01-16 12:59:32.231 | DEBUG    | algorithms.scr:train:186 - 65 has 50 samples
+2023-01-16 12:59:32.232 | DEBUG    | algorithms.scr:train:186 - 86 has 50 samples
+2023-01-16 12:59:32.232 | DEBUG    | algorithms.scr:train:186 - 9 has 50 samples
+2023-01-16 12:59:32.233 | DEBUG    | algorithms.scr:train:186 - 38 has 50 samples
+2023-01-16 12:59:32.234 | DEBUG    | algorithms.scr:train:186 - 84 has 50 samples
+2023-01-16 12:59:32.234 | DEBUG    | algorithms.scr:train:186 - 70 has 50 samples
+2023-01-16 12:59:32.235 | DEBUG    | algorithms.scr:train:186 - 55 has 50 samples
+2023-01-16 12:59:32.236 | DEBUG    | algorithms.scr:train:186 - 69 has 50 samples
+2023-01-16 12:59:32.237 | DEBUG    | algorithms.scr:train:186 - 39 has 50 samples
+2023-01-16 12:59:32.237 | DEBUG    | algorithms.scr:train:186 - 49 has 50 samples
+2023-01-16 12:59:32.238 | DEBUG    | algorithms.scr:train:186 - 72 has 50 samples
+2023-01-16 12:59:32.239 | DEBUG    | algorithms.scr:train:186 - 82 has 50 samples
+2023-01-16 12:59:32.239 | DEBUG    | algorithms.scr:train:186 - 41 has 50 samples
+2023-01-16 12:59:32.241 | DEBUG    | algorithms.scr:train:186 - 26 has 50 samples
+2023-01-16 12:59:32.242 | DEBUG    | algorithms.scr:train:186 - 52 has 50 samples
+2023-01-16 12:59:32.242 | DEBUG    | algorithms.scr:train:186 - 94 has 50 samples
+2023-01-16 12:59:32.243 | DEBUG    | algorithms.scr:train:186 - 33 has 50 samples
+2023-01-16 12:59:32.244 | DEBUG    | algorithms.scr:train:186 - 32 has 50 samples
+2023-01-16 12:59:32.244 | DEBUG    | algorithms.scr:train:186 - 30 has 50 samples
+2023-01-16 12:59:32.245 | DEBUG    | algorithms.scr:train:186 - 36 has 50 samples
+2023-01-16 12:59:32.246 | DEBUG    | algorithms.scr:train:186 - 0 has 50 samples
+2023-01-16 12:59:32.247 | DEBUG    | algorithms.scr:train:186 - 93 has 50 samples
+2023-01-16 12:59:32.247 | DEBUG    | algorithms.scr:train:186 - 43 has 50 samples
+2023-01-16 12:59:32.248 | DEBUG    | algorithms.scr:train:186 - 28 has 50 samples
+2023-01-16 12:59:32.249 | DEBUG    | algorithms.scr:train:186 - 14 has 50 samples
+2023-01-16 12:59:32.250 | DEBUG    | algorithms.scr:train:186 - 31 has 50 samples
+2023-01-16 12:59:32.250 | DEBUG    | algorithms.scr:train:186 - 71 has 50 samples
+2023-01-16 12:59:32.251 | DEBUG    | algorithms.scr:train:186 - 59 has 50 samples
+2023-01-16 12:59:32.252 | DEBUG    | algorithms.scr:train:186 - 34 has 50 samples
+2023-01-16 12:59:32.252 | DEBUG    | algorithms.scr:train:186 - 19 has 50 samples
+2023-01-16 12:59:32.253 | DEBUG    | algorithms.scr:train:186 - 73 has 50 samples
+2023-01-16 12:59:32.254 | DEBUG    | algorithms.scr:train:186 - 10 has 50 samples
+2023-01-16 12:59:32.255 | DEBUG    | algorithms.scr:train:186 - 47 has 50 samples
+2023-01-16 12:59:32.255 | DEBUG    | algorithms.scr:train:186 - 5 has 50 samples
+2023-01-16 12:59:32.257 | DEBUG    | algorithms.scr:train:186 - 16 has 50 samples
+2023-01-16 12:59:32.257 | DEBUG    | algorithms.scr:train:186 - 12 has 50 samples
+2023-01-16 12:59:32.258 | DEBUG    | algorithms.scr:train:186 - 88 has 50 samples
+2023-01-16 12:59:32.259 | DEBUG    | algorithms.scr:train:186 - 23 has 50 samples
+2023-01-16 12:59:32.259 | DEBUG    | algorithms.scr:train:186 - 89 has 50 samples
+2023-01-16 12:59:32.260 | DEBUG    | algorithms.scr:train:186 - 74 has 50 samples
+2023-01-16 12:59:32.261 | DEBUG    | algorithms.scr:train:186 - 56 has 50 samples
+2023-01-16 12:59:32.262 | DEBUG    | algorithms.scr:train:186 - 81 has 50 samples
+2023-01-16 12:59:32.262 | DEBUG    | algorithms.scr:train:186 - 35 has 50 samples
+2023-01-16 12:59:32.263 | DEBUG    | algorithms.scr:train:186 - 54 has 50 samples
+2023-01-16 12:59:32.264 | INFO     | algorithms.scr:train:192 - 1, loss: 3.475
+2023-01-16 12:59:32.265 | INFO     | algorithms.algorithm_base:run_base_task_metrics:146 - Running metrics: Task 4
+2023-01-16 12:59:32.272 | INFO     | algorithms.scr:classify:209 - Generating fresh mean embedding vectors
+2023-01-16 12:59:46.009 | DEBUG    | algorithms.scr:classify:231 - Generated mean embedding vectors for: dict_keys([85, 45, 92, 3, 66, 17, 62, 83, 67, 11, 63, 97, 96, 6, 2, 76, 48, 78, 53, 61, 1, 8, 91, 18, 24, 64, 98, 46, 21, 25, 75, 90, 4, 99, 77, 95, 57, 44, 80, 13, 37, 29, 51, 20, 60, 22, 27, 50, 7, 15, 87, 68, 42, 40, 79, 58, 65, 86, 9, 38, 84, 70, 55, 69, 39, 49, 72, 82, 41, 26, 52, 94, 33, 32, 30, 36, 0, 93, 43, 28, 14, 31, 71, 59, 34, 19, 73, 10, 47, 5, 16, 12, 88, 23, 89, 74, 56, 81, 35, 54])
+2023-01-16 13:01:57.878 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:202 - Raw classification accuracy results saved to ./output/scr/1673872324.358404_CIFAR100_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-01-16 13:01:57.880 | INFO     | algorithms.algorithm_base:run_base_task_metrics:203 - Correctly classified 2887 / 10000 samples (28.87% correct)
+2023-01-16 13:01:58.253 | INFO     | algorithms.scr:train:201 - Training complete
+2023-01-16 13:01:58.261 | INFO     | __main__:run_experiment:253 - Training and evaluation completed!
+2023-01-16 13:01:58.262 | INFO     | __main__:run_experiment:267 - Wrote usage stats to file
+2023-01-16 13:01:58.263 | INFO     | __main__:main:307 - Complete
+2023-01-16 13:01:58.264 | INFO     | __main__:close_tensorboard_writer:215 - Shut down TensorBoard
