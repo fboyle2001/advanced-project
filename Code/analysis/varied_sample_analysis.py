@@ -86,13 +86,7 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
 
         for size in xs:
             technique = by_size[size][technique_name]
-
             final_accuracies = np.array([run.tasks[list(run.tasks.keys())[-1]].overall_accuracy for run in technique.runs])
-
-            # Temporary until data point generation completes
-            if size == 1000 and parent_folder == "output_cifar100_varied_sorted" and technique_name == "Novel BN":
-                final_accuracies = np.array([0.6766, 0.6900])
-
             ys.append(final_accuracies.mean() * 100)
         
         assert len(ys) == len(xs)
@@ -132,7 +126,7 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
     
 
 def main():
-    parent_folder = "output_cifar10_varied_sorted"
+    parent_folder = "output_cifar100_varied_sorted"
     by_size = load_by_buffer_size(f"../{parent_folder}", [200, 500, 1000, 2000, 5000])
     fin_acc_over_size = plot_final_accuracy_over_size(by_size, parent_folder)
 
