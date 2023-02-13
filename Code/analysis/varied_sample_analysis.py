@@ -100,11 +100,15 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
 
     static_techniques = {
         "output_cifar100_varied_sorted": {
+            "EWC": np.array([0.0489]),
+            "L2P": np.array([0.6240]),
             "Finetuning": np.array([0.0328]),
             "Offline": np.array([0.5804, 0.5742, 0.5891, 0.5894, 0.5755]),
             "ViT Transfer": np.array([0.9167])
         },
         "output_cifar10_varied_sorted": {
+            "EWC": np.array([0.1613]),
+            "L2P": np.array([0.7560]),
             "Finetuning": np.array([0.1642]),
             "Offline": np.array([0.8995]),
             "ViT Transfer": np.array([0.9895])
@@ -128,7 +132,7 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
     
 
 def main():
-    parent_folder = "output_cifar100_varied_sorted"
+    parent_folder = "output_cifar10_varied_sorted"
     by_size = load_by_buffer_size(f"../{parent_folder}", [200, 500, 1000, 2000, 5000])
     fin_acc_over_size = plot_final_accuracy_over_size(by_size, parent_folder)
 
