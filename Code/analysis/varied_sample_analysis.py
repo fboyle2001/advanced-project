@@ -75,7 +75,7 @@ def load_by_buffer_size(parent: str, buffer_sizes: List[int]):
     
     return by_size
 
-def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]]):
+def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], parent_folder: str):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -86,29 +86,53 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]]):
 
         for size in xs:
             technique = by_size[size][technique_name]
+
             final_accuracies = np.array([run.tasks[list(run.tasks.keys())[-1]].overall_accuracy for run in technique.runs])
+
+            # Temporary until data point generation completes
+            if size == 1000 and parent_folder == "output_cifar100_varied_sorted" and technique_name == "Novel BN":
+                final_accuracies = np.array([0.6766, 0.6900])
+
             ys.append(final_accuracies.mean() * 100)
         
         assert len(ys) == len(xs)
         ax.plot(xs, ys, label=technique_name, marker="o")
+
+    static_techniques = {
+        "output_cifar100_varied_sorted": {
+            "Finetuning": np.array([0.0328]),
+            "Offline": np.array([0.5804, 0.5742, 0.5891, 0.5894, 0.5755]),
+            "ViT Transfer": np.array([0.9167])
+        },
+        "output_cifar10_varied_sorted": {
+            "Finetuning": np.array([0.1642]),
+            "Offline": np.array([0.8995]),
+            "ViT Transfer": np.array([0.9895])
+        }
+    }
+
+    for name, static_accuracy in static_techniques[parent_folder].items():
+        ys = (static_accuracy.mean() * 100).repeat(len(xs))
+        ax.plot(xs, ys, label=name, marker=None, linestyle="dashed")
     
     ax.grid()
     ax.set_xticks(xs)
     ax.set_ylabel("Final Accuracy (%)")
-    ax.set_title("Final Accuracy by Max Memory Buffer Sample Count")
+    ax.set_title("Final Accuracy over Max Memory Size")
     ax.set_ylim(0, 100)
     ax.set_xlim(min(xs), max(xs))
-    ax.set_xlabel("Max Memory Buffer Sample Count")
+    ax.set_xlabel("Maximum Number of Samples in Memory")
     ax.legend(bbox_to_anchor=(1.0, 0.5), loc="center left")
 
     return fig
     
 
 def main():
-    by_size = load_by_buffer_size("../output_cifar100_varied_sorted", [200, 500, 1000, 2000, 5000])
-    fin_acc_over_size = plot_final_accuracy_over_size(by_size)
+    parent_folder = "output_cifar100_varied_sorted"
+    by_size = load_by_buffer_size(f"../{parent_folder}", [200, 500, 1000, 2000, 5000])
+    fin_acc_over_size = plot_final_accuracy_over_size(by_size, parent_folder)
 
-    fin_acc_over_size.savefig(f"./cifar100_varied_samples.png", bbox_inches="tight")
+    fin_acc_over_size.savefig(f"./variable_sampling/{parent_folder}.png", bbox_inches="tight")
 
     # plt.show()
 
