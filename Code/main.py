@@ -83,7 +83,8 @@ ALGORITHM_DEFAULTS = {
         "batch_size": 10,
         "max_memory_samples": 1000,
         "memory_batch_size": 100,
-        "temperature": 0.07
+        "temperature": 0.07,
+        "lr": 0.1
     },
     algorithms.DarkExperiencePlusPlus: {
         "epochs_per_task": 1,
@@ -103,6 +104,14 @@ ALGORITHM_DEFAULTS = {
     experiments.NovelExperimentSeven: {},
     experiments.NovelExperimentEight: {},
     experiments.NovelImplementation: {},
+    algorithms.TrialAdaptedSCR: {
+        "epochs_per_task": 1,
+        "batch_size": 10,
+        "max_memory_samples": 1000,
+        "memory_batch_size": 100,
+        "temperature": 0.07,
+        "lr": 0.1
+    },
 }
 
 DATASET_DEFAULTS = {
@@ -180,8 +189,8 @@ def execute(algorithm_class, dataset_class, directory, writer):
 if __name__ == "__main__":
     utils.seed_everything(0)
 
-    algorithm_class = algorithms.LearningToPrompt
-    dataset_class = datasets.CIFAR100
+    algorithm_class = algorithms.TrialAdaptedSCR
+    dataset_class = datasets.CIFAR10
 
     experiment_name = None
 
@@ -192,7 +201,7 @@ if __name__ == "__main__":
     # model.fc = torch.nn.Linear(in_features=512, out_features=10, bias=True)
 
     # Has higher performance, need to analyse why in the future
-    reduced = algorithm_class == algorithms.SupervisedContrastiveReplay
+    reduced = algorithm_class == algorithms.TrialAdaptedSCR
     model = utils.get_gdumb_resnet_32_impl(reduced=reduced) if dataset_class == datasets.CIFAR100 else utils.get_gdumb_resnet_18_impl(reduced=reduced)
 
     model.to(device)

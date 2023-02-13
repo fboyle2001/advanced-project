@@ -1,7 +1,7 @@
 @echo off
 
-set dataset=cifar10
-set cpt=2
+set dataset=cifar100
+set cpt=20
 
 echo Configuration
 echo Dataset: %dataset%
@@ -11,6 +11,17 @@ echo:
 @REM 9767, 2843, 2214, 5953, 2461
 @REM 200, 500, 1000, 2000
 @REM scr, rainbow, gdumb, der, derpp, novel
+
+FOR %%s IN (9767) DO (
+    FOR %%l IN (1000) DO (
+        FOR %%a IN (novel) DO (
+            echo Seed: %%s, Samples %%l 
+            echo Executing: python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
+            python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
+            echo:
+        )
+    )
+)
 
 FOR %%s IN (9767) DO (
     FOR %%l IN (2000) DO (

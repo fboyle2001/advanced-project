@@ -105,10 +105,12 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]]):
     
 
 def main():
-    by_size = load_by_buffer_size("../output_cifar10_varied_sorted", [200, 500, 1000, 5000])
+    by_size = load_by_buffer_size("../output_cifar100_varied_sorted", [200, 500, 1000, 2000, 5000])
     fin_acc_over_size = plot_final_accuracy_over_size(by_size)
 
-    plt.show()
+    fin_acc_over_size.savefig(f"./cifar100_varied_samples.png", bbox_inches="tight")
+
+    # plt.show()
 
 if __name__ == "__main__":
     main()

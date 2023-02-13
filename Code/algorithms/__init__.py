@@ -10,3 +10,5 @@ from .l2p import LearningToPrompt
 from .scr import SupervisedContrastiveReplay
 from .der_pp import DarkExperiencePlusPlus
 from .rainbow_ncm import RainbowOnlineNCM
+
+from .trial import TrialAdaptedSCR

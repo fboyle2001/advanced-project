@@ -255,11 +255,13 @@ class NovelImplementation(BaseCLAlgorithm):
 
             # Process remains
             raw_inp = self.memory[target][batches * self.batch_size:]
-            inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
-            distances = uncertainty_func(inp)
 
-            for sample, uncertainty in zip(raw_inp, distances):
-                segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
+            if len(raw_inp) != 0:
+                inp = torch.stack([self.dataset.testing_transform(Image.fromarray(x.astype(np.uint8))) for x in raw_inp]).to(self.device) # type: ignore
+                distances = uncertainty_func(inp)
+
+                for sample, uncertainty in zip(raw_inp, distances):
+                    segmented_uncertainty[target].append((sample, uncertainty.item())) # type: ignore
         
         logger.debug("Drawing memory samples")
         # Now draw the samples out for the new buffer
