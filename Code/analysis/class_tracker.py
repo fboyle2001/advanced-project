@@ -98,9 +98,8 @@ def plot_accuracy_over_task(data):
     width = section_width / num_techniques
 
     for i, (name, task_accuracies) in enumerate(data.items()):
-        print(name, task_accuracies)
-
-        task_means = [per_task.mean() * 100 for per_task in task_accuracies.values()]
+        task_means = [per_task.mean() * 100 for per_task in task_accuracies.values()]        
+        print(name, task_means)
         pos = tasks - (section_width / 2) + (i / (num_techniques - 1)) * section_width
         ax.bar(pos, task_means, width=width, label=name)
 

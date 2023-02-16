@@ -415,7 +415,7 @@ def get_technique_result_structure(folder: str):
     return technique_result_structure
 
 def main(save: bool, show: bool):
-    folder = "output_cifar100_5k"
+    folder = "output_cifar10_0.5k"
     technique_result_structure = get_technique_result_structure(folder)
 
     store_dir = f"./output/{time.time()}"
