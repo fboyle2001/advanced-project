@@ -57,7 +57,7 @@ class TechniqueData:
 
         for run_folder in dir_run_folders:
             dir_file_names = os.listdir(f"{folder}/{run_folder}")
-            assert "stats.json" in dir_file_names, "Missing stats.json"
+            assert "stats.json" in dir_file_names, f"Missing stats.json for {name} in folder {folder}/{run_folder}"
 
             for task_file in task_files.values():
                 assert task_file in dir_file_names, f"Missing {task_file}"

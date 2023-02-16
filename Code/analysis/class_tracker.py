@@ -8,7 +8,7 @@ import os
 import json
 
 from technique_parser import TechniqueData
-from analysis import load_techniques, get_technique_result_structure, NumpyEncoder
+from analysis import COLOUR_MAP, load_techniques, get_technique_result_structure, NumpyEncoder
 
 def track_class_accuracy(techniques: Dict[str, TechniqueData], class_name: str):
     results = {}
@@ -92,6 +92,8 @@ def plot_accuracy_over_task(data):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_prop_cycle("color", COLOUR_MAP)
 
     section_width = 0.8
     num_techniques = len(data.keys())
@@ -117,14 +119,15 @@ def plot_accuracy_over_task(data):
 
 
 def main():
-    folder = "output_cifar100_5k"
+    folder = "output_cifar10_0.5k"
+    out_name = "_".join(folder.split("_")[1:]) + ".png"
     technique_result_structure = get_technique_result_structure(folder)
     techniques = load_techniques(technique_result_structure)
 
     first_class_only = track_first_class(techniques)
     first_task = track_first_task(techniques)
     fig = plot_accuracy_over_task(first_task)
-    fig.savefig("./test.png", bbox_inches="tight")
+    fig.savefig(f"./first_task_forgetting/{out_name}", bbox_inches="tight")
 
     # plot the first class averages
 

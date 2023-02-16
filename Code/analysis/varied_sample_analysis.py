@@ -8,7 +8,7 @@ import os
 import json
 
 from technique_parser import TechniqueData
-from analysis import load_techniques, get_technique_result_structure, NumpyEncoder
+from analysis import COLOUR_MAP, load_techniques, get_technique_result_structure, NumpyEncoder
 
 def generate_structure(parent: str, buffer_size: int):
     technique_result_structure = {
@@ -80,17 +80,21 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
     ax = fig.add_subplot(111)
 
     xs = list(by_size.keys())
-    
-    for technique_name in by_size[xs[0]].keys():
-        ys = []
 
-        for size in xs:
-            technique = by_size[size][technique_name]
-            final_accuracies = np.array([run.tasks[list(run.tasks.keys())[-1]].overall_accuracy for run in technique.runs])
-            ys.append(final_accuracies.mean() * 100)
-        
-        assert len(ys) == len(xs)
-        ax.plot(xs, ys, label=technique_name, marker="o")
+    technique_order = [
+        "DER",
+        "DER++",
+        "EWC",
+        "Finetuning",
+        "GDumb",
+        "L2P",
+        "Novel BN",
+        "Novel RD",
+        "Rainbow",
+        "SCR",
+        "Offline",
+        "ViT Transfer"
+    ]
 
     static_techniques = {
         "output_cifar100_varied_sorted": {
@@ -109,14 +113,38 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
         }
     }
 
-    for name, static_accuracy in static_techniques[parent_folder].items():
-        ys = (static_accuracy.mean() * 100).repeat(len(xs))
-        ax.plot(xs, ys, label=name, marker=None, linestyle="dashed")
+    ax.set_prop_cycle("color", COLOUR_MAP)
+
+    for technique_name in technique_order: # by_size[xs[0]].keys():
+        if technique_name in static_techniques[parent_folder].keys():
+            static_accuracy = static_techniques[parent_folder][technique_name]
+            ys = (static_accuracy.mean() * 100).repeat(len(xs))
+            ax.plot(xs, ys, label=technique_name, marker=None, linestyle="dashed")
+            continue
+        
+        if technique_name not in by_size[xs[0]].keys():
+            next(ax._get_lines.prop_cycler)
+            continue
+
+        ys = []
+
+        for size in xs:
+            technique = by_size[size][technique_name]
+            final_accuracies = np.array([run.tasks[list(run.tasks.keys())[-1]].overall_accuracy for run in technique.runs])
+            ys.append(final_accuracies.mean() * 100)
+        
+        assert len(ys) == len(xs)
+        ax.plot(xs, ys, label=technique_name, marker="o")
+
+    
+
+    # for name, static_accuracy in static_techniques[parent_folder].items():
+    #     ys = (static_accuracy.mean() * 100).repeat(len(xs))
+    #     ax.plot(xs, ys, label=name, marker=None, linestyle="dashed")
     
     ax.grid()
     ax.set_xticks(xs)
     ax.set_ylabel("Final Accuracy (%)")
-    ax.set_title("Final Accuracy over Max Memory Size")
     ax.set_ylim(0, 100)
     ax.set_xlim(min(xs), max(xs))
     ax.set_xlabel("Maximum Number of Samples in Memory")
@@ -126,7 +154,7 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
     
 
 def main():
-    parent_folder = "output_cifar100_varied_sorted"
+    parent_folder = "output_cifar10_varied_sorted"
     by_size = load_by_buffer_size(f"../{parent_folder}", [200, 500, 1000, 2000, 5000])
     fin_acc_over_size = plot_final_accuracy_over_size(by_size, parent_folder)
 

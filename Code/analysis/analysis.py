@@ -9,6 +9,22 @@ import json
 
 from technique_parser import TechniqueData
 
+# Generated using https://mokole.com/palette.html and then manually adjusted
+COLOUR_MAP = [
+    "#2F4F4F",
+    "#7F0000",
+    "#008000",
+    "#00008B",
+    "#FF8C00",
+    "#d9d928",
+    "#17c917",
+    "#26d5d5",
+    "#d521d5",
+    "#1E90FF",
+    "#FF69B4",
+    "#f9bd77"
+]
+
 # https://stackoverflow.com/a/47626762
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -163,7 +179,8 @@ def plot_wall_clock(techniques: Dict[str, TechniqueData]):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.set_title("Technique Wall-Clock Time")
+    ax.set_prop_cycle("color", COLOUR_MAP)
+    # ax.set_title("Technique Wall-Clock Time")
     ax.set_ylabel("Time Taken (s)")
 
     ax.boxplot(boxplot_data, labels=[k for k in techniques.keys()])
@@ -202,8 +219,10 @@ def plot_memory_usage(techniques: Dict[str, TechniqueData], stacked: bool, bar_w
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_prop_cycle("color", COLOUR_MAP)
     ax.set_xticks(xs, x_labels)
-    ax.set_title("Peak Memory Usage")
+    # ax.set_title("Peak Memory Usage")
     ax.set_ylabel("Memory (mb)")
 
     if stacked:
@@ -223,6 +242,8 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData], static_name: str
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_prop_cycle("color", COLOUR_MAP)
 
     print("Average Accuracy")
 
@@ -260,7 +281,7 @@ def plot_average_accuracy(techniques: Dict[str, TechniqueData], static_name: str
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
-    ax.set_title("Overall Accuracy by Task")
+    # ax.set_title("Overall Accuracy by Task")
     ax.set_ylim(0, 100)
     ax.set_xlim(min(tasks), max(tasks))
     ax.set_xlabel("Task")
@@ -276,6 +297,8 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_prop_cycle("color", COLOUR_MAP)
     title = f"{'Top' if top else 'Bottom'}-{n} Accuracy by Task"
 
     print(title)
@@ -306,7 +329,7 @@ def plot_n_accuracy(techniques: Dict[str, TechniqueData], n: int, top: bool):
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Accuracy (%)")
-    ax.set_title(title)
+    # ax.set_title(title)
     ax.set_ylim(y_low, y_high)
     ax.set_xlabel("Task")
     ax.set_xlim(min(tasks), max(tasks))
@@ -320,6 +343,8 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_prop_cycle("color", COLOUR_MAP)
 
     print("Average Forgetting")
 
@@ -349,7 +374,7 @@ def plot_average_forgetting(techniques: Dict[str, TechniqueData]):
     ax.grid()
     ax.set_xticks(tasks)
     ax.set_ylabel("Average Forgetting (%)")
-    ax.set_title("Average Forgetting per Task")
+    # ax.set_title("Average Forgetting per Task")
     ax.set_ylim(y_low, y_high)
     ax.set_xlim(min(tasks), max(tasks))
     ax.set_xlabel("Task")
@@ -415,7 +440,7 @@ def get_technique_result_structure(folder: str):
     return technique_result_structure
 
 def main(save: bool, show: bool):
-    folder = "output_cifar10_0.5k"
+    folder = "output_cifar100_5k"
     technique_result_structure = get_technique_result_structure(folder)
 
     store_dir = f"./output/{time.time()}"
@@ -423,7 +448,7 @@ def main(save: bool, show: bool):
 
     techniques = load_techniques(technique_result_structure)
 
-    n_size = 1
+    n_size = 5 if "cifar100" in folder else 1
 
     top_n_fig = plot_n_accuracy(techniques, n=n_size, top=True)
     bottom_n_fig = plot_n_accuracy(techniques, n=n_size, top=False)
