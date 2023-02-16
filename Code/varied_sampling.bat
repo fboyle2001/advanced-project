@@ -13,19 +13,8 @@ echo:
 @REM scr, rainbow, gdumb, der, derpp, novel
 
 FOR %%s IN (9767) DO (
-    FOR %%l IN (1000) DO (
+    FOR %%l IN (1000, 500, 200) DO (
         FOR %%a IN (novel) DO (
-            echo Seed: %%s, Samples %%l 
-            echo Executing: python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
-            python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
-            echo:
-        )
-    )
-)
-
-FOR %%s IN (9767) DO (
-    FOR %%l IN (2000) DO (
-        FOR %%a IN (scr, rainbow, gdumb, der, derpp, novel) DO (
             echo Seed: %%s, Samples %%l 
             echo Executing: python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
             python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %%l
