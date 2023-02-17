@@ -36,7 +36,8 @@ class NovelImplementation(BaseCLAlgorithm):
         optimiser: torch.optim.Optimizer,
         loss_criterion: torch.nn.modules.loss._Loss,
         writer: torch.utils.tensorboard.writer.SummaryWriter,
-        max_memory_samples: int
+        max_memory_samples: int,
+        uncertainty_type: str
     ):
         super().__init__(
             name="Novel Implementation",
@@ -85,7 +86,7 @@ class NovelImplementation(BaseCLAlgorithm):
         self.mean_embeddings = torch.zeros(len(self.dataset.classes), self.D).to(self.device)
         self.loss_criterion = SupConLoss()
 
-        self.uncertainty_type = "relative_distances"
+        self.uncertainty_type = uncertainty_type
         self.classification_type = "ncm"
 
         self.min_lr = 0.0005
