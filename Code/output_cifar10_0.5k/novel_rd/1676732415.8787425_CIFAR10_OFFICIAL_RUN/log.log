@@ -1,0 +1,1053 @@
+2023-02-18 15:00:15.882 | INFO     | __main__:setup_files:218 - Experiment Name: OFFICIAL_RUN
+2023-02-18 15:00:15.883 | INFO     | __main__:main:332 - Command line arguments: Configuration(algorithm='novel_rd', dataset='cifar10', classes_per_task=2, seed=2461, samples=500)
+2023-02-18 15:00:15.885 | INFO     | __main__:main:336 - Seeded random to 2461
+2023-02-18 15:00:15.887 | INFO     | __main__:main:340 - Got CUDA device
+2023-02-18 15:00:15.887 | INFO     | __main__:force_cuda_load:268 - Forcing CUDA initialisation...
+2023-02-18 15:00:15.944 | INFO     | __main__:main:344 - CUDA initialised
+2023-02-18 15:00:15.945 | INFO     | __main__:setup_shutdown_hook:264 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN
+2023-02-18 15:00:15.963 | INFO     | __main__:main:348 - Setup shutdown hooks
+2023-02-18 15:00:16.090 | INFO     | __main__:main:353 - Model is setup
+2023-02-18 15:00:16.091 | INFO     | __main__:main:355 - Complete pre-setup, starting experiment
+2023-02-18 15:00:17.296 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-02-18 15:00:17.298 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-02-18 15:00:17.318 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(224, 224), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(224, 224), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(224, 224), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      4,
+      7
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      1,
+      9
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      5,
+      0
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "deer",
+      "horse"
+    ],
+    [
+      "cat",
+      "frog"
+    ],
+    [
+      "car",
+      "truck"
+    ],
+    [
+      "ship",
+      "bird"
+    ],
+    [
+      "dog",
+      "plane"
+    ]
+  ]
+}
+2023-02-18 15:00:18.441 | WARNING  | models.vit.vit_models:build_backbone:149 - OVERRIDE: FREEZING PRETRAINED MODEL DIRECTLY EXCEPT
+2023-02-18 15:00:18.443 | INFO     | models.vit.vit_models:setup_head:158 - SETUP HEAD
+2023-02-18 15:00:18.582 | DEBUG    | __main__:run_experiment:292 - PID: 5652
+2023-02-18 15:00:18.583 | INFO     | __main__:run_experiment:294 - Starting...
+2023-02-18 15:00:18.584 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "experiments.finalised_novel_impl.NovelImplementation",
+  "model_class": "experiments.finalised_novel_impl.TestNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "experiments.finalised_novel_impl.SupConLoss",
+  "epochs_per_task": 70,
+  "batch_size": 16,
+  "uncertainty_type": "relative_distances",
+  "max_memory_samples": 500,
+  "classification_type": "ncm",
+  "end_train_only": false
+}
+2023-02-18 15:00:18.585 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-02-18 15:00:18.586 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-02-18 15:00:18.587 | INFO     | experiments.finalised_novel_impl:train:302 - Task 1 / 5
+2023-02-18 15:00:18.587 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['deer', 'horse']
+2023-02-18 15:00:18.588 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-02-18 15:00:18.589 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-02-18 15:00:18.590 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-02-18 15:11:19.964 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:11:19.966 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([])
+2023-02-18 15:11:19.966 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([])
+2023-02-18 15:11:19.967 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-02-18 15:11:19.969 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-02-18 15:11:19.974 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-02-18 15:11:19.980 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-02-18 15:11:19.982 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-02-18 15:11:27.823 | INFO     | experiments.finalised_novel_impl:train:396 - 1:1, loss: 4.387
+2023-02-18 15:11:27.825 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-02-18 15:11:35.613 | INFO     | experiments.finalised_novel_impl:train:396 - 1:2, loss: 4.387
+2023-02-18 15:11:35.615 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-02-18 15:11:43.398 | INFO     | experiments.finalised_novel_impl:train:396 - 1:3, loss: 4.387
+2023-02-18 15:11:43.400 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-02-18 15:11:51.173 | INFO     | experiments.finalised_novel_impl:train:396 - 1:4, loss: 4.387
+2023-02-18 15:11:51.175 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-02-18 15:11:58.955 | INFO     | experiments.finalised_novel_impl:train:396 - 1:5, loss: 4.387
+2023-02-18 15:11:58.956 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-02-18 15:12:06.717 | INFO     | experiments.finalised_novel_impl:train:396 - 1:6, loss: 4.387
+2023-02-18 15:12:06.719 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-02-18 15:12:14.497 | INFO     | experiments.finalised_novel_impl:train:396 - 1:7, loss: 4.387
+2023-02-18 15:12:14.499 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-02-18 15:12:22.279 | INFO     | experiments.finalised_novel_impl:train:396 - 1:8, loss: 4.387
+2023-02-18 15:12:22.281 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-02-18 15:12:30.048 | INFO     | experiments.finalised_novel_impl:train:396 - 1:9, loss: 4.387
+2023-02-18 15:12:30.049 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-02-18 15:12:37.829 | INFO     | experiments.finalised_novel_impl:train:396 - 1:10, loss: 4.387
+2023-02-18 15:12:37.831 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 10
+2023-02-18 15:12:37.858 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:12:41.821 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:13:59.904 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_10_accuracy_results.json
+2023-02-18 15:13:59.905 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2857 / 10000 samples (28.57% correct)
+2023-02-18 15:14:00.083 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-02-18 15:14:07.884 | INFO     | experiments.finalised_novel_impl:train:396 - 1:11, loss: 4.387
+2023-02-18 15:14:07.886 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-02-18 15:14:15.652 | INFO     | experiments.finalised_novel_impl:train:396 - 1:12, loss: 4.387
+2023-02-18 15:14:15.654 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-02-18 15:14:23.412 | INFO     | experiments.finalised_novel_impl:train:396 - 1:13, loss: 4.387
+2023-02-18 15:14:23.413 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-02-18 15:14:31.180 | INFO     | experiments.finalised_novel_impl:train:396 - 1:14, loss: 4.387
+2023-02-18 15:14:31.182 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-02-18 15:14:38.954 | INFO     | experiments.finalised_novel_impl:train:396 - 1:15, loss: 4.387
+2023-02-18 15:14:38.955 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-02-18 15:14:46.717 | INFO     | experiments.finalised_novel_impl:train:396 - 1:16, loss: 4.387
+2023-02-18 15:14:46.719 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-02-18 15:14:54.478 | INFO     | experiments.finalised_novel_impl:train:396 - 1:17, loss: 4.387
+2023-02-18 15:14:54.479 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-02-18 15:15:02.240 | INFO     | experiments.finalised_novel_impl:train:396 - 1:18, loss: 4.387
+2023-02-18 15:15:02.242 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-02-18 15:15:10.020 | INFO     | experiments.finalised_novel_impl:train:396 - 1:19, loss: 4.387
+2023-02-18 15:15:10.022 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-02-18 15:15:17.798 | INFO     | experiments.finalised_novel_impl:train:396 - 1:20, loss: 4.387
+2023-02-18 15:15:17.800 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 20
+2023-02-18 15:15:17.827 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:15:21.741 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:16:39.607 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_20_accuracy_results.json
+2023-02-18 15:16:39.608 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2866 / 10000 samples (28.66% correct)
+2023-02-18 15:16:39.734 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-02-18 15:16:47.638 | INFO     | experiments.finalised_novel_impl:train:396 - 1:21, loss: 4.387
+2023-02-18 15:16:47.639 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-02-18 15:16:55.452 | INFO     | experiments.finalised_novel_impl:train:396 - 1:22, loss: 4.387
+2023-02-18 15:16:55.454 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-02-18 15:17:03.225 | INFO     | experiments.finalised_novel_impl:train:396 - 1:23, loss: 4.387
+2023-02-18 15:17:03.227 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-02-18 15:17:10.998 | INFO     | experiments.finalised_novel_impl:train:396 - 1:24, loss: 4.387
+2023-02-18 15:17:11.000 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-02-18 15:17:18.777 | INFO     | experiments.finalised_novel_impl:train:396 - 1:25, loss: 4.387
+2023-02-18 15:17:18.779 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-02-18 15:17:26.535 | INFO     | experiments.finalised_novel_impl:train:396 - 1:26, loss: 4.387
+2023-02-18 15:17:26.537 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-02-18 15:17:34.309 | INFO     | experiments.finalised_novel_impl:train:396 - 1:27, loss: 4.387
+2023-02-18 15:17:34.311 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-02-18 15:17:42.070 | INFO     | experiments.finalised_novel_impl:train:396 - 1:28, loss: 4.387
+2023-02-18 15:17:42.071 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-02-18 15:17:49.845 | INFO     | experiments.finalised_novel_impl:train:396 - 1:29, loss: 4.387
+2023-02-18 15:17:49.846 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-02-18 15:17:57.608 | INFO     | experiments.finalised_novel_impl:train:396 - 1:30, loss: 4.387
+2023-02-18 15:17:57.610 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 30
+2023-02-18 15:17:57.636 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:18:01.558 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:19:19.389 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_30_accuracy_results.json
+2023-02-18 15:19:19.390 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2865 / 10000 samples (28.65% correct)
+2023-02-18 15:19:19.516 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-02-18 15:19:27.281 | INFO     | experiments.finalised_novel_impl:train:396 - 1:31, loss: 4.387
+2023-02-18 15:19:27.283 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-02-18 15:19:35.035 | INFO     | experiments.finalised_novel_impl:train:396 - 1:32, loss: 4.387
+2023-02-18 15:19:35.036 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-02-18 15:19:42.801 | INFO     | experiments.finalised_novel_impl:train:396 - 1:33, loss: 4.387
+2023-02-18 15:19:42.803 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-02-18 15:19:50.760 | INFO     | experiments.finalised_novel_impl:train:396 - 1:34, loss: 4.387
+2023-02-18 15:19:50.762 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-02-18 15:19:58.533 | INFO     | experiments.finalised_novel_impl:train:396 - 1:35, loss: 4.387
+2023-02-18 15:19:58.534 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-02-18 15:20:06.313 | INFO     | experiments.finalised_novel_impl:train:396 - 1:36, loss: 4.387
+2023-02-18 15:20:06.315 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-02-18 15:20:14.074 | INFO     | experiments.finalised_novel_impl:train:396 - 1:37, loss: 4.387
+2023-02-18 15:20:14.076 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-02-18 15:20:21.848 | INFO     | experiments.finalised_novel_impl:train:396 - 1:38, loss: 4.387
+2023-02-18 15:20:21.849 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-02-18 15:20:29.615 | INFO     | experiments.finalised_novel_impl:train:396 - 1:39, loss: 4.387
+2023-02-18 15:20:29.616 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-02-18 15:20:37.383 | INFO     | experiments.finalised_novel_impl:train:396 - 1:40, loss: 4.387
+2023-02-18 15:20:37.385 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 40
+2023-02-18 15:20:37.411 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:20:41.324 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:21:59.190 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_40_accuracy_results.json
+2023-02-18 15:21:59.190 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2873 / 10000 samples (28.73% correct)
+2023-02-18 15:21:59.318 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-02-18 15:22:07.124 | INFO     | experiments.finalised_novel_impl:train:396 - 1:41, loss: 4.387
+2023-02-18 15:22:07.126 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-02-18 15:22:14.891 | INFO     | experiments.finalised_novel_impl:train:396 - 1:42, loss: 4.387
+2023-02-18 15:22:14.892 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-02-18 15:22:22.671 | INFO     | experiments.finalised_novel_impl:train:396 - 1:43, loss: 4.387
+2023-02-18 15:22:22.673 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-02-18 15:22:30.445 | INFO     | experiments.finalised_novel_impl:train:396 - 1:44, loss: 4.387
+2023-02-18 15:22:30.447 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-02-18 15:22:38.220 | INFO     | experiments.finalised_novel_impl:train:396 - 1:45, loss: 4.387
+2023-02-18 15:22:38.222 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-02-18 15:22:45.991 | INFO     | experiments.finalised_novel_impl:train:396 - 1:46, loss: 4.387
+2023-02-18 15:22:45.993 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-02-18 15:22:53.860 | INFO     | experiments.finalised_novel_impl:train:396 - 1:47, loss: 4.387
+2023-02-18 15:22:53.861 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-02-18 15:23:01.643 | INFO     | experiments.finalised_novel_impl:train:396 - 1:48, loss: 4.387
+2023-02-18 15:23:01.644 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-02-18 15:23:09.410 | INFO     | experiments.finalised_novel_impl:train:396 - 1:49, loss: 4.387
+2023-02-18 15:23:09.412 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-02-18 15:23:17.175 | INFO     | experiments.finalised_novel_impl:train:396 - 1:50, loss: 4.387
+2023-02-18 15:23:17.177 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 50
+2023-02-18 15:23:17.203 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:23:21.122 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:24:38.944 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_50_accuracy_results.json
+2023-02-18 15:24:38.945 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2868 / 10000 samples (28.68% correct)
+2023-02-18 15:24:39.072 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-02-18 15:24:46.887 | INFO     | experiments.finalised_novel_impl:train:396 - 1:51, loss: 4.387
+2023-02-18 15:24:46.889 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-02-18 15:24:54.647 | INFO     | experiments.finalised_novel_impl:train:396 - 1:52, loss: 4.387
+2023-02-18 15:24:54.648 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-02-18 15:25:02.417 | INFO     | experiments.finalised_novel_impl:train:396 - 1:53, loss: 4.387
+2023-02-18 15:25:02.418 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-02-18 15:25:10.187 | INFO     | experiments.finalised_novel_impl:train:396 - 1:54, loss: 4.387
+2023-02-18 15:25:10.189 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-02-18 15:25:17.956 | INFO     | experiments.finalised_novel_impl:train:396 - 1:55, loss: 4.387
+2023-02-18 15:25:17.958 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-02-18 15:25:25.720 | INFO     | experiments.finalised_novel_impl:train:396 - 1:56, loss: 4.387
+2023-02-18 15:25:25.722 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-02-18 15:25:33.492 | INFO     | experiments.finalised_novel_impl:train:396 - 1:57, loss: 4.387
+2023-02-18 15:25:33.494 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-02-18 15:25:41.264 | INFO     | experiments.finalised_novel_impl:train:396 - 1:58, loss: 4.387
+2023-02-18 15:25:41.266 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-02-18 15:25:49.031 | INFO     | experiments.finalised_novel_impl:train:396 - 1:59, loss: 4.387
+2023-02-18 15:25:49.032 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-02-18 15:25:56.985 | INFO     | experiments.finalised_novel_impl:train:396 - 1:60, loss: 4.387
+2023-02-18 15:25:56.987 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 60
+2023-02-18 15:25:57.012 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:26:00.957 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:27:18.761 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_60_accuracy_results.json
+2023-02-18 15:27:18.762 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2858 / 10000 samples (28.58% correct)
+2023-02-18 15:27:18.889 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-02-18 15:27:26.661 | INFO     | experiments.finalised_novel_impl:train:396 - 1:61, loss: 4.387
+2023-02-18 15:27:26.663 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-02-18 15:27:34.438 | INFO     | experiments.finalised_novel_impl:train:396 - 1:62, loss: 4.387
+2023-02-18 15:27:34.440 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-02-18 15:27:42.205 | INFO     | experiments.finalised_novel_impl:train:396 - 1:63, loss: 4.387
+2023-02-18 15:27:42.206 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-02-18 15:27:49.969 | INFO     | experiments.finalised_novel_impl:train:396 - 1:64, loss: 4.387
+2023-02-18 15:27:49.971 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-02-18 15:27:57.744 | INFO     | experiments.finalised_novel_impl:train:396 - 1:65, loss: 4.387
+2023-02-18 15:27:57.745 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-02-18 15:28:05.516 | INFO     | experiments.finalised_novel_impl:train:396 - 1:66, loss: 4.387
+2023-02-18 15:28:05.518 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-02-18 15:28:13.277 | INFO     | experiments.finalised_novel_impl:train:396 - 1:67, loss: 4.387
+2023-02-18 15:28:13.279 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-02-18 15:28:21.042 | INFO     | experiments.finalised_novel_impl:train:396 - 1:68, loss: 4.387
+2023-02-18 15:28:21.043 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-02-18 15:28:28.800 | INFO     | experiments.finalised_novel_impl:train:396 - 1:69, loss: 4.387
+2023-02-18 15:28:28.801 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-02-18 15:28:36.560 | INFO     | experiments.finalised_novel_impl:train:396 - 1:70, loss: 4.387
+2023-02-18 15:28:36.562 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 70
+2023-02-18 15:28:36.588 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:28:40.504 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:29:58.547 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_70_accuracy_results.json
+2023-02-18 15:29:58.548 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2865 / 10000 samples (28.65% correct)
+2023-02-18 15:29:58.677 | INFO     | experiments.finalised_novel_impl:train:302 - Task 2 / 5
+2023-02-18 15:29:58.682 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['cat', 'frog']
+2023-02-18 15:29:58.683 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-02-18 15:29:58.684 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-02-18 15:29:58.685 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-02-18 15:40:58.584 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:41:02.493 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([7, 4])
+2023-02-18 15:41:02.503 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([7, 4])
+2023-02-18 15:41:02.504 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-02-18 15:41:19.018 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-02-18 15:41:35.457 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-02-18 15:41:35.460 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-02-18 15:41:35.466 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-02-18 15:41:35.475 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-02-18 15:41:35.477 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-02-18 15:41:43.273 | INFO     | experiments.finalised_novel_impl:train:396 - 2:1, loss: 4.386
+2023-02-18 15:41:43.274 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-02-18 15:41:51.066 | INFO     | experiments.finalised_novel_impl:train:396 - 2:2, loss: 4.386
+2023-02-18 15:41:51.067 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-02-18 15:41:58.859 | INFO     | experiments.finalised_novel_impl:train:396 - 2:3, loss: 4.386
+2023-02-18 15:41:58.860 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-02-18 15:42:06.657 | INFO     | experiments.finalised_novel_impl:train:396 - 2:4, loss: 4.386
+2023-02-18 15:42:06.658 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-02-18 15:42:14.457 | INFO     | experiments.finalised_novel_impl:train:396 - 2:5, loss: 4.386
+2023-02-18 15:42:14.458 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-02-18 15:42:22.247 | INFO     | experiments.finalised_novel_impl:train:396 - 2:6, loss: 4.385
+2023-02-18 15:42:22.249 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-02-18 15:42:30.044 | INFO     | experiments.finalised_novel_impl:train:396 - 2:7, loss: 4.385
+2023-02-18 15:42:30.046 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-02-18 15:42:37.847 | INFO     | experiments.finalised_novel_impl:train:396 - 2:8, loss: 4.385
+2023-02-18 15:42:37.849 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-02-18 15:42:45.641 | INFO     | experiments.finalised_novel_impl:train:396 - 2:9, loss: 4.384
+2023-02-18 15:42:45.642 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-02-18 15:42:53.436 | INFO     | experiments.finalised_novel_impl:train:396 - 2:10, loss: 4.384
+2023-02-18 15:42:53.438 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 80
+2023-02-18 15:42:53.466 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:42:57.420 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:44:16.036 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_80_accuracy_results.json
+2023-02-18 15:44:16.037 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4600 / 10000 samples (46.00% correct)
+2023-02-18 15:44:16.165 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-02-18 15:44:23.977 | INFO     | experiments.finalised_novel_impl:train:396 - 2:11, loss: 4.382
+2023-02-18 15:44:23.978 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-02-18 15:44:31.773 | INFO     | experiments.finalised_novel_impl:train:396 - 2:12, loss: 4.382
+2023-02-18 15:44:31.775 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-02-18 15:44:39.560 | INFO     | experiments.finalised_novel_impl:train:396 - 2:13, loss: 4.381
+2023-02-18 15:44:39.562 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-02-18 15:44:47.354 | INFO     | experiments.finalised_novel_impl:train:396 - 2:14, loss: 4.381
+2023-02-18 15:44:47.356 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-02-18 15:44:55.137 | INFO     | experiments.finalised_novel_impl:train:396 - 2:15, loss: 4.380
+2023-02-18 15:44:55.139 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-02-18 15:45:02.924 | INFO     | experiments.finalised_novel_impl:train:396 - 2:16, loss: 4.381
+2023-02-18 15:45:02.926 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-02-18 15:45:10.710 | INFO     | experiments.finalised_novel_impl:train:396 - 2:17, loss: 4.383
+2023-02-18 15:45:10.711 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-02-18 15:45:18.503 | INFO     | experiments.finalised_novel_impl:train:396 - 2:18, loss: 4.380
+2023-02-18 15:45:18.505 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-02-18 15:45:26.296 | INFO     | experiments.finalised_novel_impl:train:396 - 2:19, loss: 4.380
+2023-02-18 15:45:26.298 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-02-18 15:45:34.087 | INFO     | experiments.finalised_novel_impl:train:396 - 2:20, loss: 4.377
+2023-02-18 15:45:34.089 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 90
+2023-02-18 15:45:34.117 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:45:38.029 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:46:56.275 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_90_accuracy_results.json
+2023-02-18 15:46:56.276 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4584 / 10000 samples (45.84% correct)
+2023-02-18 15:46:56.403 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-02-18 15:47:04.211 | INFO     | experiments.finalised_novel_impl:train:396 - 2:21, loss: 4.377
+2023-02-18 15:47:04.212 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-02-18 15:47:11.997 | INFO     | experiments.finalised_novel_impl:train:396 - 2:22, loss: 4.379
+2023-02-18 15:47:11.998 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-02-18 15:47:19.908 | INFO     | experiments.finalised_novel_impl:train:396 - 2:23, loss: 4.377
+2023-02-18 15:47:19.910 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-02-18 15:47:27.700 | INFO     | experiments.finalised_novel_impl:train:396 - 2:24, loss: 4.374
+2023-02-18 15:47:27.701 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-02-18 15:47:35.499 | INFO     | experiments.finalised_novel_impl:train:396 - 2:25, loss: 4.376
+2023-02-18 15:47:35.501 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-02-18 15:47:43.284 | INFO     | experiments.finalised_novel_impl:train:396 - 2:26, loss: 4.372
+2023-02-18 15:47:43.286 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-02-18 15:47:51.071 | INFO     | experiments.finalised_novel_impl:train:396 - 2:27, loss: 4.377
+2023-02-18 15:47:51.072 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-02-18 15:47:58.855 | INFO     | experiments.finalised_novel_impl:train:396 - 2:28, loss: 4.372
+2023-02-18 15:47:58.857 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-02-18 15:48:06.637 | INFO     | experiments.finalised_novel_impl:train:396 - 2:29, loss: 4.371
+2023-02-18 15:48:06.638 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-02-18 15:48:14.427 | INFO     | experiments.finalised_novel_impl:train:396 - 2:30, loss: 4.366
+2023-02-18 15:48:14.429 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 100
+2023-02-18 15:48:14.456 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:48:18.370 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:49:36.558 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_100_accuracy_results.json
+2023-02-18 15:49:36.559 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4577 / 10000 samples (45.77% correct)
+2023-02-18 15:49:36.687 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-02-18 15:49:44.481 | INFO     | experiments.finalised_novel_impl:train:396 - 2:31, loss: 4.371
+2023-02-18 15:49:44.482 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-02-18 15:49:52.267 | INFO     | experiments.finalised_novel_impl:train:396 - 2:32, loss: 4.374
+2023-02-18 15:49:52.269 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-02-18 15:50:00.057 | INFO     | experiments.finalised_novel_impl:train:396 - 2:33, loss: 4.377
+2023-02-18 15:50:00.059 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-02-18 15:50:07.851 | INFO     | experiments.finalised_novel_impl:train:396 - 2:34, loss: 4.371
+2023-02-18 15:50:07.853 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-02-18 15:50:15.641 | INFO     | experiments.finalised_novel_impl:train:396 - 2:35, loss: 4.373
+2023-02-18 15:50:15.643 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-02-18 15:50:23.586 | INFO     | experiments.finalised_novel_impl:train:396 - 2:36, loss: 4.370
+2023-02-18 15:50:23.588 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-02-18 15:50:31.389 | INFO     | experiments.finalised_novel_impl:train:396 - 2:37, loss: 4.371
+2023-02-18 15:50:31.391 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-02-18 15:50:39.183 | INFO     | experiments.finalised_novel_impl:train:396 - 2:38, loss: 4.367
+2023-02-18 15:50:39.185 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-02-18 15:50:46.975 | INFO     | experiments.finalised_novel_impl:train:396 - 2:39, loss: 4.369
+2023-02-18 15:50:46.976 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-02-18 15:50:54.761 | INFO     | experiments.finalised_novel_impl:train:396 - 2:40, loss: 4.365
+2023-02-18 15:50:54.762 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 110
+2023-02-18 15:50:54.790 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:50:58.700 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:52:16.931 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_110_accuracy_results.json
+2023-02-18 15:52:16.932 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4594 / 10000 samples (45.94% correct)
+2023-02-18 15:52:17.061 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-02-18 15:52:24.886 | INFO     | experiments.finalised_novel_impl:train:396 - 2:41, loss: 4.363
+2023-02-18 15:52:24.888 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-02-18 15:52:32.669 | INFO     | experiments.finalised_novel_impl:train:396 - 2:42, loss: 4.364
+2023-02-18 15:52:32.670 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-02-18 15:52:40.468 | INFO     | experiments.finalised_novel_impl:train:396 - 2:43, loss: 4.363
+2023-02-18 15:52:40.469 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-02-18 15:52:48.246 | INFO     | experiments.finalised_novel_impl:train:396 - 2:44, loss: 4.360
+2023-02-18 15:52:48.248 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-02-18 15:52:56.031 | INFO     | experiments.finalised_novel_impl:train:396 - 2:45, loss: 4.362
+2023-02-18 15:52:56.034 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-02-18 15:53:03.816 | INFO     | experiments.finalised_novel_impl:train:396 - 2:46, loss: 4.362
+2023-02-18 15:53:03.817 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-02-18 15:53:11.607 | INFO     | experiments.finalised_novel_impl:train:396 - 2:47, loss: 4.359
+2023-02-18 15:53:11.608 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-02-18 15:53:19.397 | INFO     | experiments.finalised_novel_impl:train:396 - 2:48, loss: 4.355
+2023-02-18 15:53:19.399 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-02-18 15:53:27.200 | INFO     | experiments.finalised_novel_impl:train:396 - 2:49, loss: 4.355
+2023-02-18 15:53:27.202 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-02-18 15:53:34.995 | INFO     | experiments.finalised_novel_impl:train:396 - 2:50, loss: 4.357
+2023-02-18 15:53:34.998 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 120
+2023-02-18 15:53:35.025 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:53:38.934 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:54:57.154 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_120_accuracy_results.json
+2023-02-18 15:54:57.154 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4573 / 10000 samples (45.73% correct)
+2023-02-18 15:54:57.284 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-02-18 15:55:05.092 | INFO     | experiments.finalised_novel_impl:train:396 - 2:51, loss: 4.355
+2023-02-18 15:55:05.094 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-02-18 15:55:12.879 | INFO     | experiments.finalised_novel_impl:train:396 - 2:52, loss: 4.359
+2023-02-18 15:55:12.880 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-02-18 15:55:20.663 | INFO     | experiments.finalised_novel_impl:train:396 - 2:53, loss: 4.357
+2023-02-18 15:55:20.665 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-02-18 15:55:28.466 | INFO     | experiments.finalised_novel_impl:train:396 - 2:54, loss: 4.346
+2023-02-18 15:55:28.468 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-02-18 15:55:36.253 | INFO     | experiments.finalised_novel_impl:train:396 - 2:55, loss: 4.349
+2023-02-18 15:55:36.255 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-02-18 15:55:44.051 | INFO     | experiments.finalised_novel_impl:train:396 - 2:56, loss: 4.352
+2023-02-18 15:55:44.052 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-02-18 15:55:51.843 | INFO     | experiments.finalised_novel_impl:train:396 - 2:57, loss: 4.350
+2023-02-18 15:55:51.844 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-02-18 15:55:59.634 | INFO     | experiments.finalised_novel_impl:train:396 - 2:58, loss: 4.353
+2023-02-18 15:55:59.636 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-02-18 15:56:07.433 | INFO     | experiments.finalised_novel_impl:train:396 - 2:59, loss: 4.350
+2023-02-18 15:56:07.435 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-02-18 15:56:15.221 | INFO     | experiments.finalised_novel_impl:train:396 - 2:60, loss: 4.345
+2023-02-18 15:56:15.222 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 130
+2023-02-18 15:56:15.249 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:56:19.160 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 15:57:37.542 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_130_accuracy_results.json
+2023-02-18 15:57:37.543 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4585 / 10000 samples (45.85% correct)
+2023-02-18 15:57:37.672 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-02-18 15:57:45.477 | INFO     | experiments.finalised_novel_impl:train:396 - 2:61, loss: 4.343
+2023-02-18 15:57:45.479 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-02-18 15:57:53.261 | INFO     | experiments.finalised_novel_impl:train:396 - 2:62, loss: 4.338
+2023-02-18 15:57:53.262 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-02-18 15:58:01.049 | INFO     | experiments.finalised_novel_impl:train:396 - 2:63, loss: 4.348
+2023-02-18 15:58:01.051 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-02-18 15:58:08.841 | INFO     | experiments.finalised_novel_impl:train:396 - 2:64, loss: 4.359
+2023-02-18 15:58:08.842 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-02-18 15:58:16.623 | INFO     | experiments.finalised_novel_impl:train:396 - 2:65, loss: 4.359
+2023-02-18 15:58:16.624 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-02-18 15:58:24.416 | INFO     | experiments.finalised_novel_impl:train:396 - 2:66, loss: 4.360
+2023-02-18 15:58:24.418 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-02-18 15:58:32.209 | INFO     | experiments.finalised_novel_impl:train:396 - 2:67, loss: 4.361
+2023-02-18 15:58:32.211 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-02-18 15:58:40.000 | INFO     | experiments.finalised_novel_impl:train:396 - 2:68, loss: 4.356
+2023-02-18 15:58:40.001 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-02-18 15:58:47.794 | INFO     | experiments.finalised_novel_impl:train:396 - 2:69, loss: 4.357
+2023-02-18 15:58:47.795 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-02-18 15:58:55.585 | INFO     | experiments.finalised_novel_impl:train:396 - 2:70, loss: 4.354
+2023-02-18 15:58:55.587 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 140
+2023-02-18 15:58:55.615 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 15:58:59.525 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 16:00:18.071 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_140_accuracy_results.json
+2023-02-18 16:00:18.072 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4586 / 10000 samples (45.86% correct)
+2023-02-18 16:00:18.202 | INFO     | experiments.finalised_novel_impl:train:302 - Task 3 / 5
+2023-02-18 16:00:18.206 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['car', 'truck']
+2023-02-18 16:00:18.207 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-02-18 16:00:18.208 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-02-18 16:00:18.208 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-02-18 16:11:18.202 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:11:22.082 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([6, 3, 7, 4])
+2023-02-18 16:11:22.087 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([6, 3, 7, 4])
+2023-02-18 16:11:22.088 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 6
+2023-02-18 16:11:30.438 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-02-18 16:11:38.671 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-02-18 16:11:46.881 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-02-18 16:11:55.086 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-02-18 16:11:55.089 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-02-18 16:11:55.094 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-02-18 16:11:55.105 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-02-18 16:11:55.107 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-02-18 16:12:02.907 | INFO     | experiments.finalised_novel_impl:train:396 - 3:1, loss: 4.380
+2023-02-18 16:12:02.909 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-02-18 16:12:10.660 | INFO     | experiments.finalised_novel_impl:train:396 - 3:2, loss: 4.375
+2023-02-18 16:12:10.662 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-02-18 16:12:18.422 | INFO     | experiments.finalised_novel_impl:train:396 - 3:3, loss: 4.371
+2023-02-18 16:12:18.423 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-02-18 16:12:26.181 | INFO     | experiments.finalised_novel_impl:train:396 - 3:4, loss: 4.369
+2023-02-18 16:12:26.183 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-02-18 16:12:33.933 | INFO     | experiments.finalised_novel_impl:train:396 - 3:5, loss: 4.361
+2023-02-18 16:12:33.935 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-02-18 16:12:41.696 | INFO     | experiments.finalised_novel_impl:train:396 - 3:6, loss: 4.356
+2023-02-18 16:12:41.697 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-02-18 16:12:49.443 | INFO     | experiments.finalised_novel_impl:train:396 - 3:7, loss: 4.352
+2023-02-18 16:12:49.444 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-02-18 16:12:57.217 | INFO     | experiments.finalised_novel_impl:train:396 - 3:8, loss: 4.357
+2023-02-18 16:12:57.219 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-02-18 16:13:04.983 | INFO     | experiments.finalised_novel_impl:train:396 - 3:9, loss: 4.350
+2023-02-18 16:13:04.984 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-02-18 16:13:12.735 | INFO     | experiments.finalised_novel_impl:train:396 - 3:10, loss: 4.344
+2023-02-18 16:13:12.737 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 150
+2023-02-18 16:13:12.764 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:13:16.675 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:14:34.872 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_150_accuracy_results.json
+2023-02-18 16:14:34.873 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6262 / 10000 samples (62.62% correct)
+2023-02-18 16:14:35.000 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-02-18 16:14:42.800 | INFO     | experiments.finalised_novel_impl:train:396 - 3:11, loss: 4.344
+2023-02-18 16:14:42.802 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-02-18 16:14:50.556 | INFO     | experiments.finalised_novel_impl:train:396 - 3:12, loss: 4.343
+2023-02-18 16:14:50.557 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-02-18 16:14:58.315 | INFO     | experiments.finalised_novel_impl:train:396 - 3:13, loss: 4.329
+2023-02-18 16:14:58.316 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-02-18 16:15:06.076 | INFO     | experiments.finalised_novel_impl:train:396 - 3:14, loss: 4.326
+2023-02-18 16:15:06.078 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-02-18 16:15:13.841 | INFO     | experiments.finalised_novel_impl:train:396 - 3:15, loss: 4.328
+2023-02-18 16:15:13.843 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-02-18 16:15:21.596 | INFO     | experiments.finalised_novel_impl:train:396 - 3:16, loss: 4.335
+2023-02-18 16:15:21.597 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-02-18 16:15:29.351 | INFO     | experiments.finalised_novel_impl:train:396 - 3:17, loss: 4.336
+2023-02-18 16:15:29.353 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-02-18 16:15:37.105 | INFO     | experiments.finalised_novel_impl:train:396 - 3:18, loss: 4.341
+2023-02-18 16:15:37.107 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-02-18 16:15:44.868 | INFO     | experiments.finalised_novel_impl:train:396 - 3:19, loss: 4.331
+2023-02-18 16:15:44.870 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-02-18 16:15:52.625 | INFO     | experiments.finalised_novel_impl:train:396 - 3:20, loss: 4.324
+2023-02-18 16:15:52.627 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 160
+2023-02-18 16:15:52.654 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:15:56.545 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:17:14.729 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_160_accuracy_results.json
+2023-02-18 16:17:14.730 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6264 / 10000 samples (62.64% correct)
+2023-02-18 16:17:14.860 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-02-18 16:17:22.620 | INFO     | experiments.finalised_novel_impl:train:396 - 3:21, loss: 4.327
+2023-02-18 16:17:22.622 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-02-18 16:17:30.386 | INFO     | experiments.finalised_novel_impl:train:396 - 3:22, loss: 4.327
+2023-02-18 16:17:30.388 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-02-18 16:17:38.140 | INFO     | experiments.finalised_novel_impl:train:396 - 3:23, loss: 4.313
+2023-02-18 16:17:38.142 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-02-18 16:17:45.943 | INFO     | experiments.finalised_novel_impl:train:396 - 3:24, loss: 4.307
+2023-02-18 16:17:45.944 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-02-18 16:17:53.701 | INFO     | experiments.finalised_novel_impl:train:396 - 3:25, loss: 4.304
+2023-02-18 16:17:53.702 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-02-18 16:18:01.453 | INFO     | experiments.finalised_novel_impl:train:396 - 3:26, loss: 4.312
+2023-02-18 16:18:01.455 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-02-18 16:18:09.211 | INFO     | experiments.finalised_novel_impl:train:396 - 3:27, loss: 4.307
+2023-02-18 16:18:09.213 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-02-18 16:18:16.969 | INFO     | experiments.finalised_novel_impl:train:396 - 3:28, loss: 4.303
+2023-02-18 16:18:16.971 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-02-18 16:18:24.728 | INFO     | experiments.finalised_novel_impl:train:396 - 3:29, loss: 4.312
+2023-02-18 16:18:24.730 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-02-18 16:18:32.487 | INFO     | experiments.finalised_novel_impl:train:396 - 3:30, loss: 4.303
+2023-02-18 16:18:32.488 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 170
+2023-02-18 16:18:32.516 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:18:36.402 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:19:54.582 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_170_accuracy_results.json
+2023-02-18 16:19:54.583 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6247 / 10000 samples (62.47% correct)
+2023-02-18 16:19:54.710 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-02-18 16:20:02.472 | INFO     | experiments.finalised_novel_impl:train:396 - 3:31, loss: 4.294
+2023-02-18 16:20:02.474 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-02-18 16:20:10.237 | INFO     | experiments.finalised_novel_impl:train:396 - 3:32, loss: 4.316
+2023-02-18 16:20:10.238 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-02-18 16:20:17.991 | INFO     | experiments.finalised_novel_impl:train:396 - 3:33, loss: 4.310
+2023-02-18 16:20:17.993 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-02-18 16:20:25.747 | INFO     | experiments.finalised_novel_impl:train:396 - 3:34, loss: 4.313
+2023-02-18 16:20:25.749 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-02-18 16:20:33.506 | INFO     | experiments.finalised_novel_impl:train:396 - 3:35, loss: 4.323
+2023-02-18 16:20:33.507 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-02-18 16:20:41.273 | INFO     | experiments.finalised_novel_impl:train:396 - 3:36, loss: 4.305
+2023-02-18 16:20:41.274 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-02-18 16:20:49.042 | INFO     | experiments.finalised_novel_impl:train:396 - 3:37, loss: 4.317
+2023-02-18 16:20:49.043 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-02-18 16:20:56.806 | INFO     | experiments.finalised_novel_impl:train:396 - 3:38, loss: 4.299
+2023-02-18 16:20:56.808 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-02-18 16:21:04.558 | INFO     | experiments.finalised_novel_impl:train:396 - 3:39, loss: 4.300
+2023-02-18 16:21:04.561 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-02-18 16:21:12.320 | INFO     | experiments.finalised_novel_impl:train:396 - 3:40, loss: 4.293
+2023-02-18 16:21:12.321 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 180
+2023-02-18 16:21:12.349 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:21:16.237 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:22:34.418 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_180_accuracy_results.json
+2023-02-18 16:22:34.419 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6250 / 10000 samples (62.50% correct)
+2023-02-18 16:22:34.550 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-02-18 16:22:42.318 | INFO     | experiments.finalised_novel_impl:train:396 - 3:41, loss: 4.304
+2023-02-18 16:22:42.319 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-02-18 16:22:50.072 | INFO     | experiments.finalised_novel_impl:train:396 - 3:42, loss: 4.292
+2023-02-18 16:22:50.073 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-02-18 16:22:57.829 | INFO     | experiments.finalised_novel_impl:train:396 - 3:43, loss: 4.303
+2023-02-18 16:22:57.831 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-02-18 16:23:05.579 | INFO     | experiments.finalised_novel_impl:train:396 - 3:44, loss: 4.299
+2023-02-18 16:23:05.581 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-02-18 16:23:13.350 | INFO     | experiments.finalised_novel_impl:train:396 - 3:45, loss: 4.296
+2023-02-18 16:23:13.351 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-02-18 16:23:21.105 | INFO     | experiments.finalised_novel_impl:train:396 - 3:46, loss: 4.291
+2023-02-18 16:23:21.107 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-02-18 16:23:28.866 | INFO     | experiments.finalised_novel_impl:train:396 - 3:47, loss: 4.286
+2023-02-18 16:23:28.867 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-02-18 16:23:36.624 | INFO     | experiments.finalised_novel_impl:train:396 - 3:48, loss: 4.285
+2023-02-18 16:23:36.626 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-02-18 16:23:44.379 | INFO     | experiments.finalised_novel_impl:train:396 - 3:49, loss: 4.280
+2023-02-18 16:23:44.380 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-02-18 16:23:52.263 | INFO     | experiments.finalised_novel_impl:train:396 - 3:50, loss: 4.287
+2023-02-18 16:23:52.264 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 190
+2023-02-18 16:23:52.292 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:23:56.180 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:25:14.374 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_190_accuracy_results.json
+2023-02-18 16:25:14.375 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6257 / 10000 samples (62.57% correct)
+2023-02-18 16:25:14.557 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-02-18 16:25:22.334 | INFO     | experiments.finalised_novel_impl:train:396 - 3:51, loss: 4.287
+2023-02-18 16:25:22.335 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-02-18 16:25:30.097 | INFO     | experiments.finalised_novel_impl:train:396 - 3:52, loss: 4.285
+2023-02-18 16:25:30.099 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-02-18 16:25:37.845 | INFO     | experiments.finalised_novel_impl:train:396 - 3:53, loss: 4.285
+2023-02-18 16:25:37.847 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-02-18 16:25:45.603 | INFO     | experiments.finalised_novel_impl:train:396 - 3:54, loss: 4.275
+2023-02-18 16:25:45.605 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-02-18 16:25:53.363 | INFO     | experiments.finalised_novel_impl:train:396 - 3:55, loss: 4.277
+2023-02-18 16:25:53.365 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-02-18 16:26:01.120 | INFO     | experiments.finalised_novel_impl:train:396 - 3:56, loss: 4.282
+2023-02-18 16:26:01.122 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-02-18 16:26:08.890 | INFO     | experiments.finalised_novel_impl:train:396 - 3:57, loss: 4.285
+2023-02-18 16:26:08.891 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-02-18 16:26:16.655 | INFO     | experiments.finalised_novel_impl:train:396 - 3:58, loss: 4.286
+2023-02-18 16:26:16.657 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-02-18 16:26:24.407 | INFO     | experiments.finalised_novel_impl:train:396 - 3:59, loss: 4.277
+2023-02-18 16:26:24.409 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-02-18 16:26:32.163 | INFO     | experiments.finalised_novel_impl:train:396 - 3:60, loss: 4.279
+2023-02-18 16:26:32.166 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 200
+2023-02-18 16:26:32.192 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:26:36.080 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:27:54.655 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_200_accuracy_results.json
+2023-02-18 16:27:54.656 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6240 / 10000 samples (62.40% correct)
+2023-02-18 16:27:54.785 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-02-18 16:28:02.588 | INFO     | experiments.finalised_novel_impl:train:396 - 3:61, loss: 4.280
+2023-02-18 16:28:02.590 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-02-18 16:28:10.355 | INFO     | experiments.finalised_novel_impl:train:396 - 3:62, loss: 4.274
+2023-02-18 16:28:10.356 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-02-18 16:28:18.110 | INFO     | experiments.finalised_novel_impl:train:396 - 3:63, loss: 4.282
+2023-02-18 16:28:18.112 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-02-18 16:28:25.871 | INFO     | experiments.finalised_novel_impl:train:396 - 3:64, loss: 4.280
+2023-02-18 16:28:25.872 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-02-18 16:28:33.628 | INFO     | experiments.finalised_novel_impl:train:396 - 3:65, loss: 4.285
+2023-02-18 16:28:33.629 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-02-18 16:28:41.391 | INFO     | experiments.finalised_novel_impl:train:396 - 3:66, loss: 4.289
+2023-02-18 16:28:41.393 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-02-18 16:28:49.144 | INFO     | experiments.finalised_novel_impl:train:396 - 3:67, loss: 4.290
+2023-02-18 16:28:49.146 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-02-18 16:28:56.898 | INFO     | experiments.finalised_novel_impl:train:396 - 3:68, loss: 4.286
+2023-02-18 16:28:56.899 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-02-18 16:29:04.654 | INFO     | experiments.finalised_novel_impl:train:396 - 3:69, loss: 4.292
+2023-02-18 16:29:04.655 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-02-18 16:29:12.415 | INFO     | experiments.finalised_novel_impl:train:396 - 3:70, loss: 4.295
+2023-02-18 16:29:12.417 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 210
+2023-02-18 16:29:12.445 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:29:16.333 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:30:34.827 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_210_accuracy_results.json
+2023-02-18 16:30:34.828 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6253 / 10000 samples (62.53% correct)
+2023-02-18 16:30:34.957 | INFO     | experiments.finalised_novel_impl:train:302 - Task 4 / 5
+2023-02-18 16:30:34.962 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['ship', 'bird']
+2023-02-18 16:30:34.963 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-02-18 16:30:34.964 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-02-18 16:30:34.964 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-02-18 16:41:34.310 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:41:38.180 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:41:38.184 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([9, 1, 6, 3, 7, 4])
+2023-02-18 16:41:38.185 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 9
+2023-02-18 16:41:43.699 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 1
+2023-02-18 16:41:49.199 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 6
+2023-02-18 16:41:54.652 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-02-18 16:42:00.150 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-02-18 16:42:05.643 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-02-18 16:42:11.113 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-02-18 16:42:11.115 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-02-18 16:42:11.121 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-02-18 16:42:11.127 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-02-18 16:42:11.128 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-02-18 16:42:18.859 | INFO     | experiments.finalised_novel_impl:train:396 - 4:1, loss: 4.345
+2023-02-18 16:42:18.861 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-02-18 16:42:26.585 | INFO     | experiments.finalised_novel_impl:train:396 - 4:2, loss: 4.345
+2023-02-18 16:42:26.587 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-02-18 16:42:34.316 | INFO     | experiments.finalised_novel_impl:train:396 - 4:3, loss: 4.309
+2023-02-18 16:42:34.319 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-02-18 16:42:42.050 | INFO     | experiments.finalised_novel_impl:train:396 - 4:4, loss: 4.324
+2023-02-18 16:42:42.051 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-02-18 16:42:49.778 | INFO     | experiments.finalised_novel_impl:train:396 - 4:5, loss: 4.307
+2023-02-18 16:42:49.779 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-02-18 16:42:57.503 | INFO     | experiments.finalised_novel_impl:train:396 - 4:6, loss: 4.296
+2023-02-18 16:42:57.504 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-02-18 16:43:05.249 | INFO     | experiments.finalised_novel_impl:train:396 - 4:7, loss: 4.278
+2023-02-18 16:43:05.250 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-02-18 16:43:12.973 | INFO     | experiments.finalised_novel_impl:train:396 - 4:8, loss: 4.304
+2023-02-18 16:43:12.975 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-02-18 16:43:20.702 | INFO     | experiments.finalised_novel_impl:train:396 - 4:9, loss: 4.300
+2023-02-18 16:43:20.703 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-02-18 16:43:28.434 | INFO     | experiments.finalised_novel_impl:train:396 - 4:10, loss: 4.293
+2023-02-18 16:43:28.435 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 220
+2023-02-18 16:43:28.463 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:43:32.411 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:44:50.594 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_220_accuracy_results.json
+2023-02-18 16:44:50.595 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7724 / 10000 samples (77.24% correct)
+2023-02-18 16:44:50.723 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-02-18 16:44:58.469 | INFO     | experiments.finalised_novel_impl:train:396 - 4:11, loss: 4.269
+2023-02-18 16:44:58.471 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-02-18 16:45:06.216 | INFO     | experiments.finalised_novel_impl:train:396 - 4:12, loss: 4.281
+2023-02-18 16:45:06.217 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-02-18 16:45:14.003 | INFO     | experiments.finalised_novel_impl:train:396 - 4:13, loss: 4.274
+2023-02-18 16:45:14.005 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-02-18 16:45:21.727 | INFO     | experiments.finalised_novel_impl:train:396 - 4:14, loss: 4.265
+2023-02-18 16:45:21.729 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-02-18 16:45:29.453 | INFO     | experiments.finalised_novel_impl:train:396 - 4:15, loss: 4.275
+2023-02-18 16:45:29.454 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-02-18 16:45:37.184 | INFO     | experiments.finalised_novel_impl:train:396 - 4:16, loss: 4.306
+2023-02-18 16:45:37.186 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-02-18 16:45:44.909 | INFO     | experiments.finalised_novel_impl:train:396 - 4:17, loss: 4.291
+2023-02-18 16:45:44.911 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-02-18 16:45:52.645 | INFO     | experiments.finalised_novel_impl:train:396 - 4:18, loss: 4.284
+2023-02-18 16:45:52.647 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-02-18 16:46:00.377 | INFO     | experiments.finalised_novel_impl:train:396 - 4:19, loss: 4.271
+2023-02-18 16:46:00.378 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-02-18 16:46:08.117 | INFO     | experiments.finalised_novel_impl:train:396 - 4:20, loss: 4.283
+2023-02-18 16:46:08.118 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 230
+2023-02-18 16:46:08.146 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:46:12.062 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:47:30.233 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_230_accuracy_results.json
+2023-02-18 16:47:30.234 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7725 / 10000 samples (77.25% correct)
+2023-02-18 16:47:30.367 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-02-18 16:47:38.099 | INFO     | experiments.finalised_novel_impl:train:396 - 4:21, loss: 4.276
+2023-02-18 16:47:38.101 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-02-18 16:47:45.828 | INFO     | experiments.finalised_novel_impl:train:396 - 4:22, loss: 4.264
+2023-02-18 16:47:45.830 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-02-18 16:47:53.560 | INFO     | experiments.finalised_novel_impl:train:396 - 4:23, loss: 4.261
+2023-02-18 16:47:53.562 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-02-18 16:48:01.287 | INFO     | experiments.finalised_novel_impl:train:396 - 4:24, loss: 4.255
+2023-02-18 16:48:01.289 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-02-18 16:48:09.170 | INFO     | experiments.finalised_novel_impl:train:396 - 4:25, loss: 4.249
+2023-02-18 16:48:09.171 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-02-18 16:48:16.900 | INFO     | experiments.finalised_novel_impl:train:396 - 4:26, loss: 4.251
+2023-02-18 16:48:16.902 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-02-18 16:48:24.618 | INFO     | experiments.finalised_novel_impl:train:396 - 4:27, loss: 4.248
+2023-02-18 16:48:24.620 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-02-18 16:48:32.342 | INFO     | experiments.finalised_novel_impl:train:396 - 4:28, loss: 4.257
+2023-02-18 16:48:32.344 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-02-18 16:48:40.066 | INFO     | experiments.finalised_novel_impl:train:396 - 4:29, loss: 4.250
+2023-02-18 16:48:40.067 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-02-18 16:48:47.794 | INFO     | experiments.finalised_novel_impl:train:396 - 4:30, loss: 4.241
+2023-02-18 16:48:47.797 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 240
+2023-02-18 16:48:47.824 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:48:51.736 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:50:09.897 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_240_accuracy_results.json
+2023-02-18 16:50:09.898 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7723 / 10000 samples (77.23% correct)
+2023-02-18 16:50:10.028 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-02-18 16:50:17.760 | INFO     | experiments.finalised_novel_impl:train:396 - 4:31, loss: 4.233
+2023-02-18 16:50:17.761 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-02-18 16:50:25.486 | INFO     | experiments.finalised_novel_impl:train:396 - 4:32, loss: 4.269
+2023-02-18 16:50:25.488 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-02-18 16:50:33.221 | INFO     | experiments.finalised_novel_impl:train:396 - 4:33, loss: 4.268
+2023-02-18 16:50:33.223 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-02-18 16:50:40.943 | INFO     | experiments.finalised_novel_impl:train:396 - 4:34, loss: 4.270
+2023-02-18 16:50:40.945 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-02-18 16:50:48.672 | INFO     | experiments.finalised_novel_impl:train:396 - 4:35, loss: 4.235
+2023-02-18 16:50:48.674 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-02-18 16:50:56.407 | INFO     | experiments.finalised_novel_impl:train:396 - 4:36, loss: 4.249
+2023-02-18 16:50:56.409 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-02-18 16:51:04.145 | INFO     | experiments.finalised_novel_impl:train:396 - 4:37, loss: 4.260
+2023-02-18 16:51:04.146 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-02-18 16:51:11.935 | INFO     | experiments.finalised_novel_impl:train:396 - 4:38, loss: 4.256
+2023-02-18 16:51:11.936 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-02-18 16:51:19.774 | INFO     | experiments.finalised_novel_impl:train:396 - 4:39, loss: 4.277
+2023-02-18 16:51:19.775 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-02-18 16:51:27.498 | INFO     | experiments.finalised_novel_impl:train:396 - 4:40, loss: 4.237
+2023-02-18 16:51:27.499 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 250
+2023-02-18 16:51:27.526 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:51:31.445 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:52:49.604 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_250_accuracy_results.json
+2023-02-18 16:52:49.605 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7781 / 10000 samples (77.81% correct)
+2023-02-18 16:52:49.732 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-02-18 16:52:57.495 | INFO     | experiments.finalised_novel_impl:train:396 - 4:41, loss: 4.258
+2023-02-18 16:52:57.497 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-02-18 16:53:05.227 | INFO     | experiments.finalised_novel_impl:train:396 - 4:42, loss: 4.248
+2023-02-18 16:53:05.228 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-02-18 16:53:12.947 | INFO     | experiments.finalised_novel_impl:train:396 - 4:43, loss: 4.239
+2023-02-18 16:53:12.947 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-02-18 16:53:20.672 | INFO     | experiments.finalised_novel_impl:train:396 - 4:44, loss: 4.243
+2023-02-18 16:53:20.674 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-02-18 16:53:28.394 | INFO     | experiments.finalised_novel_impl:train:396 - 4:45, loss: 4.243
+2023-02-18 16:53:28.396 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-02-18 16:53:36.123 | INFO     | experiments.finalised_novel_impl:train:396 - 4:46, loss: 4.228
+2023-02-18 16:53:36.124 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-02-18 16:53:43.854 | INFO     | experiments.finalised_novel_impl:train:396 - 4:47, loss: 4.228
+2023-02-18 16:53:43.855 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-02-18 16:53:51.579 | INFO     | experiments.finalised_novel_impl:train:396 - 4:48, loss: 4.234
+2023-02-18 16:53:51.580 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-02-18 16:53:59.304 | INFO     | experiments.finalised_novel_impl:train:396 - 4:49, loss: 4.224
+2023-02-18 16:53:59.306 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-02-18 16:54:07.031 | INFO     | experiments.finalised_novel_impl:train:396 - 4:50, loss: 4.247
+2023-02-18 16:54:07.033 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 260
+2023-02-18 16:54:07.060 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:54:10.978 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:55:29.255 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_260_accuracy_results.json
+2023-02-18 16:55:29.256 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7767 / 10000 samples (77.67% correct)
+2023-02-18 16:55:29.388 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-02-18 16:55:37.135 | INFO     | experiments.finalised_novel_impl:train:396 - 4:51, loss: 4.226
+2023-02-18 16:55:37.136 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-02-18 16:55:44.867 | INFO     | experiments.finalised_novel_impl:train:396 - 4:52, loss: 4.225
+2023-02-18 16:55:44.869 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-02-18 16:55:52.599 | INFO     | experiments.finalised_novel_impl:train:396 - 4:53, loss: 4.216
+2023-02-18 16:55:52.601 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-02-18 16:56:00.328 | INFO     | experiments.finalised_novel_impl:train:396 - 4:54, loss: 4.225
+2023-02-18 16:56:00.330 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-02-18 16:56:08.066 | INFO     | experiments.finalised_novel_impl:train:396 - 4:55, loss: 4.229
+2023-02-18 16:56:08.068 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-02-18 16:56:15.796 | INFO     | experiments.finalised_novel_impl:train:396 - 4:56, loss: 4.217
+2023-02-18 16:56:15.797 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-02-18 16:56:23.517 | INFO     | experiments.finalised_novel_impl:train:396 - 4:57, loss: 4.237
+2023-02-18 16:56:23.518 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-02-18 16:56:31.243 | INFO     | experiments.finalised_novel_impl:train:396 - 4:58, loss: 4.222
+2023-02-18 16:56:31.244 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-02-18 16:56:38.975 | INFO     | experiments.finalised_novel_impl:train:396 - 4:59, loss: 4.206
+2023-02-18 16:56:38.977 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-02-18 16:56:46.706 | INFO     | experiments.finalised_novel_impl:train:396 - 4:60, loss: 4.212
+2023-02-18 16:56:46.707 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 270
+2023-02-18 16:56:46.734 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:56:50.652 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 16:58:08.971 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_270_accuracy_results.json
+2023-02-18 16:58:08.972 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7725 / 10000 samples (77.25% correct)
+2023-02-18 16:58:09.102 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-02-18 16:58:16.853 | INFO     | experiments.finalised_novel_impl:train:396 - 4:61, loss: 4.223
+2023-02-18 16:58:16.855 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-02-18 16:58:24.583 | INFO     | experiments.finalised_novel_impl:train:396 - 4:62, loss: 4.206
+2023-02-18 16:58:24.585 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-02-18 16:58:32.308 | INFO     | experiments.finalised_novel_impl:train:396 - 4:63, loss: 4.218
+2023-02-18 16:58:32.310 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-02-18 16:58:40.023 | INFO     | experiments.finalised_novel_impl:train:396 - 4:64, loss: 4.229
+2023-02-18 16:58:40.025 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-02-18 16:58:47.743 | INFO     | experiments.finalised_novel_impl:train:396 - 4:65, loss: 4.256
+2023-02-18 16:58:47.745 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-02-18 16:58:55.474 | INFO     | experiments.finalised_novel_impl:train:396 - 4:66, loss: 4.236
+2023-02-18 16:58:55.475 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-02-18 16:59:03.212 | INFO     | experiments.finalised_novel_impl:train:396 - 4:67, loss: 4.247
+2023-02-18 16:59:03.213 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-02-18 16:59:10.941 | INFO     | experiments.finalised_novel_impl:train:396 - 4:68, loss: 4.241
+2023-02-18 16:59:10.942 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-02-18 16:59:18.671 | INFO     | experiments.finalised_novel_impl:train:396 - 4:69, loss: 4.250
+2023-02-18 16:59:18.673 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-02-18 16:59:26.408 | INFO     | experiments.finalised_novel_impl:train:396 - 4:70, loss: 4.237
+2023-02-18 16:59:26.410 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 280
+2023-02-18 16:59:26.438 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 16:59:30.358 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:00:48.809 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_280_accuracy_results.json
+2023-02-18 17:00:48.810 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7745 / 10000 samples (77.45% correct)
+2023-02-18 17:00:48.941 | INFO     | experiments.finalised_novel_impl:train:302 - Task 5 / 5
+2023-02-18 17:00:48.945 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['dog', 'plane']
+2023-02-18 17:00:48.946 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-02-18 17:00:48.946 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-02-18 17:00:48.947 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-02-18 17:11:48.811 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:11:52.700 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:11:52.703 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:11:52.704 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 8
+2023-02-18 17:11:56.844 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 2
+2023-02-18 17:12:00.931 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 9
+2023-02-18 17:12:04.975 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 1
+2023-02-18 17:12:09.081 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 6
+2023-02-18 17:12:13.168 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-02-18 17:12:17.230 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-02-18 17:12:21.322 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-02-18 17:12:25.392 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-02-18 17:12:25.396 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-02-18 17:12:25.401 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-02-18 17:12:25.407 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-02-18 17:12:25.408 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-02-18 17:12:33.359 | INFO     | experiments.finalised_novel_impl:train:396 - 5:1, loss: 4.329
+2023-02-18 17:12:33.360 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-02-18 17:12:41.136 | INFO     | experiments.finalised_novel_impl:train:396 - 5:2, loss: 4.338
+2023-02-18 17:12:41.138 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-02-18 17:12:48.912 | INFO     | experiments.finalised_novel_impl:train:396 - 5:3, loss: 4.280
+2023-02-18 17:12:48.913 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-02-18 17:12:56.700 | INFO     | experiments.finalised_novel_impl:train:396 - 5:4, loss: 4.306
+2023-02-18 17:12:56.702 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-02-18 17:13:04.492 | INFO     | experiments.finalised_novel_impl:train:396 - 5:5, loss: 4.280
+2023-02-18 17:13:04.494 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-02-18 17:13:12.283 | INFO     | experiments.finalised_novel_impl:train:396 - 5:6, loss: 4.253
+2023-02-18 17:13:12.285 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-02-18 17:13:20.056 | INFO     | experiments.finalised_novel_impl:train:396 - 5:7, loss: 4.249
+2023-02-18 17:13:20.058 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-02-18 17:13:27.846 | INFO     | experiments.finalised_novel_impl:train:396 - 5:8, loss: 4.264
+2023-02-18 17:13:27.847 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-02-18 17:13:35.630 | INFO     | experiments.finalised_novel_impl:train:396 - 5:9, loss: 4.267
+2023-02-18 17:13:35.632 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-02-18 17:13:43.410 | INFO     | experiments.finalised_novel_impl:train:396 - 5:10, loss: 4.256
+2023-02-18 17:13:43.411 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 290
+2023-02-18 17:13:43.439 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:13:47.389 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:15:05.493 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_290_accuracy_results.json
+2023-02-18 17:15:05.493 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8948 / 10000 samples (89.48% correct)
+2023-02-18 17:15:05.620 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-02-18 17:15:13.414 | INFO     | experiments.finalised_novel_impl:train:396 - 5:11, loss: 4.238
+2023-02-18 17:15:13.415 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-02-18 17:15:21.195 | INFO     | experiments.finalised_novel_impl:train:396 - 5:12, loss: 4.234
+2023-02-18 17:15:21.197 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-02-18 17:15:28.970 | INFO     | experiments.finalised_novel_impl:train:396 - 5:13, loss: 4.231
+2023-02-18 17:15:28.971 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-02-18 17:15:36.768 | INFO     | experiments.finalised_novel_impl:train:396 - 5:14, loss: 4.238
+2023-02-18 17:15:36.770 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-02-18 17:15:44.545 | INFO     | experiments.finalised_novel_impl:train:396 - 5:15, loss: 4.217
+2023-02-18 17:15:44.547 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-02-18 17:15:52.340 | INFO     | experiments.finalised_novel_impl:train:396 - 5:16, loss: 4.250
+2023-02-18 17:15:52.342 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-02-18 17:16:00.127 | INFO     | experiments.finalised_novel_impl:train:396 - 5:17, loss: 4.248
+2023-02-18 17:16:00.129 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-02-18 17:16:07.915 | INFO     | experiments.finalised_novel_impl:train:396 - 5:18, loss: 4.234
+2023-02-18 17:16:07.916 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-02-18 17:16:15.687 | INFO     | experiments.finalised_novel_impl:train:396 - 5:19, loss: 4.235
+2023-02-18 17:16:15.689 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-02-18 17:16:23.480 | INFO     | experiments.finalised_novel_impl:train:396 - 5:20, loss: 4.228
+2023-02-18 17:16:23.481 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 300
+2023-02-18 17:16:23.509 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:16:27.428 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:17:45.521 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_300_accuracy_results.json
+2023-02-18 17:17:45.522 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8959 / 10000 samples (89.59% correct)
+2023-02-18 17:17:45.652 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-02-18 17:17:53.438 | INFO     | experiments.finalised_novel_impl:train:396 - 5:21, loss: 4.216
+2023-02-18 17:17:53.440 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-02-18 17:18:01.218 | INFO     | experiments.finalised_novel_impl:train:396 - 5:22, loss: 4.211
+2023-02-18 17:18:01.220 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-02-18 17:18:09.011 | INFO     | experiments.finalised_novel_impl:train:396 - 5:23, loss: 4.228
+2023-02-18 17:18:09.013 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-02-18 17:18:16.801 | INFO     | experiments.finalised_novel_impl:train:396 - 5:24, loss: 4.208
+2023-02-18 17:18:16.803 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-02-18 17:18:24.581 | INFO     | experiments.finalised_novel_impl:train:396 - 5:25, loss: 4.209
+2023-02-18 17:18:24.582 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-02-18 17:18:32.364 | INFO     | experiments.finalised_novel_impl:train:396 - 5:26, loss: 4.207
+2023-02-18 17:18:32.365 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-02-18 17:18:40.213 | INFO     | experiments.finalised_novel_impl:train:396 - 5:27, loss: 4.192
+2023-02-18 17:18:40.215 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-02-18 17:18:47.991 | INFO     | experiments.finalised_novel_impl:train:396 - 5:28, loss: 4.193
+2023-02-18 17:18:47.993 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-02-18 17:18:55.781 | INFO     | experiments.finalised_novel_impl:train:396 - 5:29, loss: 4.207
+2023-02-18 17:18:55.782 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-02-18 17:19:03.559 | INFO     | experiments.finalised_novel_impl:train:396 - 5:30, loss: 4.204
+2023-02-18 17:19:03.560 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 310
+2023-02-18 17:19:03.588 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:19:07.511 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:20:25.621 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_310_accuracy_results.json
+2023-02-18 17:20:25.622 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8976 / 10000 samples (89.76% correct)
+2023-02-18 17:20:25.750 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-02-18 17:20:33.538 | INFO     | experiments.finalised_novel_impl:train:396 - 5:31, loss: 4.198
+2023-02-18 17:20:33.541 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-02-18 17:20:41.321 | INFO     | experiments.finalised_novel_impl:train:396 - 5:32, loss: 4.206
+2023-02-18 17:20:41.322 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-02-18 17:20:49.111 | INFO     | experiments.finalised_novel_impl:train:396 - 5:33, loss: 4.217
+2023-02-18 17:20:49.113 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-02-18 17:20:56.902 | INFO     | experiments.finalised_novel_impl:train:396 - 5:34, loss: 4.219
+2023-02-18 17:20:56.904 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-02-18 17:21:04.680 | INFO     | experiments.finalised_novel_impl:train:396 - 5:35, loss: 4.219
+2023-02-18 17:21:04.682 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-02-18 17:21:12.469 | INFO     | experiments.finalised_novel_impl:train:396 - 5:36, loss: 4.210
+2023-02-18 17:21:12.471 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-02-18 17:21:20.256 | INFO     | experiments.finalised_novel_impl:train:396 - 5:37, loss: 4.194
+2023-02-18 17:21:20.258 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-02-18 17:21:28.039 | INFO     | experiments.finalised_novel_impl:train:396 - 5:38, loss: 4.205
+2023-02-18 17:21:28.041 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-02-18 17:21:35.829 | INFO     | experiments.finalised_novel_impl:train:396 - 5:39, loss: 4.211
+2023-02-18 17:21:35.831 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-02-18 17:21:43.753 | INFO     | experiments.finalised_novel_impl:train:396 - 5:40, loss: 4.210
+2023-02-18 17:21:43.754 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 320
+2023-02-18 17:21:43.781 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:21:47.703 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:23:05.791 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_320_accuracy_results.json
+2023-02-18 17:23:05.792 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8967 / 10000 samples (89.67% correct)
+2023-02-18 17:23:05.920 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-02-18 17:23:13.704 | INFO     | experiments.finalised_novel_impl:train:396 - 5:41, loss: 4.214
+2023-02-18 17:23:13.706 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-02-18 17:23:21.487 | INFO     | experiments.finalised_novel_impl:train:396 - 5:42, loss: 4.184
+2023-02-18 17:23:21.490 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-02-18 17:23:29.276 | INFO     | experiments.finalised_novel_impl:train:396 - 5:43, loss: 4.201
+2023-02-18 17:23:29.278 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-02-18 17:23:37.065 | INFO     | experiments.finalised_novel_impl:train:396 - 5:44, loss: 4.190
+2023-02-18 17:23:37.067 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-02-18 17:23:44.854 | INFO     | experiments.finalised_novel_impl:train:396 - 5:45, loss: 4.189
+2023-02-18 17:23:44.856 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-02-18 17:23:52.655 | INFO     | experiments.finalised_novel_impl:train:396 - 5:46, loss: 4.187
+2023-02-18 17:23:52.656 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-02-18 17:24:00.436 | INFO     | experiments.finalised_novel_impl:train:396 - 5:47, loss: 4.188
+2023-02-18 17:24:00.437 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-02-18 17:24:08.226 | INFO     | experiments.finalised_novel_impl:train:396 - 5:48, loss: 4.177
+2023-02-18 17:24:08.228 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-02-18 17:24:16.007 | INFO     | experiments.finalised_novel_impl:train:396 - 5:49, loss: 4.166
+2023-02-18 17:24:16.009 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-02-18 17:24:23.786 | INFO     | experiments.finalised_novel_impl:train:396 - 5:50, loss: 4.181
+2023-02-18 17:24:23.788 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 330
+2023-02-18 17:24:23.816 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:24:27.730 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:25:46.138 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_330_accuracy_results.json
+2023-02-18 17:25:46.139 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8968 / 10000 samples (89.68% correct)
+2023-02-18 17:25:46.268 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-02-18 17:25:54.057 | INFO     | experiments.finalised_novel_impl:train:396 - 5:51, loss: 4.168
+2023-02-18 17:25:54.059 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-02-18 17:26:01.846 | INFO     | experiments.finalised_novel_impl:train:396 - 5:52, loss: 4.167
+2023-02-18 17:26:01.848 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-02-18 17:26:09.630 | INFO     | experiments.finalised_novel_impl:train:396 - 5:53, loss: 4.189
+2023-02-18 17:26:09.631 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-02-18 17:26:17.415 | INFO     | experiments.finalised_novel_impl:train:396 - 5:54, loss: 4.181
+2023-02-18 17:26:17.417 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-02-18 17:26:25.203 | INFO     | experiments.finalised_novel_impl:train:396 - 5:55, loss: 4.177
+2023-02-18 17:26:25.205 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-02-18 17:26:32.977 | INFO     | experiments.finalised_novel_impl:train:396 - 5:56, loss: 4.179
+2023-02-18 17:26:32.979 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-02-18 17:26:40.759 | INFO     | experiments.finalised_novel_impl:train:396 - 5:57, loss: 4.194
+2023-02-18 17:26:40.760 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-02-18 17:26:48.540 | INFO     | experiments.finalised_novel_impl:train:396 - 5:58, loss: 4.161
+2023-02-18 17:26:48.542 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-02-18 17:26:56.335 | INFO     | experiments.finalised_novel_impl:train:396 - 5:59, loss: 4.165
+2023-02-18 17:26:56.336 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-02-18 17:27:04.136 | INFO     | experiments.finalised_novel_impl:train:396 - 5:60, loss: 4.162
+2023-02-18 17:27:04.138 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 340
+2023-02-18 17:27:04.166 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:27:08.089 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:28:26.448 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_340_accuracy_results.json
+2023-02-18 17:28:26.448 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8936 / 10000 samples (89.36% correct)
+2023-02-18 17:28:26.581 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-02-18 17:28:34.365 | INFO     | experiments.finalised_novel_impl:train:396 - 5:61, loss: 4.167
+2023-02-18 17:28:34.367 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-02-18 17:28:42.151 | INFO     | experiments.finalised_novel_impl:train:396 - 5:62, loss: 4.155
+2023-02-18 17:28:42.153 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-02-18 17:28:49.931 | INFO     | experiments.finalised_novel_impl:train:396 - 5:63, loss: 4.168
+2023-02-18 17:28:49.933 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-02-18 17:28:57.711 | INFO     | experiments.finalised_novel_impl:train:396 - 5:64, loss: 4.196
+2023-02-18 17:28:57.713 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-02-18 17:29:05.519 | INFO     | experiments.finalised_novel_impl:train:396 - 5:65, loss: 4.202
+2023-02-18 17:29:05.521 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-02-18 17:29:13.302 | INFO     | experiments.finalised_novel_impl:train:396 - 5:66, loss: 4.189
+2023-02-18 17:29:13.304 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-02-18 17:29:21.088 | INFO     | experiments.finalised_novel_impl:train:396 - 5:67, loss: 4.191
+2023-02-18 17:29:21.090 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-02-18 17:29:28.868 | INFO     | experiments.finalised_novel_impl:train:396 - 5:68, loss: 4.184
+2023-02-18 17:29:28.869 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-02-18 17:29:36.656 | INFO     | experiments.finalised_novel_impl:train:396 - 5:69, loss: 4.200
+2023-02-18 17:29:36.657 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-02-18 17:29:44.445 | INFO     | experiments.finalised_novel_impl:train:396 - 5:70, loss: 4.192
+2023-02-18 17:29:44.446 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 350
+2023-02-18 17:29:44.473 | INFO     | experiments.finalised_novel_impl:generate_embeddings:419 - Generating fresh mean embedding vectors
+2023-02-18 17:29:48.396 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:452 - Generated mean embedding vectors for: dict_keys([5, 0, 8, 2, 9, 1, 6, 3, 7, 4])
+2023-02-18 17:31:06.684 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_350_accuracy_results.json
+2023-02-18 17:31:06.684 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8948 / 10000 samples (89.48% correct)
+2023-02-18 17:31:06.813 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 999
+2023-02-18 17:32:24.949 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/novel/1676732415.8787425_CIFAR10_OFFICIAL_RUN/task_999_accuracy_results.json
+2023-02-18 17:32:24.950 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 8963 / 10000 samples (89.63% correct)
+2023-02-18 17:32:25.079 | INFO     | experiments.finalised_novel_impl:train:406 - Training complete
+2023-02-18 17:32:25.084 | INFO     | __main__:run_experiment:300 - Training and evaluation completed!
+2023-02-18 17:32:25.085 | INFO     | __main__:run_experiment:314 - Wrote usage stats to file
+2023-02-18 17:32:25.086 | INFO     | __main__:main:361 - Complete
+2023-02-18 17:32:25.087 | INFO     | __main__:close_tensorboard_writer:262 - Shut down TensorBoard
