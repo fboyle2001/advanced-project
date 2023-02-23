@@ -21,7 +21,7 @@ import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-PARENT_DIRECTORY = "./output_cifar100_varied_sampling"
+PARENT_DIRECTORY = "./output_cifar10_0.5k"
 @dataclass
 class Configuration:
     algorithm: str
@@ -152,10 +152,20 @@ algorithm_setups = {
         reduced_model=False,
         img_size=32
     ),
-    "novel": AlgorithmSetup(
+    "novel_bn": AlgorithmSetup(
         algorithm=experiments.NovelImplementation,
         options={
-            "max_memory_samples": 500
+            "max_memory_samples": 500,
+            "uncertainty_type": "batch_normalised"
+        },
+        reduced_model=False,
+        img_size=224
+    ),
+    "novel_rd": AlgorithmSetup(
+        algorithm=experiments.NovelImplementation,
+        options={
+            "max_memory_samples": 500,
+            "uncertainty_type": "relative_distances"
         },
         reduced_model=False,
         img_size=224
@@ -312,7 +322,7 @@ def main():
 
     # Set the samples
     if config.samples is not None:
-        if config.algorithm in ["gdumb", "rainbow", "scr", "der", "derpp", "novel"]:
+        if config.algorithm in ["gdumb", "rainbow", "scr", "der", "derpp", "novel_bn", "novel_rd"]:
             algorithm_setup.options["max_memory_samples"] = config.samples
         else:
             assert 1 == 0, f"Invalid algorithm {config.algorithm} for sample setting"
