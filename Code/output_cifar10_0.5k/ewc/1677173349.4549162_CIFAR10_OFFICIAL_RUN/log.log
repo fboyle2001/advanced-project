@@ -1,0 +1,1037 @@
+2023-02-23 17:29:09.458 | INFO     | __main__:setup_files:218 - Experiment Name: OFFICIAL_RUN
+2023-02-23 17:29:09.459 | INFO     | __main__:main:334 - Command line arguments: Configuration(algorithm='ewc', dataset='cifar10', classes_per_task=2, seed=5953, samples=500)
+2023-02-23 17:29:09.461 | INFO     | __main__:main:338 - Seeded random to 5953
+2023-02-23 17:29:09.462 | INFO     | __main__:main:342 - Got CUDA device
+2023-02-23 17:29:09.463 | INFO     | __main__:force_cuda_load:268 - Forcing CUDA initialisation...
+2023-02-23 17:29:09.520 | INFO     | __main__:main:346 - CUDA initialised
+2023-02-23 17:29:09.520 | INFO     | __main__:setup_shutdown_hook:264 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN
+2023-02-23 17:29:09.523 | INFO     | __main__:main:350 - Setup shutdown hooks
+2023-02-23 17:29:09.648 | INFO     | __main__:main:355 - Model is setup
+2023-02-23 17:29:09.650 | INFO     | __main__:main:357 - Complete pre-setup, starting experiment
+2023-02-23 17:29:10.844 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-02-23 17:29:10.846 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-02-23 17:29:10.865 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      1,
+      2
+    ],
+    [
+      9,
+      3
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      5,
+      7
+    ],
+    [
+      6,
+      8
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "car",
+      "bird"
+    ],
+    [
+      "truck",
+      "cat"
+    ],
+    [
+      "deer",
+      "plane"
+    ],
+    [
+      "dog",
+      "horse"
+    ],
+    [
+      "frog",
+      "ship"
+    ]
+  ]
+}
+2023-02-23 17:29:10.869 | DEBUG    | __main__:run_experiment:292 - PID: 23616
+2023-02-23 17:29:10.870 | INFO     | __main__:run_experiment:294 - Starting...
+2023-02-23 17:29:10.871 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.ewc.ElasticWeightConsolidation",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "max_epochs_per_task": 50,
+  "batch_size": 64,
+  "task_importance": 175000
+}
+2023-02-23 17:29:10.872 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-02-23 17:29:10.873 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-02-23 17:29:10.874 | INFO     | algorithms.ewc:train:69 - Task 1 / 5
+2023-02-23 17:29:10.875 | INFO     | algorithms.ewc:train:70 - Classes in task: ['car', 'bird']
+2023-02-23 17:29:10.876 | INFO     | algorithms.ewc:train:73 - Starting epoch 1 / 50
+2023-02-23 17:29:22.494 | INFO     | algorithms.ewc:train:114 - 1, loss: 1.572
+2023-02-23 17:29:22.496 | INFO     | algorithms.ewc:train:119 - 1, EWC Loss: 0.000
+2023-02-23 17:29:22.497 | INFO     | algorithms.ewc:train:73 - Starting epoch 2 / 50
+2023-02-23 17:29:31.511 | INFO     | algorithms.ewc:train:114 - 2, loss: 0.915
+2023-02-23 17:29:31.513 | INFO     | algorithms.ewc:train:119 - 2, EWC Loss: 0.000
+2023-02-23 17:29:31.515 | INFO     | algorithms.ewc:train:73 - Starting epoch 3 / 50
+2023-02-23 17:29:40.526 | INFO     | algorithms.ewc:train:114 - 3, loss: 0.624
+2023-02-23 17:29:40.528 | INFO     | algorithms.ewc:train:119 - 3, EWC Loss: 0.000
+2023-02-23 17:29:40.529 | INFO     | algorithms.ewc:train:73 - Starting epoch 4 / 50
+2023-02-23 17:29:49.549 | INFO     | algorithms.ewc:train:114 - 4, loss: 0.473
+2023-02-23 17:29:49.550 | INFO     | algorithms.ewc:train:119 - 4, EWC Loss: 0.000
+2023-02-23 17:29:49.552 | INFO     | algorithms.ewc:train:73 - Starting epoch 5 / 50
+2023-02-23 17:29:58.572 | INFO     | algorithms.ewc:train:114 - 5, loss: 0.391
+2023-02-23 17:29:58.573 | INFO     | algorithms.ewc:train:119 - 5, EWC Loss: 0.000
+2023-02-23 17:29:58.574 | INFO     | algorithms.ewc:train:73 - Starting epoch 6 / 50
+2023-02-23 17:30:07.603 | INFO     | algorithms.ewc:train:114 - 6, loss: 0.331
+2023-02-23 17:30:07.605 | INFO     | algorithms.ewc:train:119 - 6, EWC Loss: 0.000
+2023-02-23 17:30:07.606 | INFO     | algorithms.ewc:train:73 - Starting epoch 7 / 50
+2023-02-23 17:30:16.622 | INFO     | algorithms.ewc:train:114 - 7, loss: 0.294
+2023-02-23 17:30:16.624 | INFO     | algorithms.ewc:train:119 - 7, EWC Loss: 0.000
+2023-02-23 17:30:16.625 | INFO     | algorithms.ewc:train:73 - Starting epoch 8 / 50
+2023-02-23 17:30:25.642 | INFO     | algorithms.ewc:train:114 - 8, loss: 0.262
+2023-02-23 17:30:25.643 | INFO     | algorithms.ewc:train:119 - 8, EWC Loss: 0.000
+2023-02-23 17:30:25.644 | INFO     | algorithms.ewc:train:73 - Starting epoch 9 / 50
+2023-02-23 17:30:34.660 | INFO     | algorithms.ewc:train:114 - 9, loss: 0.232
+2023-02-23 17:30:34.662 | INFO     | algorithms.ewc:train:119 - 9, EWC Loss: 0.000
+2023-02-23 17:30:34.663 | INFO     | algorithms.ewc:train:73 - Starting epoch 10 / 50
+2023-02-23 17:30:43.690 | INFO     | algorithms.ewc:train:114 - 10, loss: 0.212
+2023-02-23 17:30:43.692 | INFO     | algorithms.ewc:train:119 - 10, EWC Loss: 0.000
+2023-02-23 17:30:43.693 | INFO     | algorithms.ewc:train:73 - Starting epoch 11 / 50
+2023-02-23 17:30:52.721 | INFO     | algorithms.ewc:train:114 - 11, loss: 0.187
+2023-02-23 17:30:52.722 | INFO     | algorithms.ewc:train:119 - 11, EWC Loss: 0.000
+2023-02-23 17:30:52.724 | INFO     | algorithms.ewc:train:73 - Starting epoch 12 / 50
+2023-02-23 17:31:01.754 | INFO     | algorithms.ewc:train:114 - 12, loss: 0.193
+2023-02-23 17:31:01.755 | INFO     | algorithms.ewc:train:119 - 12, EWC Loss: 0.000
+2023-02-23 17:31:01.756 | INFO     | algorithms.ewc:train:73 - Starting epoch 13 / 50
+2023-02-23 17:31:10.783 | INFO     | algorithms.ewc:train:114 - 13, loss: 0.171
+2023-02-23 17:31:10.785 | INFO     | algorithms.ewc:train:119 - 13, EWC Loss: 0.000
+2023-02-23 17:31:10.786 | INFO     | algorithms.ewc:train:73 - Starting epoch 14 / 50
+2023-02-23 17:31:19.807 | INFO     | algorithms.ewc:train:114 - 14, loss: 0.167
+2023-02-23 17:31:19.809 | INFO     | algorithms.ewc:train:119 - 14, EWC Loss: 0.000
+2023-02-23 17:31:19.810 | INFO     | algorithms.ewc:train:73 - Starting epoch 15 / 50
+2023-02-23 17:31:28.860 | INFO     | algorithms.ewc:train:114 - 15, loss: 0.159
+2023-02-23 17:31:28.862 | INFO     | algorithms.ewc:train:119 - 15, EWC Loss: 0.000
+2023-02-23 17:31:28.863 | INFO     | algorithms.ewc:train:73 - Starting epoch 16 / 50
+2023-02-23 17:31:37.908 | INFO     | algorithms.ewc:train:114 - 16, loss: 0.149
+2023-02-23 17:31:37.911 | INFO     | algorithms.ewc:train:119 - 16, EWC Loss: 0.000
+2023-02-23 17:31:37.912 | INFO     | algorithms.ewc:train:73 - Starting epoch 17 / 50
+2023-02-23 17:31:46.921 | INFO     | algorithms.ewc:train:114 - 17, loss: 0.137
+2023-02-23 17:31:46.923 | INFO     | algorithms.ewc:train:119 - 17, EWC Loss: 0.000
+2023-02-23 17:31:46.924 | INFO     | algorithms.ewc:train:73 - Starting epoch 18 / 50
+2023-02-23 17:31:55.947 | INFO     | algorithms.ewc:train:114 - 18, loss: 0.130
+2023-02-23 17:31:55.948 | INFO     | algorithms.ewc:train:119 - 18, EWC Loss: 0.000
+2023-02-23 17:31:55.949 | INFO     | algorithms.ewc:train:73 - Starting epoch 19 / 50
+2023-02-23 17:32:04.978 | INFO     | algorithms.ewc:train:114 - 19, loss: 0.127
+2023-02-23 17:32:04.979 | INFO     | algorithms.ewc:train:119 - 19, EWC Loss: 0.000
+2023-02-23 17:32:04.980 | INFO     | algorithms.ewc:train:73 - Starting epoch 20 / 50
+2023-02-23 17:32:14.001 | INFO     | algorithms.ewc:train:114 - 20, loss: 0.120
+2023-02-23 17:32:14.002 | INFO     | algorithms.ewc:train:119 - 20, EWC Loss: 0.000
+2023-02-23 17:32:14.003 | INFO     | algorithms.ewc:train:73 - Starting epoch 21 / 50
+2023-02-23 17:32:23.021 | INFO     | algorithms.ewc:train:114 - 21, loss: 0.118
+2023-02-23 17:32:23.022 | INFO     | algorithms.ewc:train:119 - 21, EWC Loss: 0.000
+2023-02-23 17:32:23.023 | INFO     | algorithms.ewc:train:73 - Starting epoch 22 / 50
+2023-02-23 17:32:32.035 | INFO     | algorithms.ewc:train:114 - 22, loss: 0.112
+2023-02-23 17:32:32.036 | INFO     | algorithms.ewc:train:119 - 22, EWC Loss: 0.000
+2023-02-23 17:32:32.037 | INFO     | algorithms.ewc:train:73 - Starting epoch 23 / 50
+2023-02-23 17:32:41.061 | INFO     | algorithms.ewc:train:114 - 23, loss: 0.110
+2023-02-23 17:32:41.063 | INFO     | algorithms.ewc:train:119 - 23, EWC Loss: 0.000
+2023-02-23 17:32:41.064 | INFO     | algorithms.ewc:train:73 - Starting epoch 24 / 50
+2023-02-23 17:32:50.091 | INFO     | algorithms.ewc:train:114 - 24, loss: 0.102
+2023-02-23 17:32:50.092 | INFO     | algorithms.ewc:train:119 - 24, EWC Loss: 0.000
+2023-02-23 17:32:50.093 | INFO     | algorithms.ewc:train:73 - Starting epoch 25 / 50
+2023-02-23 17:32:59.128 | INFO     | algorithms.ewc:train:114 - 25, loss: 0.099
+2023-02-23 17:32:59.130 | INFO     | algorithms.ewc:train:119 - 25, EWC Loss: 0.000
+2023-02-23 17:32:59.131 | INFO     | algorithms.ewc:train:73 - Starting epoch 26 / 50
+2023-02-23 17:33:08.151 | INFO     | algorithms.ewc:train:114 - 26, loss: 0.096
+2023-02-23 17:33:08.153 | INFO     | algorithms.ewc:train:119 - 26, EWC Loss: 0.000
+2023-02-23 17:33:08.154 | INFO     | algorithms.ewc:train:73 - Starting epoch 27 / 50
+2023-02-23 17:33:17.181 | INFO     | algorithms.ewc:train:114 - 27, loss: 0.088
+2023-02-23 17:33:17.182 | INFO     | algorithms.ewc:train:119 - 27, EWC Loss: 0.000
+2023-02-23 17:33:17.183 | INFO     | algorithms.ewc:train:73 - Starting epoch 28 / 50
+2023-02-23 17:33:26.203 | INFO     | algorithms.ewc:train:114 - 28, loss: 0.084
+2023-02-23 17:33:26.205 | INFO     | algorithms.ewc:train:119 - 28, EWC Loss: 0.000
+2023-02-23 17:33:26.206 | INFO     | algorithms.ewc:train:73 - Starting epoch 29 / 50
+2023-02-23 17:33:35.232 | INFO     | algorithms.ewc:train:114 - 29, loss: 0.088
+2023-02-23 17:33:35.234 | INFO     | algorithms.ewc:train:119 - 29, EWC Loss: 0.000
+2023-02-23 17:33:35.235 | INFO     | algorithms.ewc:train:73 - Starting epoch 30 / 50
+2023-02-23 17:33:44.269 | INFO     | algorithms.ewc:train:114 - 30, loss: 0.080
+2023-02-23 17:33:44.271 | INFO     | algorithms.ewc:train:119 - 30, EWC Loss: 0.000
+2023-02-23 17:33:44.272 | INFO     | algorithms.ewc:train:73 - Starting epoch 31 / 50
+2023-02-23 17:33:53.308 | INFO     | algorithms.ewc:train:114 - 31, loss: 0.079
+2023-02-23 17:33:53.309 | INFO     | algorithms.ewc:train:119 - 31, EWC Loss: 0.000
+2023-02-23 17:33:53.311 | INFO     | algorithms.ewc:train:73 - Starting epoch 32 / 50
+2023-02-23 17:34:02.332 | INFO     | algorithms.ewc:train:114 - 32, loss: 0.078
+2023-02-23 17:34:02.334 | INFO     | algorithms.ewc:train:119 - 32, EWC Loss: 0.000
+2023-02-23 17:34:02.335 | INFO     | algorithms.ewc:train:73 - Starting epoch 33 / 50
+2023-02-23 17:34:11.361 | INFO     | algorithms.ewc:train:114 - 33, loss: 0.077
+2023-02-23 17:34:11.362 | INFO     | algorithms.ewc:train:119 - 33, EWC Loss: 0.000
+2023-02-23 17:34:11.363 | INFO     | algorithms.ewc:train:73 - Starting epoch 34 / 50
+2023-02-23 17:34:20.390 | INFO     | algorithms.ewc:train:114 - 34, loss: 0.069
+2023-02-23 17:34:20.390 | INFO     | algorithms.ewc:train:119 - 34, EWC Loss: 0.000
+2023-02-23 17:34:20.392 | INFO     | algorithms.ewc:train:73 - Starting epoch 35 / 50
+2023-02-23 17:34:29.419 | INFO     | algorithms.ewc:train:114 - 35, loss: 0.070
+2023-02-23 17:34:29.420 | INFO     | algorithms.ewc:train:119 - 35, EWC Loss: 0.000
+2023-02-23 17:34:29.421 | INFO     | algorithms.ewc:train:73 - Starting epoch 36 / 50
+2023-02-23 17:34:38.507 | INFO     | algorithms.ewc:train:114 - 36, loss: 0.065
+2023-02-23 17:34:38.509 | INFO     | algorithms.ewc:train:119 - 36, EWC Loss: 0.000
+2023-02-23 17:34:38.510 | INFO     | algorithms.ewc:train:73 - Starting epoch 37 / 50
+2023-02-23 17:34:47.536 | INFO     | algorithms.ewc:train:114 - 37, loss: 0.070
+2023-02-23 17:34:47.538 | INFO     | algorithms.ewc:train:119 - 37, EWC Loss: 0.000
+2023-02-23 17:34:47.539 | INFO     | algorithms.ewc:train:73 - Starting epoch 38 / 50
+2023-02-23 17:34:56.560 | INFO     | algorithms.ewc:train:114 - 38, loss: 0.070
+2023-02-23 17:34:56.562 | INFO     | algorithms.ewc:train:119 - 38, EWC Loss: 0.000
+2023-02-23 17:34:56.563 | INFO     | algorithms.ewc:train:73 - Starting epoch 39 / 50
+2023-02-23 17:35:05.593 | INFO     | algorithms.ewc:train:114 - 39, loss: 0.067
+2023-02-23 17:35:05.595 | INFO     | algorithms.ewc:train:119 - 39, EWC Loss: 0.000
+2023-02-23 17:35:05.595 | INFO     | algorithms.ewc:train:73 - Starting epoch 40 / 50
+2023-02-23 17:35:14.609 | INFO     | algorithms.ewc:train:114 - 40, loss: 0.060
+2023-02-23 17:35:14.611 | INFO     | algorithms.ewc:train:119 - 40, EWC Loss: 0.000
+2023-02-23 17:35:14.612 | INFO     | algorithms.ewc:train:73 - Starting epoch 41 / 50
+2023-02-23 17:35:23.630 | INFO     | algorithms.ewc:train:114 - 41, loss: 0.063
+2023-02-23 17:35:23.631 | INFO     | algorithms.ewc:train:119 - 41, EWC Loss: 0.000
+2023-02-23 17:35:23.632 | INFO     | algorithms.ewc:train:73 - Starting epoch 42 / 50
+2023-02-23 17:35:32.657 | INFO     | algorithms.ewc:train:114 - 42, loss: 0.058
+2023-02-23 17:35:32.658 | INFO     | algorithms.ewc:train:119 - 42, EWC Loss: 0.000
+2023-02-23 17:35:32.659 | INFO     | algorithms.ewc:train:73 - Starting epoch 43 / 50
+2023-02-23 17:35:41.688 | INFO     | algorithms.ewc:train:114 - 43, loss: 0.061
+2023-02-23 17:35:41.690 | INFO     | algorithms.ewc:train:119 - 43, EWC Loss: 0.000
+2023-02-23 17:35:41.691 | INFO     | algorithms.ewc:train:73 - Starting epoch 44 / 50
+2023-02-23 17:35:50.729 | INFO     | algorithms.ewc:train:114 - 44, loss: 0.053
+2023-02-23 17:35:50.731 | INFO     | algorithms.ewc:train:119 - 44, EWC Loss: 0.000
+2023-02-23 17:35:50.732 | INFO     | algorithms.ewc:train:73 - Starting epoch 45 / 50
+2023-02-23 17:35:59.760 | INFO     | algorithms.ewc:train:114 - 45, loss: 0.056
+2023-02-23 17:35:59.761 | INFO     | algorithms.ewc:train:119 - 45, EWC Loss: 0.000
+2023-02-23 17:35:59.762 | INFO     | algorithms.ewc:train:73 - Starting epoch 46 / 50
+2023-02-23 17:36:08.798 | INFO     | algorithms.ewc:train:114 - 46, loss: 0.051
+2023-02-23 17:36:08.800 | INFO     | algorithms.ewc:train:119 - 46, EWC Loss: 0.000
+2023-02-23 17:36:08.801 | INFO     | algorithms.ewc:train:73 - Starting epoch 47 / 50
+2023-02-23 17:36:17.819 | INFO     | algorithms.ewc:train:114 - 47, loss: 0.053
+2023-02-23 17:36:17.821 | INFO     | algorithms.ewc:train:119 - 47, EWC Loss: 0.000
+2023-02-23 17:36:17.822 | INFO     | algorithms.ewc:train:73 - Starting epoch 48 / 50
+2023-02-23 17:36:26.845 | INFO     | algorithms.ewc:train:114 - 48, loss: 0.057
+2023-02-23 17:36:26.846 | INFO     | algorithms.ewc:train:119 - 48, EWC Loss: 0.000
+2023-02-23 17:36:26.847 | INFO     | algorithms.ewc:train:73 - Starting epoch 49 / 50
+2023-02-23 17:36:35.873 | INFO     | algorithms.ewc:train:114 - 49, loss: 0.045
+2023-02-23 17:36:35.875 | INFO     | algorithms.ewc:train:119 - 49, EWC Loss: 0.000
+2023-02-23 17:36:35.876 | INFO     | algorithms.ewc:train:73 - Starting epoch 50 / 50
+2023-02-23 17:36:44.904 | INFO     | algorithms.ewc:train:114 - 50, loss: 0.052
+2023-02-23 17:36:44.906 | INFO     | algorithms.ewc:train:119 - 50, EWC Loss: 0.000
+2023-02-23 17:36:44.907 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 0
+2023-02-23 17:36:49.696 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-02-23 17:36:49.698 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1946 / 10000 samples (19.46% correct)
+2023-02-23 17:36:49.934 | DEBUG    | algorithms.ewc:train:136 - Consolidating EWC parameters
+2023-02-23 17:36:49.939 | DEBUG    | algorithms.ewc:consolidate:142 - Copying existing model parameters
+2023-02-23 17:36:49.943 | DEBUG    | algorithms.ewc:consolidate:145 - Computing FIM
+2023-02-23 17:36:51.729 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   100. Fps: 56.0857 samples/s.
+2023-02-23 17:36:53.280 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   200. Fps: 64.4801 samples/s.
+2023-02-23 17:36:54.831 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   300. Fps: 64.4688 samples/s.
+2023-02-23 17:36:56.377 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   400. Fps: 64.6780 samples/s.
+2023-02-23 17:36:57.969 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   500. Fps: 62.8324 samples/s.
+2023-02-23 17:36:59.557 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   600. Fps: 62.9528 samples/s.
+2023-02-23 17:37:01.144 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   700. Fps: 63.0070 samples/s.
+2023-02-23 17:37:02.726 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   800. Fps: 63.2268 samples/s.
+2023-02-23 17:37:04.430 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   900. Fps: 58.7188 samples/s.
+2023-02-23 17:37:05.983 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1000. Fps: 64.3294 samples/s.
+2023-02-23 17:37:07.540 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1100. Fps: 64.2197 samples/s.
+2023-02-23 17:37:09.085 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1200. Fps: 64.7492 samples/s.
+2023-02-23 17:37:10.670 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1300. Fps: 63.0780 samples/s.
+2023-02-23 17:37:12.261 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1400. Fps: 62.8466 samples/s.
+2023-02-23 17:37:13.852 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1500. Fps: 62.8523 samples/s.
+2023-02-23 17:37:15.436 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1600. Fps: 63.1404 samples/s.
+2023-02-23 17:37:17.148 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1700. Fps: 58.4279 samples/s.
+2023-02-23 17:37:18.698 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1800. Fps: 64.4851 samples/s.
+2023-02-23 17:37:20.248 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1900. Fps: 64.5237 samples/s.
+2023-02-23 17:37:21.798 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2000. Fps: 64.5102 samples/s.
+2023-02-23 17:37:23.387 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2100. Fps: 62.9345 samples/s.
+2023-02-23 17:37:24.976 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2200. Fps: 62.9577 samples/s.
+2023-02-23 17:37:26.567 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2300. Fps: 62.8325 samples/s.
+2023-02-23 17:37:28.152 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2400. Fps: 63.1059 samples/s.
+2023-02-23 17:37:29.864 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2500. Fps: 58.4076 samples/s.
+2023-02-23 17:37:31.417 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2600. Fps: 64.3955 samples/s.
+2023-02-23 17:37:32.974 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2700. Fps: 64.2253 samples/s.
+2023-02-23 17:37:34.505 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2800. Fps: 65.3248 samples/s.
+2023-02-23 17:37:36.080 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2900. Fps: 63.4875 samples/s.
+2023-02-23 17:37:37.668 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3000. Fps: 62.9637 samples/s.
+2023-02-23 17:37:39.246 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3100. Fps: 63.3894 samples/s.
+2023-02-23 17:37:40.829 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3200. Fps: 63.1434 samples/s.
+2023-02-23 17:37:42.540 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3300. Fps: 58.4643 samples/s.
+2023-02-23 17:37:44.091 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3400. Fps: 64.4824 samples/s.
+2023-02-23 17:37:45.641 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3500. Fps: 64.5080 samples/s.
+2023-02-23 17:37:47.195 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3600. Fps: 64.3442 samples/s.
+2023-02-23 17:37:48.779 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3700. Fps: 63.1337 samples/s.
+2023-02-23 17:37:50.365 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3800. Fps: 63.0538 samples/s.
+2023-02-23 17:37:51.952 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3900. Fps: 62.9928 samples/s.
+2023-02-23 17:37:53.540 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  4000. Fps: 62.9663 samples/s.
+2023-02-23 17:37:55.068 | INFO     | algorithms.ewc:train:69 - Task 2 / 5
+2023-02-23 17:37:55.069 | INFO     | algorithms.ewc:train:70 - Classes in task: ['truck', 'cat']
+2023-02-23 17:37:55.069 | INFO     | algorithms.ewc:train:73 - Starting epoch 1 / 50
+2023-02-23 17:38:05.326 | INFO     | algorithms.ewc:train:114 - 1, loss: 6.960
+2023-02-23 17:38:05.327 | INFO     | algorithms.ewc:train:119 - 1, EWC Loss: 1.407
+2023-02-23 17:38:05.328 | INFO     | algorithms.ewc:train:73 - Starting epoch 2 / 50
+2023-02-23 17:38:15.467 | INFO     | algorithms.ewc:train:114 - 2, loss: 5.465
+2023-02-23 17:38:15.468 | INFO     | algorithms.ewc:train:119 - 2, EWC Loss: 0.806
+2023-02-23 17:38:15.469 | INFO     | algorithms.ewc:train:73 - Starting epoch 3 / 50
+2023-02-23 17:38:25.634 | INFO     | algorithms.ewc:train:114 - 3, loss: 5.052
+2023-02-23 17:38:25.635 | INFO     | algorithms.ewc:train:119 - 3, EWC Loss: 0.982
+2023-02-23 17:38:25.636 | INFO     | algorithms.ewc:train:73 - Starting epoch 4 / 50
+2023-02-23 17:38:35.776 | INFO     | algorithms.ewc:train:114 - 4, loss: 4.759
+2023-02-23 17:38:35.777 | INFO     | algorithms.ewc:train:119 - 4, EWC Loss: 1.135
+2023-02-23 17:38:35.778 | INFO     | algorithms.ewc:train:73 - Starting epoch 5 / 50
+2023-02-23 17:38:45.948 | INFO     | algorithms.ewc:train:114 - 5, loss: 4.528
+2023-02-23 17:38:45.950 | INFO     | algorithms.ewc:train:119 - 5, EWC Loss: 1.262
+2023-02-23 17:38:45.951 | INFO     | algorithms.ewc:train:73 - Starting epoch 6 / 50
+2023-02-23 17:38:56.115 | INFO     | algorithms.ewc:train:114 - 6, loss: 4.366
+2023-02-23 17:38:56.116 | INFO     | algorithms.ewc:train:119 - 6, EWC Loss: 1.363
+2023-02-23 17:38:56.117 | INFO     | algorithms.ewc:train:73 - Starting epoch 7 / 50
+2023-02-23 17:39:06.266 | INFO     | algorithms.ewc:train:114 - 7, loss: 4.235
+2023-02-23 17:39:06.267 | INFO     | algorithms.ewc:train:119 - 7, EWC Loss: 1.445
+2023-02-23 17:39:06.268 | INFO     | algorithms.ewc:train:73 - Starting epoch 8 / 50
+2023-02-23 17:39:16.414 | INFO     | algorithms.ewc:train:114 - 8, loss: 4.117
+2023-02-23 17:39:16.416 | INFO     | algorithms.ewc:train:119 - 8, EWC Loss: 1.509
+2023-02-23 17:39:16.417 | INFO     | algorithms.ewc:train:73 - Starting epoch 9 / 50
+2023-02-23 17:39:26.575 | INFO     | algorithms.ewc:train:114 - 9, loss: 4.029
+2023-02-23 17:39:26.576 | INFO     | algorithms.ewc:train:119 - 9, EWC Loss: 1.561
+2023-02-23 17:39:26.577 | INFO     | algorithms.ewc:train:73 - Starting epoch 10 / 50
+2023-02-23 17:39:36.732 | INFO     | algorithms.ewc:train:114 - 10, loss: 3.945
+2023-02-23 17:39:36.734 | INFO     | algorithms.ewc:train:119 - 10, EWC Loss: 1.604
+2023-02-23 17:39:36.735 | INFO     | algorithms.ewc:train:73 - Starting epoch 11 / 50
+2023-02-23 17:39:46.882 | INFO     | algorithms.ewc:train:114 - 11, loss: 3.882
+2023-02-23 17:39:46.883 | INFO     | algorithms.ewc:train:119 - 11, EWC Loss: 1.641
+2023-02-23 17:39:46.884 | INFO     | algorithms.ewc:train:73 - Starting epoch 12 / 50
+2023-02-23 17:39:57.043 | INFO     | algorithms.ewc:train:114 - 12, loss: 3.822
+2023-02-23 17:39:57.044 | INFO     | algorithms.ewc:train:119 - 12, EWC Loss: 1.671
+2023-02-23 17:39:57.045 | INFO     | algorithms.ewc:train:73 - Starting epoch 13 / 50
+2023-02-23 17:40:07.199 | INFO     | algorithms.ewc:train:114 - 13, loss: 3.771
+2023-02-23 17:40:07.200 | INFO     | algorithms.ewc:train:119 - 13, EWC Loss: 1.697
+2023-02-23 17:40:07.201 | INFO     | algorithms.ewc:train:73 - Starting epoch 14 / 50
+2023-02-23 17:40:17.351 | INFO     | algorithms.ewc:train:114 - 14, loss: 3.729
+2023-02-23 17:40:17.352 | INFO     | algorithms.ewc:train:119 - 14, EWC Loss: 1.719
+2023-02-23 17:40:17.353 | INFO     | algorithms.ewc:train:73 - Starting epoch 15 / 50
+2023-02-23 17:40:27.503 | INFO     | algorithms.ewc:train:114 - 15, loss: 3.687
+2023-02-23 17:40:27.504 | INFO     | algorithms.ewc:train:119 - 15, EWC Loss: 1.736
+2023-02-23 17:40:27.505 | INFO     | algorithms.ewc:train:73 - Starting epoch 16 / 50
+2023-02-23 17:40:37.699 | INFO     | algorithms.ewc:train:114 - 16, loss: 3.654
+2023-02-23 17:40:37.700 | INFO     | algorithms.ewc:train:119 - 16, EWC Loss: 1.754
+2023-02-23 17:40:37.701 | INFO     | algorithms.ewc:train:73 - Starting epoch 17 / 50
+2023-02-23 17:40:47.860 | INFO     | algorithms.ewc:train:114 - 17, loss: 3.615
+2023-02-23 17:40:47.860 | INFO     | algorithms.ewc:train:119 - 17, EWC Loss: 1.767
+2023-02-23 17:40:47.861 | INFO     | algorithms.ewc:train:73 - Starting epoch 18 / 50
+2023-02-23 17:40:58.016 | INFO     | algorithms.ewc:train:114 - 18, loss: 3.585
+2023-02-23 17:40:58.018 | INFO     | algorithms.ewc:train:119 - 18, EWC Loss: 1.779
+2023-02-23 17:40:58.019 | INFO     | algorithms.ewc:train:73 - Starting epoch 19 / 50
+2023-02-23 17:41:08.415 | INFO     | algorithms.ewc:train:114 - 19, loss: 3.555
+2023-02-23 17:41:08.417 | INFO     | algorithms.ewc:train:119 - 19, EWC Loss: 1.791
+2023-02-23 17:41:08.418 | INFO     | algorithms.ewc:train:73 - Starting epoch 20 / 50
+2023-02-23 17:41:18.697 | INFO     | algorithms.ewc:train:114 - 20, loss: 3.533
+2023-02-23 17:41:18.698 | INFO     | algorithms.ewc:train:119 - 20, EWC Loss: 1.799
+2023-02-23 17:41:18.699 | INFO     | algorithms.ewc:train:73 - Starting epoch 21 / 50
+2023-02-23 17:41:29.024 | INFO     | algorithms.ewc:train:114 - 21, loss: 3.512
+2023-02-23 17:41:29.025 | INFO     | algorithms.ewc:train:119 - 21, EWC Loss: 1.809
+2023-02-23 17:41:29.026 | INFO     | algorithms.ewc:train:73 - Starting epoch 22 / 50
+2023-02-23 17:41:39.294 | INFO     | algorithms.ewc:train:114 - 22, loss: 3.489
+2023-02-23 17:41:39.295 | INFO     | algorithms.ewc:train:119 - 22, EWC Loss: 1.815
+2023-02-23 17:41:39.297 | INFO     | algorithms.ewc:train:73 - Starting epoch 23 / 50
+2023-02-23 17:41:49.547 | INFO     | algorithms.ewc:train:114 - 23, loss: 3.467
+2023-02-23 17:41:49.548 | INFO     | algorithms.ewc:train:119 - 23, EWC Loss: 1.822
+2023-02-23 17:41:49.549 | INFO     | algorithms.ewc:train:73 - Starting epoch 24 / 50
+2023-02-23 17:41:59.756 | INFO     | algorithms.ewc:train:114 - 24, loss: 3.449
+2023-02-23 17:41:59.758 | INFO     | algorithms.ewc:train:119 - 24, EWC Loss: 1.829
+2023-02-23 17:41:59.759 | INFO     | algorithms.ewc:train:73 - Starting epoch 25 / 50
+2023-02-23 17:42:09.969 | INFO     | algorithms.ewc:train:114 - 25, loss: 3.424
+2023-02-23 17:42:09.970 | INFO     | algorithms.ewc:train:119 - 25, EWC Loss: 1.835
+2023-02-23 17:42:09.971 | INFO     | algorithms.ewc:train:73 - Starting epoch 26 / 50
+2023-02-23 17:42:20.173 | INFO     | algorithms.ewc:train:114 - 26, loss: 3.408
+2023-02-23 17:42:20.174 | INFO     | algorithms.ewc:train:119 - 26, EWC Loss: 1.840
+2023-02-23 17:42:20.176 | INFO     | algorithms.ewc:train:73 - Starting epoch 27 / 50
+2023-02-23 17:42:30.379 | INFO     | algorithms.ewc:train:114 - 27, loss: 3.400
+2023-02-23 17:42:30.381 | INFO     | algorithms.ewc:train:119 - 27, EWC Loss: 1.843
+2023-02-23 17:42:30.382 | INFO     | algorithms.ewc:train:73 - Starting epoch 28 / 50
+2023-02-23 17:42:40.602 | INFO     | algorithms.ewc:train:114 - 28, loss: 3.380
+2023-02-23 17:42:40.604 | INFO     | algorithms.ewc:train:119 - 28, EWC Loss: 1.848
+2023-02-23 17:42:40.605 | INFO     | algorithms.ewc:train:73 - Starting epoch 29 / 50
+2023-02-23 17:42:50.777 | INFO     | algorithms.ewc:train:114 - 29, loss: 3.364
+2023-02-23 17:42:50.778 | INFO     | algorithms.ewc:train:119 - 29, EWC Loss: 1.850
+2023-02-23 17:42:50.779 | INFO     | algorithms.ewc:train:73 - Starting epoch 30 / 50
+2023-02-23 17:43:00.966 | INFO     | algorithms.ewc:train:114 - 30, loss: 3.357
+2023-02-23 17:43:00.967 | INFO     | algorithms.ewc:train:119 - 30, EWC Loss: 1.853
+2023-02-23 17:43:00.968 | INFO     | algorithms.ewc:train:73 - Starting epoch 31 / 50
+2023-02-23 17:43:11.173 | INFO     | algorithms.ewc:train:114 - 31, loss: 3.342
+2023-02-23 17:43:11.174 | INFO     | algorithms.ewc:train:119 - 31, EWC Loss: 1.857
+2023-02-23 17:43:11.175 | INFO     | algorithms.ewc:train:73 - Starting epoch 32 / 50
+2023-02-23 17:43:21.347 | INFO     | algorithms.ewc:train:114 - 32, loss: 3.329
+2023-02-23 17:43:21.348 | INFO     | algorithms.ewc:train:119 - 32, EWC Loss: 1.860
+2023-02-23 17:43:21.349 | INFO     | algorithms.ewc:train:73 - Starting epoch 33 / 50
+2023-02-23 17:43:31.560 | INFO     | algorithms.ewc:train:114 - 33, loss: 3.308
+2023-02-23 17:43:31.561 | INFO     | algorithms.ewc:train:119 - 33, EWC Loss: 1.862
+2023-02-23 17:43:31.562 | INFO     | algorithms.ewc:train:73 - Starting epoch 34 / 50
+2023-02-23 17:43:41.810 | INFO     | algorithms.ewc:train:114 - 34, loss: 3.307
+2023-02-23 17:43:41.811 | INFO     | algorithms.ewc:train:119 - 34, EWC Loss: 1.865
+2023-02-23 17:43:41.813 | INFO     | algorithms.ewc:train:73 - Starting epoch 35 / 50
+2023-02-23 17:43:52.042 | INFO     | algorithms.ewc:train:114 - 35, loss: 3.295
+2023-02-23 17:43:52.044 | INFO     | algorithms.ewc:train:119 - 35, EWC Loss: 1.868
+2023-02-23 17:43:52.045 | INFO     | algorithms.ewc:train:73 - Starting epoch 36 / 50
+2023-02-23 17:44:02.233 | INFO     | algorithms.ewc:train:114 - 36, loss: 3.280
+2023-02-23 17:44:02.234 | INFO     | algorithms.ewc:train:119 - 36, EWC Loss: 1.869
+2023-02-23 17:44:02.235 | INFO     | algorithms.ewc:train:73 - Starting epoch 37 / 50
+2023-02-23 17:44:12.428 | INFO     | algorithms.ewc:train:114 - 37, loss: 3.275
+2023-02-23 17:44:12.430 | INFO     | algorithms.ewc:train:119 - 37, EWC Loss: 1.871
+2023-02-23 17:44:12.431 | INFO     | algorithms.ewc:train:73 - Starting epoch 38 / 50
+2023-02-23 17:44:22.659 | INFO     | algorithms.ewc:train:114 - 38, loss: 3.265
+2023-02-23 17:44:22.661 | INFO     | algorithms.ewc:train:119 - 38, EWC Loss: 1.873
+2023-02-23 17:44:22.662 | INFO     | algorithms.ewc:train:73 - Starting epoch 39 / 50
+2023-02-23 17:44:32.874 | INFO     | algorithms.ewc:train:114 - 39, loss: 3.250
+2023-02-23 17:44:32.876 | INFO     | algorithms.ewc:train:119 - 39, EWC Loss: 1.873
+2023-02-23 17:44:32.878 | INFO     | algorithms.ewc:train:73 - Starting epoch 40 / 50
+2023-02-23 17:44:43.067 | INFO     | algorithms.ewc:train:114 - 40, loss: 3.248
+2023-02-23 17:44:43.069 | INFO     | algorithms.ewc:train:119 - 40, EWC Loss: 1.875
+2023-02-23 17:44:43.070 | INFO     | algorithms.ewc:train:73 - Starting epoch 41 / 50
+2023-02-23 17:44:53.246 | INFO     | algorithms.ewc:train:114 - 41, loss: 3.233
+2023-02-23 17:44:53.248 | INFO     | algorithms.ewc:train:119 - 41, EWC Loss: 1.876
+2023-02-23 17:44:53.249 | INFO     | algorithms.ewc:train:73 - Starting epoch 42 / 50
+2023-02-23 17:45:03.424 | INFO     | algorithms.ewc:train:114 - 42, loss: 3.229
+2023-02-23 17:45:03.426 | INFO     | algorithms.ewc:train:119 - 42, EWC Loss: 1.878
+2023-02-23 17:45:03.427 | INFO     | algorithms.ewc:train:73 - Starting epoch 43 / 50
+2023-02-23 17:45:13.597 | INFO     | algorithms.ewc:train:114 - 43, loss: 3.219
+2023-02-23 17:45:13.599 | INFO     | algorithms.ewc:train:119 - 43, EWC Loss: 1.880
+2023-02-23 17:45:13.600 | INFO     | algorithms.ewc:train:73 - Starting epoch 44 / 50
+2023-02-23 17:45:23.766 | INFO     | algorithms.ewc:train:114 - 44, loss: 3.216
+2023-02-23 17:45:23.767 | INFO     | algorithms.ewc:train:119 - 44, EWC Loss: 1.880
+2023-02-23 17:45:23.768 | INFO     | algorithms.ewc:train:73 - Starting epoch 45 / 50
+2023-02-23 17:45:33.934 | INFO     | algorithms.ewc:train:114 - 45, loss: 3.200
+2023-02-23 17:45:33.935 | INFO     | algorithms.ewc:train:119 - 45, EWC Loss: 1.881
+2023-02-23 17:45:33.937 | INFO     | algorithms.ewc:train:73 - Starting epoch 46 / 50
+2023-02-23 17:45:44.131 | INFO     | algorithms.ewc:train:114 - 46, loss: 3.199
+2023-02-23 17:45:44.132 | INFO     | algorithms.ewc:train:119 - 46, EWC Loss: 1.880
+2023-02-23 17:45:44.133 | INFO     | algorithms.ewc:train:73 - Starting epoch 47 / 50
+2023-02-23 17:45:54.310 | INFO     | algorithms.ewc:train:114 - 47, loss: 3.194
+2023-02-23 17:45:54.311 | INFO     | algorithms.ewc:train:119 - 47, EWC Loss: 1.882
+2023-02-23 17:45:54.312 | INFO     | algorithms.ewc:train:73 - Starting epoch 48 / 50
+2023-02-23 17:46:04.489 | INFO     | algorithms.ewc:train:114 - 48, loss: 3.182
+2023-02-23 17:46:04.491 | INFO     | algorithms.ewc:train:119 - 48, EWC Loss: 1.883
+2023-02-23 17:46:04.492 | INFO     | algorithms.ewc:train:73 - Starting epoch 49 / 50
+2023-02-23 17:46:14.664 | INFO     | algorithms.ewc:train:114 - 49, loss: 3.172
+2023-02-23 17:46:14.666 | INFO     | algorithms.ewc:train:119 - 49, EWC Loss: 1.883
+2023-02-23 17:46:14.667 | INFO     | algorithms.ewc:train:73 - Starting epoch 50 / 50
+2023-02-23 17:46:24.843 | INFO     | algorithms.ewc:train:114 - 50, loss: 3.171
+2023-02-23 17:46:24.844 | INFO     | algorithms.ewc:train:119 - 50, EWC Loss: 1.884
+2023-02-23 17:46:24.845 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 1
+2023-02-23 17:46:29.531 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-02-23 17:46:29.533 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1868 / 10000 samples (18.68% correct)
+2023-02-23 17:46:29.667 | DEBUG    | algorithms.ewc:train:136 - Consolidating EWC parameters
+2023-02-23 17:46:29.671 | DEBUG    | algorithms.ewc:consolidate:142 - Copying existing model parameters
+2023-02-23 17:46:29.676 | DEBUG    | algorithms.ewc:consolidate:145 - Computing FIM
+2023-02-23 17:46:31.242 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   100. Fps: 63.9212 samples/s.
+2023-02-23 17:46:32.784 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   200. Fps: 64.8585 samples/s.
+2023-02-23 17:46:34.331 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   300. Fps: 64.6544 samples/s.
+2023-02-23 17:46:35.875 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   400. Fps: 64.7668 samples/s.
+2023-02-23 17:46:37.463 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   500. Fps: 62.9683 samples/s.
+2023-02-23 17:46:39.043 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   600. Fps: 63.2943 samples/s.
+2023-02-23 17:46:40.624 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   700. Fps: 63.2421 samples/s.
+2023-02-23 17:46:42.202 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   800. Fps: 63.3630 samples/s.
+2023-02-23 17:46:43.903 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   900. Fps: 58.8066 samples/s.
+2023-02-23 17:46:45.441 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1000. Fps: 64.9971 samples/s.
+2023-02-23 17:46:46.989 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1100. Fps: 64.5979 samples/s.
+2023-02-23 17:46:48.531 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1200. Fps: 64.8605 samples/s.
+2023-02-23 17:46:50.118 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1300. Fps: 63.0128 samples/s.
+2023-02-23 17:46:51.703 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1400. Fps: 63.0911 samples/s.
+2023-02-23 17:46:53.290 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1500. Fps: 63.0736 samples/s.
+2023-02-23 17:46:54.882 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1600. Fps: 62.7517 samples/s.
+2023-02-23 17:46:56.588 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1700. Fps: 58.6347 samples/s.
+2023-02-23 17:46:58.136 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1800. Fps: 64.5913 samples/s.
+2023-02-23 17:46:59.683 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1900. Fps: 64.6116 samples/s.
+2023-02-23 17:47:01.232 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2000. Fps: 64.5928 samples/s.
+2023-02-23 17:47:02.814 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2100. Fps: 63.2061 samples/s.
+2023-02-23 17:47:04.400 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2200. Fps: 63.0335 samples/s.
+2023-02-23 17:47:05.981 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2300. Fps: 63.2512 samples/s.
+2023-02-23 17:47:07.570 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2400. Fps: 62.9434 samples/s.
+2023-02-23 17:47:09.269 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2500. Fps: 58.8430 samples/s.
+2023-02-23 17:47:10.815 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2600. Fps: 64.7018 samples/s.
+2023-02-23 17:47:12.359 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2700. Fps: 64.7628 samples/s.
+2023-02-23 17:47:13.899 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2800. Fps: 64.9447 samples/s.
+2023-02-23 17:47:15.485 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2900. Fps: 63.0591 samples/s.
+2023-02-23 17:47:17.070 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3000. Fps: 63.0866 samples/s.
+2023-02-23 17:47:18.650 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3100. Fps: 63.2781 samples/s.
+2023-02-23 17:47:20.229 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3200. Fps: 63.3308 samples/s.
+2023-02-23 17:47:21.950 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3300. Fps: 58.1176 samples/s.
+2023-02-23 17:47:23.492 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3400. Fps: 64.8914 samples/s.
+2023-02-23 17:47:25.036 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3500. Fps: 64.7216 samples/s.
+2023-02-23 17:47:26.580 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3600. Fps: 64.7534 samples/s.
+2023-02-23 17:47:28.170 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3700. Fps: 62.9169 samples/s.
+2023-02-23 17:47:29.751 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3800. Fps: 63.2344 samples/s.
+2023-02-23 17:47:31.334 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3900. Fps: 63.1877 samples/s.
+2023-02-23 17:47:32.913 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  4000. Fps: 63.3023 samples/s.
+2023-02-23 17:47:34.433 | INFO     | algorithms.ewc:train:69 - Task 3 / 5
+2023-02-23 17:47:34.435 | INFO     | algorithms.ewc:train:70 - Classes in task: ['deer', 'plane']
+2023-02-23 17:47:34.436 | INFO     | algorithms.ewc:train:73 - Starting epoch 1 / 50
+2023-02-23 17:47:44.738 | INFO     | algorithms.ewc:train:114 - 1, loss: 5.562
+2023-02-23 17:47:44.739 | INFO     | algorithms.ewc:train:119 - 1, EWC Loss: 1.717
+2023-02-23 17:47:44.741 | INFO     | algorithms.ewc:train:73 - Starting epoch 2 / 50
+2023-02-23 17:47:54.923 | INFO     | algorithms.ewc:train:114 - 2, loss: 5.322
+2023-02-23 17:47:54.924 | INFO     | algorithms.ewc:train:119 - 2, EWC Loss: 1.672
+2023-02-23 17:47:54.925 | INFO     | algorithms.ewc:train:73 - Starting epoch 3 / 50
+2023-02-23 17:48:05.133 | INFO     | algorithms.ewc:train:114 - 3, loss: 5.188
+2023-02-23 17:48:05.135 | INFO     | algorithms.ewc:train:119 - 3, EWC Loss: 1.704
+2023-02-23 17:48:05.136 | INFO     | algorithms.ewc:train:73 - Starting epoch 4 / 50
+2023-02-23 17:48:15.361 | INFO     | algorithms.ewc:train:114 - 4, loss: 5.063
+2023-02-23 17:48:15.362 | INFO     | algorithms.ewc:train:119 - 4, EWC Loss: 1.733
+2023-02-23 17:48:15.363 | INFO     | algorithms.ewc:train:73 - Starting epoch 5 / 50
+2023-02-23 17:48:25.596 | INFO     | algorithms.ewc:train:114 - 5, loss: 4.963
+2023-02-23 17:48:25.598 | INFO     | algorithms.ewc:train:119 - 5, EWC Loss: 1.767
+2023-02-23 17:48:25.599 | INFO     | algorithms.ewc:train:73 - Starting epoch 6 / 50
+2023-02-23 17:48:35.845 | INFO     | algorithms.ewc:train:114 - 6, loss: 4.870
+2023-02-23 17:48:35.847 | INFO     | algorithms.ewc:train:119 - 6, EWC Loss: 1.797
+2023-02-23 17:48:35.848 | INFO     | algorithms.ewc:train:73 - Starting epoch 7 / 50
+2023-02-23 17:48:46.102 | INFO     | algorithms.ewc:train:114 - 7, loss: 4.795
+2023-02-23 17:48:46.104 | INFO     | algorithms.ewc:train:119 - 7, EWC Loss: 1.831
+2023-02-23 17:48:46.105 | INFO     | algorithms.ewc:train:73 - Starting epoch 8 / 50
+2023-02-23 17:48:56.345 | INFO     | algorithms.ewc:train:114 - 8, loss: 4.719
+2023-02-23 17:48:56.347 | INFO     | algorithms.ewc:train:119 - 8, EWC Loss: 1.859
+2023-02-23 17:48:56.348 | INFO     | algorithms.ewc:train:73 - Starting epoch 9 / 50
+2023-02-23 17:49:06.596 | INFO     | algorithms.ewc:train:114 - 9, loss: 4.659
+2023-02-23 17:49:06.597 | INFO     | algorithms.ewc:train:119 - 9, EWC Loss: 1.889
+2023-02-23 17:49:06.598 | INFO     | algorithms.ewc:train:73 - Starting epoch 10 / 50
+2023-02-23 17:49:16.854 | INFO     | algorithms.ewc:train:114 - 10, loss: 4.599
+2023-02-23 17:49:16.855 | INFO     | algorithms.ewc:train:119 - 10, EWC Loss: 1.915
+2023-02-23 17:49:16.856 | INFO     | algorithms.ewc:train:73 - Starting epoch 11 / 50
+2023-02-23 17:49:27.114 | INFO     | algorithms.ewc:train:114 - 11, loss: 4.548
+2023-02-23 17:49:27.116 | INFO     | algorithms.ewc:train:119 - 11, EWC Loss: 1.943
+2023-02-23 17:49:27.116 | INFO     | algorithms.ewc:train:73 - Starting epoch 12 / 50
+2023-02-23 17:49:37.316 | INFO     | algorithms.ewc:train:114 - 12, loss: 4.499
+2023-02-23 17:49:37.318 | INFO     | algorithms.ewc:train:119 - 12, EWC Loss: 1.966
+2023-02-23 17:49:37.320 | INFO     | algorithms.ewc:train:73 - Starting epoch 13 / 50
+2023-02-23 17:49:47.587 | INFO     | algorithms.ewc:train:114 - 13, loss: 4.459
+2023-02-23 17:49:47.588 | INFO     | algorithms.ewc:train:119 - 13, EWC Loss: 1.993
+2023-02-23 17:49:47.589 | INFO     | algorithms.ewc:train:73 - Starting epoch 14 / 50
+2023-02-23 17:49:57.786 | INFO     | algorithms.ewc:train:114 - 14, loss: 4.419
+2023-02-23 17:49:57.788 | INFO     | algorithms.ewc:train:119 - 14, EWC Loss: 2.013
+2023-02-23 17:49:57.789 | INFO     | algorithms.ewc:train:73 - Starting epoch 15 / 50
+2023-02-23 17:50:08.052 | INFO     | algorithms.ewc:train:114 - 15, loss: 4.382
+2023-02-23 17:50:08.053 | INFO     | algorithms.ewc:train:119 - 15, EWC Loss: 2.037
+2023-02-23 17:50:08.054 | INFO     | algorithms.ewc:train:73 - Starting epoch 16 / 50
+2023-02-23 17:50:19.224 | INFO     | algorithms.ewc:train:114 - 16, loss: 4.349
+2023-02-23 17:50:19.225 | INFO     | algorithms.ewc:train:119 - 16, EWC Loss: 2.055
+2023-02-23 17:50:19.226 | INFO     | algorithms.ewc:train:73 - Starting epoch 17 / 50
+2023-02-23 17:50:30.428 | INFO     | algorithms.ewc:train:114 - 17, loss: 4.321
+2023-02-23 17:50:30.430 | INFO     | algorithms.ewc:train:119 - 17, EWC Loss: 2.077
+2023-02-23 17:50:30.431 | INFO     | algorithms.ewc:train:73 - Starting epoch 18 / 50
+2023-02-23 17:50:41.097 | INFO     | algorithms.ewc:train:114 - 18, loss: 4.287
+2023-02-23 17:50:41.099 | INFO     | algorithms.ewc:train:119 - 18, EWC Loss: 2.093
+2023-02-23 17:50:41.100 | INFO     | algorithms.ewc:train:73 - Starting epoch 19 / 50
+2023-02-23 17:50:51.791 | INFO     | algorithms.ewc:train:114 - 19, loss: 4.266
+2023-02-23 17:50:51.792 | INFO     | algorithms.ewc:train:119 - 19, EWC Loss: 2.112
+2023-02-23 17:50:51.793 | INFO     | algorithms.ewc:train:73 - Starting epoch 20 / 50
+2023-02-23 17:51:02.479 | INFO     | algorithms.ewc:train:114 - 20, loss: 4.239
+2023-02-23 17:51:02.480 | INFO     | algorithms.ewc:train:119 - 20, EWC Loss: 2.127
+2023-02-23 17:51:02.481 | INFO     | algorithms.ewc:train:73 - Starting epoch 21 / 50
+2023-02-23 17:51:13.165 | INFO     | algorithms.ewc:train:114 - 21, loss: 4.216
+2023-02-23 17:51:13.166 | INFO     | algorithms.ewc:train:119 - 21, EWC Loss: 2.144
+2023-02-23 17:51:13.167 | INFO     | algorithms.ewc:train:73 - Starting epoch 22 / 50
+2023-02-23 17:51:23.855 | INFO     | algorithms.ewc:train:114 - 22, loss: 4.196
+2023-02-23 17:51:23.857 | INFO     | algorithms.ewc:train:119 - 22, EWC Loss: 2.157
+2023-02-23 17:51:23.858 | INFO     | algorithms.ewc:train:73 - Starting epoch 23 / 50
+2023-02-23 17:51:34.536 | INFO     | algorithms.ewc:train:114 - 23, loss: 4.177
+2023-02-23 17:51:34.538 | INFO     | algorithms.ewc:train:119 - 23, EWC Loss: 2.172
+2023-02-23 17:51:34.539 | INFO     | algorithms.ewc:train:73 - Starting epoch 24 / 50
+2023-02-23 17:51:45.214 | INFO     | algorithms.ewc:train:114 - 24, loss: 4.158
+2023-02-23 17:51:45.216 | INFO     | algorithms.ewc:train:119 - 24, EWC Loss: 2.183
+2023-02-23 17:51:45.217 | INFO     | algorithms.ewc:train:73 - Starting epoch 25 / 50
+2023-02-23 17:51:55.914 | INFO     | algorithms.ewc:train:114 - 25, loss: 4.139
+2023-02-23 17:51:55.916 | INFO     | algorithms.ewc:train:119 - 25, EWC Loss: 2.198
+2023-02-23 17:51:55.917 | INFO     | algorithms.ewc:train:73 - Starting epoch 26 / 50
+2023-02-23 17:52:06.588 | INFO     | algorithms.ewc:train:114 - 26, loss: 4.120
+2023-02-23 17:52:06.590 | INFO     | algorithms.ewc:train:119 - 26, EWC Loss: 2.207
+2023-02-23 17:52:06.591 | INFO     | algorithms.ewc:train:73 - Starting epoch 27 / 50
+2023-02-23 17:52:17.266 | INFO     | algorithms.ewc:train:114 - 27, loss: 4.108
+2023-02-23 17:52:17.268 | INFO     | algorithms.ewc:train:119 - 27, EWC Loss: 2.220
+2023-02-23 17:52:17.269 | INFO     | algorithms.ewc:train:73 - Starting epoch 28 / 50
+2023-02-23 17:52:27.954 | INFO     | algorithms.ewc:train:114 - 28, loss: 4.095
+2023-02-23 17:52:27.955 | INFO     | algorithms.ewc:train:119 - 28, EWC Loss: 2.228
+2023-02-23 17:52:27.956 | INFO     | algorithms.ewc:train:73 - Starting epoch 29 / 50
+2023-02-23 17:52:38.621 | INFO     | algorithms.ewc:train:114 - 29, loss: 4.080
+2023-02-23 17:52:38.623 | INFO     | algorithms.ewc:train:119 - 29, EWC Loss: 2.240
+2023-02-23 17:52:38.624 | INFO     | algorithms.ewc:train:73 - Starting epoch 30 / 50
+2023-02-23 17:52:49.297 | INFO     | algorithms.ewc:train:114 - 30, loss: 4.066
+2023-02-23 17:52:49.298 | INFO     | algorithms.ewc:train:119 - 30, EWC Loss: 2.247
+2023-02-23 17:52:49.300 | INFO     | algorithms.ewc:train:73 - Starting epoch 31 / 50
+2023-02-23 17:52:59.949 | INFO     | algorithms.ewc:train:114 - 31, loss: 4.058
+2023-02-23 17:52:59.952 | INFO     | algorithms.ewc:train:119 - 31, EWC Loss: 2.258
+2023-02-23 17:52:59.953 | INFO     | algorithms.ewc:train:73 - Starting epoch 32 / 50
+2023-02-23 17:53:10.732 | INFO     | algorithms.ewc:train:114 - 32, loss: 4.040
+2023-02-23 17:53:10.733 | INFO     | algorithms.ewc:train:119 - 32, EWC Loss: 2.264
+2023-02-23 17:53:10.734 | INFO     | algorithms.ewc:train:73 - Starting epoch 33 / 50
+2023-02-23 17:53:21.358 | INFO     | algorithms.ewc:train:114 - 33, loss: 4.035
+2023-02-23 17:53:21.359 | INFO     | algorithms.ewc:train:119 - 33, EWC Loss: 2.274
+2023-02-23 17:53:21.360 | INFO     | algorithms.ewc:train:73 - Starting epoch 34 / 50
+2023-02-23 17:53:31.874 | INFO     | algorithms.ewc:train:114 - 34, loss: 4.021
+2023-02-23 17:53:31.875 | INFO     | algorithms.ewc:train:119 - 34, EWC Loss: 2.279
+2023-02-23 17:53:31.876 | INFO     | algorithms.ewc:train:73 - Starting epoch 35 / 50
+2023-02-23 17:53:42.619 | INFO     | algorithms.ewc:train:114 - 35, loss: 4.012
+2023-02-23 17:53:42.621 | INFO     | algorithms.ewc:train:119 - 35, EWC Loss: 2.288
+2023-02-23 17:53:42.621 | INFO     | algorithms.ewc:train:73 - Starting epoch 36 / 50
+2023-02-23 17:53:53.792 | INFO     | algorithms.ewc:train:114 - 36, loss: 4.001
+2023-02-23 17:53:53.794 | INFO     | algorithms.ewc:train:119 - 36, EWC Loss: 2.293
+2023-02-23 17:53:53.795 | INFO     | algorithms.ewc:train:73 - Starting epoch 37 / 50
+2023-02-23 17:54:04.436 | INFO     | algorithms.ewc:train:114 - 37, loss: 3.993
+2023-02-23 17:54:04.438 | INFO     | algorithms.ewc:train:119 - 37, EWC Loss: 2.301
+2023-02-23 17:54:04.439 | INFO     | algorithms.ewc:train:73 - Starting epoch 38 / 50
+2023-02-23 17:54:15.034 | INFO     | algorithms.ewc:train:114 - 38, loss: 3.983
+2023-02-23 17:54:15.035 | INFO     | algorithms.ewc:train:119 - 38, EWC Loss: 2.305
+2023-02-23 17:54:15.036 | INFO     | algorithms.ewc:train:73 - Starting epoch 39 / 50
+2023-02-23 17:54:25.502 | INFO     | algorithms.ewc:train:114 - 39, loss: 3.978
+2023-02-23 17:54:25.504 | INFO     | algorithms.ewc:train:119 - 39, EWC Loss: 2.312
+2023-02-23 17:54:25.505 | INFO     | algorithms.ewc:train:73 - Starting epoch 40 / 50
+2023-02-23 17:54:36.298 | INFO     | algorithms.ewc:train:114 - 40, loss: 3.968
+2023-02-23 17:54:36.300 | INFO     | algorithms.ewc:train:119 - 40, EWC Loss: 2.316
+2023-02-23 17:54:36.301 | INFO     | algorithms.ewc:train:73 - Starting epoch 41 / 50
+2023-02-23 17:54:47.066 | INFO     | algorithms.ewc:train:114 - 41, loss: 3.964
+2023-02-23 17:54:47.067 | INFO     | algorithms.ewc:train:119 - 41, EWC Loss: 2.323
+2023-02-23 17:54:47.068 | INFO     | algorithms.ewc:train:73 - Starting epoch 42 / 50
+2023-02-23 17:54:57.723 | INFO     | algorithms.ewc:train:114 - 42, loss: 3.954
+2023-02-23 17:54:57.725 | INFO     | algorithms.ewc:train:119 - 42, EWC Loss: 2.326
+2023-02-23 17:54:57.726 | INFO     | algorithms.ewc:train:73 - Starting epoch 43 / 50
+2023-02-23 17:55:08.096 | INFO     | algorithms.ewc:train:114 - 43, loss: 3.947
+2023-02-23 17:55:08.097 | INFO     | algorithms.ewc:train:119 - 43, EWC Loss: 2.333
+2023-02-23 17:55:08.099 | INFO     | algorithms.ewc:train:73 - Starting epoch 44 / 50
+2023-02-23 17:55:18.695 | INFO     | algorithms.ewc:train:114 - 44, loss: 3.939
+2023-02-23 17:55:18.697 | INFO     | algorithms.ewc:train:119 - 44, EWC Loss: 2.335
+2023-02-23 17:55:18.698 | INFO     | algorithms.ewc:train:73 - Starting epoch 45 / 50
+2023-02-23 17:55:28.869 | INFO     | algorithms.ewc:train:114 - 45, loss: 3.930
+2023-02-23 17:55:28.871 | INFO     | algorithms.ewc:train:119 - 45, EWC Loss: 2.341
+2023-02-23 17:55:28.872 | INFO     | algorithms.ewc:train:73 - Starting epoch 46 / 50
+2023-02-23 17:55:39.229 | INFO     | algorithms.ewc:train:114 - 46, loss: 3.928
+2023-02-23 17:55:39.230 | INFO     | algorithms.ewc:train:119 - 46, EWC Loss: 2.343
+2023-02-23 17:55:39.231 | INFO     | algorithms.ewc:train:73 - Starting epoch 47 / 50
+2023-02-23 17:55:49.472 | INFO     | algorithms.ewc:train:114 - 47, loss: 3.921
+2023-02-23 17:55:49.474 | INFO     | algorithms.ewc:train:119 - 47, EWC Loss: 2.349
+2023-02-23 17:55:49.475 | INFO     | algorithms.ewc:train:73 - Starting epoch 48 / 50
+2023-02-23 17:55:59.831 | INFO     | algorithms.ewc:train:114 - 48, loss: 3.911
+2023-02-23 17:55:59.833 | INFO     | algorithms.ewc:train:119 - 48, EWC Loss: 2.351
+2023-02-23 17:55:59.834 | INFO     | algorithms.ewc:train:73 - Starting epoch 49 / 50
+2023-02-23 17:56:10.169 | INFO     | algorithms.ewc:train:114 - 49, loss: 3.912
+2023-02-23 17:56:10.171 | INFO     | algorithms.ewc:train:119 - 49, EWC Loss: 2.356
+2023-02-23 17:56:10.172 | INFO     | algorithms.ewc:train:73 - Starting epoch 50 / 50
+2023-02-23 17:56:20.329 | INFO     | algorithms.ewc:train:114 - 50, loss: 3.901
+2023-02-23 17:56:20.331 | INFO     | algorithms.ewc:train:119 - 50, EWC Loss: 2.357
+2023-02-23 17:56:20.332 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 2
+2023-02-23 17:56:25.109 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-02-23 17:56:25.111 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2019 / 10000 samples (20.19% correct)
+2023-02-23 17:56:25.250 | DEBUG    | algorithms.ewc:train:136 - Consolidating EWC parameters
+2023-02-23 17:56:25.255 | DEBUG    | algorithms.ewc:consolidate:142 - Copying existing model parameters
+2023-02-23 17:56:25.260 | DEBUG    | algorithms.ewc:consolidate:145 - Computing FIM
+2023-02-23 17:56:26.832 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   100. Fps: 63.6625 samples/s.
+2023-02-23 17:56:28.378 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   200. Fps: 64.7110 samples/s.
+2023-02-23 17:56:29.926 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   300. Fps: 64.5650 samples/s.
+2023-02-23 17:56:31.514 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   400. Fps: 62.9997 samples/s.
+2023-02-23 17:56:33.090 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   500. Fps: 63.4297 samples/s.
+2023-02-23 17:56:34.714 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   600. Fps: 61.6054 samples/s.
+2023-02-23 17:56:36.322 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   700. Fps: 62.1699 samples/s.
+2023-02-23 17:56:37.946 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   800. Fps: 61.5608 samples/s.
+2023-02-23 17:56:39.709 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   900. Fps: 56.7338 samples/s.
+2023-02-23 17:56:41.313 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1000. Fps: 62.3553 samples/s.
+2023-02-23 17:56:42.853 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1100. Fps: 64.9283 samples/s.
+2023-02-23 17:56:44.404 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1200. Fps: 64.4818 samples/s.
+2023-02-23 17:56:46.120 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1300. Fps: 58.2749 samples/s.
+2023-02-23 17:56:47.792 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1400. Fps: 59.7934 samples/s.
+2023-02-23 17:56:49.482 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1500. Fps: 59.1811 samples/s.
+2023-02-23 17:56:51.088 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1600. Fps: 62.2535 samples/s.
+2023-02-23 17:56:52.791 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1700. Fps: 58.7242 samples/s.
+2023-02-23 17:56:54.354 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1800. Fps: 63.9879 samples/s.
+2023-02-23 17:56:55.895 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1900. Fps: 64.8877 samples/s.
+2023-02-23 17:56:57.463 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2000. Fps: 63.7623 samples/s.
+2023-02-23 17:56:59.058 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2100. Fps: 62.7165 samples/s.
+2023-02-23 17:57:00.633 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2200. Fps: 63.4789 samples/s.
+2023-02-23 17:57:02.210 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2300. Fps: 63.4045 samples/s.
+2023-02-23 17:57:03.789 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2400. Fps: 63.3534 samples/s.
+2023-02-23 17:57:05.520 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2500. Fps: 57.7634 samples/s.
+2023-02-23 17:57:07.071 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2600. Fps: 64.4645 samples/s.
+2023-02-23 17:57:08.642 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2700. Fps: 63.6538 samples/s.
+2023-02-23 17:57:10.198 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2800. Fps: 64.2777 samples/s.
+2023-02-23 17:57:11.776 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2900. Fps: 63.3751 samples/s.
+2023-02-23 17:57:13.379 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3000. Fps: 62.3843 samples/s.
+2023-02-23 17:57:14.965 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3100. Fps: 63.0470 samples/s.
+2023-02-23 17:57:16.599 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3200. Fps: 61.2001 samples/s.
+2023-02-23 17:57:18.302 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3300. Fps: 58.7168 samples/s.
+2023-02-23 17:57:19.850 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3400. Fps: 64.5866 samples/s.
+2023-02-23 17:57:21.432 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3500. Fps: 63.2086 samples/s.
+2023-02-23 17:57:22.963 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3600. Fps: 65.3292 samples/s.
+2023-02-23 17:57:24.548 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3700. Fps: 63.1016 samples/s.
+2023-02-23 17:57:26.133 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3800. Fps: 63.0784 samples/s.
+2023-02-23 17:57:27.716 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3900. Fps: 63.1990 samples/s.
+2023-02-23 17:57:29.300 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  4000. Fps: 63.1086 samples/s.
+2023-02-23 17:57:30.825 | INFO     | algorithms.ewc:train:69 - Task 4 / 5
+2023-02-23 17:57:30.827 | INFO     | algorithms.ewc:train:70 - Classes in task: ['dog', 'horse']
+2023-02-23 17:57:30.827 | INFO     | algorithms.ewc:train:73 - Starting epoch 1 / 50
+2023-02-23 17:57:41.099 | INFO     | algorithms.ewc:train:114 - 1, loss: 4.461
+2023-02-23 17:57:41.101 | INFO     | algorithms.ewc:train:119 - 1, EWC Loss: 1.145
+2023-02-23 17:57:41.102 | INFO     | algorithms.ewc:train:73 - Starting epoch 2 / 50
+2023-02-23 17:57:51.220 | INFO     | algorithms.ewc:train:114 - 2, loss: 4.189
+2023-02-23 17:57:51.221 | INFO     | algorithms.ewc:train:119 - 2, EWC Loss: 1.094
+2023-02-23 17:57:51.222 | INFO     | algorithms.ewc:train:73 - Starting epoch 3 / 50
+2023-02-23 17:58:01.346 | INFO     | algorithms.ewc:train:114 - 3, loss: 4.040
+2023-02-23 17:58:01.347 | INFO     | algorithms.ewc:train:119 - 3, EWC Loss: 1.129
+2023-02-23 17:58:01.348 | INFO     | algorithms.ewc:train:73 - Starting epoch 4 / 50
+2023-02-23 17:58:11.474 | INFO     | algorithms.ewc:train:114 - 4, loss: 3.911
+2023-02-23 17:58:11.475 | INFO     | algorithms.ewc:train:119 - 4, EWC Loss: 1.169
+2023-02-23 17:58:11.476 | INFO     | algorithms.ewc:train:73 - Starting epoch 5 / 50
+2023-02-23 17:58:21.601 | INFO     | algorithms.ewc:train:114 - 5, loss: 3.808
+2023-02-23 17:58:21.602 | INFO     | algorithms.ewc:train:119 - 5, EWC Loss: 1.207
+2023-02-23 17:58:21.603 | INFO     | algorithms.ewc:train:73 - Starting epoch 6 / 50
+2023-02-23 17:58:31.730 | INFO     | algorithms.ewc:train:114 - 6, loss: 3.722
+2023-02-23 17:58:31.731 | INFO     | algorithms.ewc:train:119 - 6, EWC Loss: 1.246
+2023-02-23 17:58:31.732 | INFO     | algorithms.ewc:train:73 - Starting epoch 7 / 50
+2023-02-23 17:58:41.864 | INFO     | algorithms.ewc:train:114 - 7, loss: 3.648
+2023-02-23 17:58:41.865 | INFO     | algorithms.ewc:train:119 - 7, EWC Loss: 1.280
+2023-02-23 17:58:41.867 | INFO     | algorithms.ewc:train:73 - Starting epoch 8 / 50
+2023-02-23 17:58:51.990 | INFO     | algorithms.ewc:train:114 - 8, loss: 3.586
+2023-02-23 17:58:51.991 | INFO     | algorithms.ewc:train:119 - 8, EWC Loss: 1.316
+2023-02-23 17:58:51.993 | INFO     | algorithms.ewc:train:73 - Starting epoch 9 / 50
+2023-02-23 17:59:02.119 | INFO     | algorithms.ewc:train:114 - 9, loss: 3.528
+2023-02-23 17:59:02.121 | INFO     | algorithms.ewc:train:119 - 9, EWC Loss: 1.346
+2023-02-23 17:59:02.122 | INFO     | algorithms.ewc:train:73 - Starting epoch 10 / 50
+2023-02-23 17:59:12.251 | INFO     | algorithms.ewc:train:114 - 10, loss: 3.483
+2023-02-23 17:59:12.253 | INFO     | algorithms.ewc:train:119 - 10, EWC Loss: 1.376
+2023-02-23 17:59:12.254 | INFO     | algorithms.ewc:train:73 - Starting epoch 11 / 50
+2023-02-23 17:59:22.376 | INFO     | algorithms.ewc:train:114 - 11, loss: 3.441
+2023-02-23 17:59:22.378 | INFO     | algorithms.ewc:train:119 - 11, EWC Loss: 1.401
+2023-02-23 17:59:22.379 | INFO     | algorithms.ewc:train:73 - Starting epoch 12 / 50
+2023-02-23 17:59:32.503 | INFO     | algorithms.ewc:train:114 - 12, loss: 3.403
+2023-02-23 17:59:32.504 | INFO     | algorithms.ewc:train:119 - 12, EWC Loss: 1.427
+2023-02-23 17:59:32.505 | INFO     | algorithms.ewc:train:73 - Starting epoch 13 / 50
+2023-02-23 17:59:42.641 | INFO     | algorithms.ewc:train:114 - 13, loss: 3.373
+2023-02-23 17:59:42.643 | INFO     | algorithms.ewc:train:119 - 13, EWC Loss: 1.448
+2023-02-23 17:59:42.644 | INFO     | algorithms.ewc:train:73 - Starting epoch 14 / 50
+2023-02-23 17:59:52.750 | INFO     | algorithms.ewc:train:114 - 14, loss: 3.348
+2023-02-23 17:59:52.751 | INFO     | algorithms.ewc:train:119 - 14, EWC Loss: 1.469
+2023-02-23 17:59:52.753 | INFO     | algorithms.ewc:train:73 - Starting epoch 15 / 50
+2023-02-23 18:00:02.882 | INFO     | algorithms.ewc:train:114 - 15, loss: 3.323
+2023-02-23 18:00:02.883 | INFO     | algorithms.ewc:train:119 - 15, EWC Loss: 1.486
+2023-02-23 18:00:02.885 | INFO     | algorithms.ewc:train:73 - Starting epoch 16 / 50
+2023-02-23 18:00:12.990 | INFO     | algorithms.ewc:train:114 - 16, loss: 3.300
+2023-02-23 18:00:12.991 | INFO     | algorithms.ewc:train:119 - 16, EWC Loss: 1.504
+2023-02-23 18:00:12.992 | INFO     | algorithms.ewc:train:73 - Starting epoch 17 / 50
+2023-02-23 18:00:23.110 | INFO     | algorithms.ewc:train:114 - 17, loss: 3.278
+2023-02-23 18:00:23.111 | INFO     | algorithms.ewc:train:119 - 17, EWC Loss: 1.518
+2023-02-23 18:00:23.113 | INFO     | algorithms.ewc:train:73 - Starting epoch 18 / 50
+2023-02-23 18:00:33.212 | INFO     | algorithms.ewc:train:114 - 18, loss: 3.262
+2023-02-23 18:00:33.213 | INFO     | algorithms.ewc:train:119 - 18, EWC Loss: 1.533
+2023-02-23 18:00:33.214 | INFO     | algorithms.ewc:train:73 - Starting epoch 19 / 50
+2023-02-23 18:00:43.318 | INFO     | algorithms.ewc:train:114 - 19, loss: 3.249
+2023-02-23 18:00:43.319 | INFO     | algorithms.ewc:train:119 - 19, EWC Loss: 1.544
+2023-02-23 18:00:43.320 | INFO     | algorithms.ewc:train:73 - Starting epoch 20 / 50
+2023-02-23 18:00:53.427 | INFO     | algorithms.ewc:train:114 - 20, loss: 3.238
+2023-02-23 18:00:53.429 | INFO     | algorithms.ewc:train:119 - 20, EWC Loss: 1.557
+2023-02-23 18:00:53.430 | INFO     | algorithms.ewc:train:73 - Starting epoch 21 / 50
+2023-02-23 18:01:03.541 | INFO     | algorithms.ewc:train:114 - 21, loss: 3.222
+2023-02-23 18:01:03.543 | INFO     | algorithms.ewc:train:119 - 21, EWC Loss: 1.566
+2023-02-23 18:01:03.544 | INFO     | algorithms.ewc:train:73 - Starting epoch 22 / 50
+2023-02-23 18:01:13.645 | INFO     | algorithms.ewc:train:114 - 22, loss: 3.209
+2023-02-23 18:01:13.646 | INFO     | algorithms.ewc:train:119 - 22, EWC Loss: 1.577
+2023-02-23 18:01:13.647 | INFO     | algorithms.ewc:train:73 - Starting epoch 23 / 50
+2023-02-23 18:01:23.758 | INFO     | algorithms.ewc:train:114 - 23, loss: 3.196
+2023-02-23 18:01:23.760 | INFO     | algorithms.ewc:train:119 - 23, EWC Loss: 1.584
+2023-02-23 18:01:23.761 | INFO     | algorithms.ewc:train:73 - Starting epoch 24 / 50
+2023-02-23 18:01:33.873 | INFO     | algorithms.ewc:train:114 - 24, loss: 3.190
+2023-02-23 18:01:33.875 | INFO     | algorithms.ewc:train:119 - 24, EWC Loss: 1.593
+2023-02-23 18:01:33.876 | INFO     | algorithms.ewc:train:73 - Starting epoch 25 / 50
+2023-02-23 18:01:43.977 | INFO     | algorithms.ewc:train:114 - 25, loss: 3.176
+2023-02-23 18:01:43.979 | INFO     | algorithms.ewc:train:119 - 25, EWC Loss: 1.599
+2023-02-23 18:01:43.980 | INFO     | algorithms.ewc:train:73 - Starting epoch 26 / 50
+2023-02-23 18:01:54.087 | INFO     | algorithms.ewc:train:114 - 26, loss: 3.169
+2023-02-23 18:01:54.089 | INFO     | algorithms.ewc:train:119 - 26, EWC Loss: 1.608
+2023-02-23 18:01:54.090 | INFO     | algorithms.ewc:train:73 - Starting epoch 27 / 50
+2023-02-23 18:02:04.206 | INFO     | algorithms.ewc:train:114 - 27, loss: 3.160
+2023-02-23 18:02:04.208 | INFO     | algorithms.ewc:train:119 - 27, EWC Loss: 1.612
+2023-02-23 18:02:04.209 | INFO     | algorithms.ewc:train:73 - Starting epoch 28 / 50
+2023-02-23 18:02:14.312 | INFO     | algorithms.ewc:train:114 - 28, loss: 3.154
+2023-02-23 18:02:14.314 | INFO     | algorithms.ewc:train:119 - 28, EWC Loss: 1.620
+2023-02-23 18:02:14.315 | INFO     | algorithms.ewc:train:73 - Starting epoch 29 / 50
+2023-02-23 18:02:24.423 | INFO     | algorithms.ewc:train:114 - 29, loss: 3.144
+2023-02-23 18:02:24.424 | INFO     | algorithms.ewc:train:119 - 29, EWC Loss: 1.623
+2023-02-23 18:02:24.425 | INFO     | algorithms.ewc:train:73 - Starting epoch 30 / 50
+2023-02-23 18:02:34.535 | INFO     | algorithms.ewc:train:114 - 30, loss: 3.142
+2023-02-23 18:02:34.536 | INFO     | algorithms.ewc:train:119 - 30, EWC Loss: 1.630
+2023-02-23 18:02:34.537 | INFO     | algorithms.ewc:train:73 - Starting epoch 31 / 50
+2023-02-23 18:02:44.644 | INFO     | algorithms.ewc:train:114 - 31, loss: 3.129
+2023-02-23 18:02:44.646 | INFO     | algorithms.ewc:train:119 - 31, EWC Loss: 1.633
+2023-02-23 18:02:44.647 | INFO     | algorithms.ewc:train:73 - Starting epoch 32 / 50
+2023-02-23 18:02:54.747 | INFO     | algorithms.ewc:train:114 - 32, loss: 3.125
+2023-02-23 18:02:54.748 | INFO     | algorithms.ewc:train:119 - 32, EWC Loss: 1.638
+2023-02-23 18:02:54.749 | INFO     | algorithms.ewc:train:73 - Starting epoch 33 / 50
+2023-02-23 18:03:04.854 | INFO     | algorithms.ewc:train:114 - 33, loss: 3.120
+2023-02-23 18:03:04.855 | INFO     | algorithms.ewc:train:119 - 33, EWC Loss: 1.641
+2023-02-23 18:03:04.856 | INFO     | algorithms.ewc:train:73 - Starting epoch 34 / 50
+2023-02-23 18:03:14.967 | INFO     | algorithms.ewc:train:114 - 34, loss: 3.114
+2023-02-23 18:03:14.968 | INFO     | algorithms.ewc:train:119 - 34, EWC Loss: 1.646
+2023-02-23 18:03:14.969 | INFO     | algorithms.ewc:train:73 - Starting epoch 35 / 50
+2023-02-23 18:03:25.074 | INFO     | algorithms.ewc:train:114 - 35, loss: 3.109
+2023-02-23 18:03:25.075 | INFO     | algorithms.ewc:train:119 - 35, EWC Loss: 1.648
+2023-02-23 18:03:25.076 | INFO     | algorithms.ewc:train:73 - Starting epoch 36 / 50
+2023-02-23 18:03:35.187 | INFO     | algorithms.ewc:train:114 - 36, loss: 3.107
+2023-02-23 18:03:35.189 | INFO     | algorithms.ewc:train:119 - 36, EWC Loss: 1.652
+2023-02-23 18:03:35.190 | INFO     | algorithms.ewc:train:73 - Starting epoch 37 / 50
+2023-02-23 18:03:45.296 | INFO     | algorithms.ewc:train:114 - 37, loss: 3.102
+2023-02-23 18:03:45.297 | INFO     | algorithms.ewc:train:119 - 37, EWC Loss: 1.654
+2023-02-23 18:03:45.298 | INFO     | algorithms.ewc:train:73 - Starting epoch 38 / 50
+2023-02-23 18:03:55.412 | INFO     | algorithms.ewc:train:114 - 38, loss: 3.098
+2023-02-23 18:03:55.414 | INFO     | algorithms.ewc:train:119 - 38, EWC Loss: 1.658
+2023-02-23 18:03:55.415 | INFO     | algorithms.ewc:train:73 - Starting epoch 39 / 50
+2023-02-23 18:04:05.527 | INFO     | algorithms.ewc:train:114 - 39, loss: 3.092
+2023-02-23 18:04:05.529 | INFO     | algorithms.ewc:train:119 - 39, EWC Loss: 1.660
+2023-02-23 18:04:05.530 | INFO     | algorithms.ewc:train:73 - Starting epoch 40 / 50
+2023-02-23 18:04:15.641 | INFO     | algorithms.ewc:train:114 - 40, loss: 3.093
+2023-02-23 18:04:15.643 | INFO     | algorithms.ewc:train:119 - 40, EWC Loss: 1.664
+2023-02-23 18:04:15.644 | INFO     | algorithms.ewc:train:73 - Starting epoch 41 / 50
+2023-02-23 18:04:25.749 | INFO     | algorithms.ewc:train:114 - 41, loss: 3.085
+2023-02-23 18:04:25.750 | INFO     | algorithms.ewc:train:119 - 41, EWC Loss: 1.665
+2023-02-23 18:04:25.751 | INFO     | algorithms.ewc:train:73 - Starting epoch 42 / 50
+2023-02-23 18:04:35.856 | INFO     | algorithms.ewc:train:114 - 42, loss: 3.083
+2023-02-23 18:04:35.858 | INFO     | algorithms.ewc:train:119 - 42, EWC Loss: 1.668
+2023-02-23 18:04:35.859 | INFO     | algorithms.ewc:train:73 - Starting epoch 43 / 50
+2023-02-23 18:04:45.967 | INFO     | algorithms.ewc:train:114 - 43, loss: 3.078
+2023-02-23 18:04:45.969 | INFO     | algorithms.ewc:train:119 - 43, EWC Loss: 1.669
+2023-02-23 18:04:45.970 | INFO     | algorithms.ewc:train:73 - Starting epoch 44 / 50
+2023-02-23 18:04:56.075 | INFO     | algorithms.ewc:train:114 - 44, loss: 3.076
+2023-02-23 18:04:56.076 | INFO     | algorithms.ewc:train:119 - 44, EWC Loss: 1.673
+2023-02-23 18:04:56.077 | INFO     | algorithms.ewc:train:73 - Starting epoch 45 / 50
+2023-02-23 18:05:06.184 | INFO     | algorithms.ewc:train:114 - 45, loss: 3.071
+2023-02-23 18:05:06.186 | INFO     | algorithms.ewc:train:119 - 45, EWC Loss: 1.673
+2023-02-23 18:05:06.187 | INFO     | algorithms.ewc:train:73 - Starting epoch 46 / 50
+2023-02-23 18:05:16.287 | INFO     | algorithms.ewc:train:114 - 46, loss: 3.071
+2023-02-23 18:05:16.289 | INFO     | algorithms.ewc:train:119 - 46, EWC Loss: 1.676
+2023-02-23 18:05:16.290 | INFO     | algorithms.ewc:train:73 - Starting epoch 47 / 50
+2023-02-23 18:05:26.440 | INFO     | algorithms.ewc:train:114 - 47, loss: 3.065
+2023-02-23 18:05:26.442 | INFO     | algorithms.ewc:train:119 - 47, EWC Loss: 1.676
+2023-02-23 18:05:26.443 | INFO     | algorithms.ewc:train:73 - Starting epoch 48 / 50
+2023-02-23 18:05:36.573 | INFO     | algorithms.ewc:train:114 - 48, loss: 3.062
+2023-02-23 18:05:36.575 | INFO     | algorithms.ewc:train:119 - 48, EWC Loss: 1.680
+2023-02-23 18:05:36.576 | INFO     | algorithms.ewc:train:73 - Starting epoch 49 / 50
+2023-02-23 18:05:46.685 | INFO     | algorithms.ewc:train:114 - 49, loss: 3.059
+2023-02-23 18:05:46.687 | INFO     | algorithms.ewc:train:119 - 49, EWC Loss: 1.680
+2023-02-23 18:05:46.688 | INFO     | algorithms.ewc:train:73 - Starting epoch 50 / 50
+2023-02-23 18:05:56.794 | INFO     | algorithms.ewc:train:114 - 50, loss: 3.057
+2023-02-23 18:05:56.796 | INFO     | algorithms.ewc:train:119 - 50, EWC Loss: 1.683
+2023-02-23 18:05:56.797 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 3
+2023-02-23 18:06:01.437 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-02-23 18:06:01.439 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1752 / 10000 samples (17.52% correct)
+2023-02-23 18:06:01.573 | DEBUG    | algorithms.ewc:train:136 - Consolidating EWC parameters
+2023-02-23 18:06:01.578 | DEBUG    | algorithms.ewc:consolidate:142 - Copying existing model parameters
+2023-02-23 18:06:01.583 | DEBUG    | algorithms.ewc:consolidate:145 - Computing FIM
+2023-02-23 18:06:03.141 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   100. Fps: 64.2717 samples/s.
+2023-02-23 18:06:04.670 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   200. Fps: 65.3695 samples/s.
+2023-02-23 18:06:06.208 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   300. Fps: 65.0213 samples/s.
+2023-02-23 18:06:07.748 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   400. Fps: 64.9585 samples/s.
+2023-02-23 18:06:09.324 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   500. Fps: 63.4469 samples/s.
+2023-02-23 18:06:10.900 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   600. Fps: 63.4340 samples/s.
+2023-02-23 18:06:12.478 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   700. Fps: 63.3681 samples/s.
+2023-02-23 18:06:14.057 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   800. Fps: 63.3357 samples/s.
+2023-02-23 18:06:15.752 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:   900. Fps: 59.0148 samples/s.
+2023-02-23 18:06:17.291 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1000. Fps: 64.9894 samples/s.
+2023-02-23 18:06:18.913 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1100. Fps: 61.6465 samples/s.
+2023-02-23 18:06:20.546 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1200. Fps: 61.2263 samples/s.
+2023-02-23 18:06:22.172 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1300. Fps: 61.4948 samples/s.
+2023-02-23 18:06:24.010 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1400. Fps: 54.4214 samples/s.
+2023-02-23 18:06:25.902 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1500. Fps: 52.8494 samples/s.
+2023-02-23 18:06:27.582 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1600. Fps: 59.5059 samples/s.
+2023-02-23 18:06:29.415 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1700. Fps: 54.5610 samples/s.
+2023-02-23 18:06:31.197 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1800. Fps: 56.1326 samples/s.
+2023-02-23 18:06:32.818 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  1900. Fps: 61.6952 samples/s.
+2023-02-23 18:06:34.431 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2000. Fps: 61.9604 samples/s.
+2023-02-23 18:06:36.027 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2100. Fps: 62.6671 samples/s.
+2023-02-23 18:06:37.600 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2200. Fps: 63.5867 samples/s.
+2023-02-23 18:06:39.182 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2300. Fps: 63.2122 samples/s.
+2023-02-23 18:06:40.773 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2400. Fps: 62.8638 samples/s.
+2023-02-23 18:06:42.525 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2500. Fps: 57.0683 samples/s.
+2023-02-23 18:06:44.203 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2600. Fps: 59.5753 samples/s.
+2023-02-23 18:06:45.740 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2700. Fps: 65.0731 samples/s.
+2023-02-23 18:06:47.263 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2800. Fps: 65.6460 samples/s.
+2023-02-23 18:06:48.840 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  2900. Fps: 63.4231 samples/s.
+2023-02-23 18:06:50.426 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3000. Fps: 63.0486 samples/s.
+2023-02-23 18:06:52.010 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3100. Fps: 63.1207 samples/s.
+2023-02-23 18:06:53.585 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3200. Fps: 63.4918 samples/s.
+2023-02-23 18:06:55.285 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3300. Fps: 58.8561 samples/s.
+2023-02-23 18:06:56.824 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3400. Fps: 64.9681 samples/s.
+2023-02-23 18:06:58.370 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3500. Fps: 64.6817 samples/s.
+2023-02-23 18:06:59.914 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3600. Fps: 64.7610 samples/s.
+2023-02-23 18:07:01.492 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3700. Fps: 63.3557 samples/s.
+2023-02-23 18:07:03.061 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3800. Fps: 63.7577 samples/s.
+2023-02-23 18:07:04.648 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  3900. Fps: 63.0020 samples/s.
+2023-02-23 18:07:06.224 | DEBUG    | algorithms.ewc:fim_diag:209 - Samples:  4000. Fps: 63.4619 samples/s.
+2023-02-23 18:07:07.731 | INFO     | algorithms.ewc:train:69 - Task 5 / 5
+2023-02-23 18:07:07.733 | INFO     | algorithms.ewc:train:70 - Classes in task: ['frog', 'ship']
+2023-02-23 18:07:07.734 | INFO     | algorithms.ewc:train:73 - Starting epoch 1 / 50
+2023-02-23 18:07:17.999 | INFO     | algorithms.ewc:train:114 - 1, loss: 4.643
+2023-02-23 18:07:18.000 | INFO     | algorithms.ewc:train:119 - 1, EWC Loss: 1.192
+2023-02-23 18:07:18.001 | INFO     | algorithms.ewc:train:73 - Starting epoch 2 / 50
+2023-02-23 18:07:28.133 | INFO     | algorithms.ewc:train:114 - 2, loss: 4.153
+2023-02-23 18:07:28.135 | INFO     | algorithms.ewc:train:119 - 2, EWC Loss: 0.965
+2023-02-23 18:07:28.136 | INFO     | algorithms.ewc:train:73 - Starting epoch 3 / 50
+2023-02-23 18:07:39.284 | INFO     | algorithms.ewc:train:114 - 3, loss: 3.976
+2023-02-23 18:07:39.285 | INFO     | algorithms.ewc:train:119 - 3, EWC Loss: 1.011
+2023-02-23 18:07:39.287 | INFO     | algorithms.ewc:train:73 - Starting epoch 4 / 50
+2023-02-23 18:07:49.772 | INFO     | algorithms.ewc:train:114 - 4, loss: 3.828
+2023-02-23 18:07:49.774 | INFO     | algorithms.ewc:train:119 - 4, EWC Loss: 1.058
+2023-02-23 18:07:49.775 | INFO     | algorithms.ewc:train:73 - Starting epoch 5 / 50
+2023-02-23 18:08:00.338 | INFO     | algorithms.ewc:train:114 - 5, loss: 3.710
+2023-02-23 18:08:00.340 | INFO     | algorithms.ewc:train:119 - 5, EWC Loss: 1.107
+2023-02-23 18:08:00.341 | INFO     | algorithms.ewc:train:73 - Starting epoch 6 / 50
+2023-02-23 18:08:10.583 | INFO     | algorithms.ewc:train:114 - 6, loss: 3.610
+2023-02-23 18:08:10.584 | INFO     | algorithms.ewc:train:119 - 6, EWC Loss: 1.153
+2023-02-23 18:08:10.585 | INFO     | algorithms.ewc:train:73 - Starting epoch 7 / 50
+2023-02-23 18:08:20.792 | INFO     | algorithms.ewc:train:114 - 7, loss: 3.527
+2023-02-23 18:08:20.794 | INFO     | algorithms.ewc:train:119 - 7, EWC Loss: 1.198
+2023-02-23 18:08:20.795 | INFO     | algorithms.ewc:train:73 - Starting epoch 8 / 50
+2023-02-23 18:08:31.336 | INFO     | algorithms.ewc:train:114 - 8, loss: 3.457
+2023-02-23 18:08:31.336 | INFO     | algorithms.ewc:train:119 - 8, EWC Loss: 1.238
+2023-02-23 18:08:31.337 | INFO     | algorithms.ewc:train:73 - Starting epoch 9 / 50
+2023-02-23 18:08:41.732 | INFO     | algorithms.ewc:train:114 - 9, loss: 3.396
+2023-02-23 18:08:41.733 | INFO     | algorithms.ewc:train:119 - 9, EWC Loss: 1.278
+2023-02-23 18:08:41.734 | INFO     | algorithms.ewc:train:73 - Starting epoch 10 / 50
+2023-02-23 18:08:52.201 | INFO     | algorithms.ewc:train:114 - 10, loss: 3.342
+2023-02-23 18:08:52.203 | INFO     | algorithms.ewc:train:119 - 10, EWC Loss: 1.312
+2023-02-23 18:08:52.204 | INFO     | algorithms.ewc:train:73 - Starting epoch 11 / 50
+2023-02-23 18:09:02.595 | INFO     | algorithms.ewc:train:114 - 11, loss: 3.299
+2023-02-23 18:09:02.596 | INFO     | algorithms.ewc:train:119 - 11, EWC Loss: 1.345
+2023-02-23 18:09:02.597 | INFO     | algorithms.ewc:train:73 - Starting epoch 12 / 50
+2023-02-23 18:09:13.059 | INFO     | algorithms.ewc:train:114 - 12, loss: 3.256
+2023-02-23 18:09:13.060 | INFO     | algorithms.ewc:train:119 - 12, EWC Loss: 1.373
+2023-02-23 18:09:13.061 | INFO     | algorithms.ewc:train:73 - Starting epoch 13 / 50
+2023-02-23 18:09:23.514 | INFO     | algorithms.ewc:train:114 - 13, loss: 3.223
+2023-02-23 18:09:23.515 | INFO     | algorithms.ewc:train:119 - 13, EWC Loss: 1.400
+2023-02-23 18:09:23.516 | INFO     | algorithms.ewc:train:73 - Starting epoch 14 / 50
+2023-02-23 18:09:33.934 | INFO     | algorithms.ewc:train:114 - 14, loss: 3.194
+2023-02-23 18:09:33.934 | INFO     | algorithms.ewc:train:119 - 14, EWC Loss: 1.423
+2023-02-23 18:09:33.935 | INFO     | algorithms.ewc:train:73 - Starting epoch 15 / 50
+2023-02-23 18:09:44.299 | INFO     | algorithms.ewc:train:114 - 15, loss: 3.165
+2023-02-23 18:09:44.301 | INFO     | algorithms.ewc:train:119 - 15, EWC Loss: 1.446
+2023-02-23 18:09:44.302 | INFO     | algorithms.ewc:train:73 - Starting epoch 16 / 50
+2023-02-23 18:09:54.718 | INFO     | algorithms.ewc:train:114 - 16, loss: 3.141
+2023-02-23 18:09:54.719 | INFO     | algorithms.ewc:train:119 - 16, EWC Loss: 1.465
+2023-02-23 18:09:54.720 | INFO     | algorithms.ewc:train:73 - Starting epoch 17 / 50
+2023-02-23 18:10:05.572 | INFO     | algorithms.ewc:train:114 - 17, loss: 3.119
+2023-02-23 18:10:05.573 | INFO     | algorithms.ewc:train:119 - 17, EWC Loss: 1.484
+2023-02-23 18:10:05.574 | INFO     | algorithms.ewc:train:73 - Starting epoch 18 / 50
+2023-02-23 18:10:16.055 | INFO     | algorithms.ewc:train:114 - 18, loss: 3.100
+2023-02-23 18:10:16.057 | INFO     | algorithms.ewc:train:119 - 18, EWC Loss: 1.499
+2023-02-23 18:10:16.058 | INFO     | algorithms.ewc:train:73 - Starting epoch 19 / 50
+2023-02-23 18:10:26.465 | INFO     | algorithms.ewc:train:114 - 19, loss: 3.083
+2023-02-23 18:10:26.467 | INFO     | algorithms.ewc:train:119 - 19, EWC Loss: 1.515
+2023-02-23 18:10:26.468 | INFO     | algorithms.ewc:train:73 - Starting epoch 20 / 50
+2023-02-23 18:10:36.852 | INFO     | algorithms.ewc:train:114 - 20, loss: 3.066
+2023-02-23 18:10:36.854 | INFO     | algorithms.ewc:train:119 - 20, EWC Loss: 1.527
+2023-02-23 18:10:36.855 | INFO     | algorithms.ewc:train:73 - Starting epoch 21 / 50
+2023-02-23 18:10:47.255 | INFO     | algorithms.ewc:train:114 - 21, loss: 3.054
+2023-02-23 18:10:47.257 | INFO     | algorithms.ewc:train:119 - 21, EWC Loss: 1.540
+2023-02-23 18:10:47.258 | INFO     | algorithms.ewc:train:73 - Starting epoch 22 / 50
+2023-02-23 18:10:57.897 | INFO     | algorithms.ewc:train:114 - 22, loss: 3.040
+2023-02-23 18:10:57.898 | INFO     | algorithms.ewc:train:119 - 22, EWC Loss: 1.550
+2023-02-23 18:10:57.899 | INFO     | algorithms.ewc:train:73 - Starting epoch 23 / 50
+2023-02-23 18:11:08.882 | INFO     | algorithms.ewc:train:114 - 23, loss: 3.028
+2023-02-23 18:11:08.884 | INFO     | algorithms.ewc:train:119 - 23, EWC Loss: 1.561
+2023-02-23 18:11:08.885 | INFO     | algorithms.ewc:train:73 - Starting epoch 24 / 50
+2023-02-23 18:11:19.491 | INFO     | algorithms.ewc:train:114 - 24, loss: 3.016
+2023-02-23 18:11:19.493 | INFO     | algorithms.ewc:train:119 - 24, EWC Loss: 1.569
+2023-02-23 18:11:19.494 | INFO     | algorithms.ewc:train:73 - Starting epoch 25 / 50
+2023-02-23 18:11:29.897 | INFO     | algorithms.ewc:train:114 - 25, loss: 3.008
+2023-02-23 18:11:29.899 | INFO     | algorithms.ewc:train:119 - 25, EWC Loss: 1.579
+2023-02-23 18:11:29.900 | INFO     | algorithms.ewc:train:73 - Starting epoch 26 / 50
+2023-02-23 18:11:40.286 | INFO     | algorithms.ewc:train:114 - 26, loss: 2.996
+2023-02-23 18:11:40.288 | INFO     | algorithms.ewc:train:119 - 26, EWC Loss: 1.586
+2023-02-23 18:11:40.289 | INFO     | algorithms.ewc:train:73 - Starting epoch 27 / 50
+2023-02-23 18:11:50.733 | INFO     | algorithms.ewc:train:114 - 27, loss: 2.986
+2023-02-23 18:11:50.734 | INFO     | algorithms.ewc:train:119 - 27, EWC Loss: 1.594
+2023-02-23 18:11:50.735 | INFO     | algorithms.ewc:train:73 - Starting epoch 28 / 50
+2023-02-23 18:12:01.080 | INFO     | algorithms.ewc:train:114 - 28, loss: 2.977
+2023-02-23 18:12:01.082 | INFO     | algorithms.ewc:train:119 - 28, EWC Loss: 1.600
+2023-02-23 18:12:01.083 | INFO     | algorithms.ewc:train:73 - Starting epoch 29 / 50
+2023-02-23 18:12:11.515 | INFO     | algorithms.ewc:train:114 - 29, loss: 2.971
+2023-02-23 18:12:11.518 | INFO     | algorithms.ewc:train:119 - 29, EWC Loss: 1.607
+2023-02-23 18:12:11.519 | INFO     | algorithms.ewc:train:73 - Starting epoch 30 / 50
+2023-02-23 18:12:21.901 | INFO     | algorithms.ewc:train:114 - 30, loss: 2.963
+2023-02-23 18:12:21.903 | INFO     | algorithms.ewc:train:119 - 30, EWC Loss: 1.611
+2023-02-23 18:12:21.904 | INFO     | algorithms.ewc:train:73 - Starting epoch 31 / 50
+2023-02-23 18:12:32.500 | INFO     | algorithms.ewc:train:114 - 31, loss: 2.957
+2023-02-23 18:12:32.502 | INFO     | algorithms.ewc:train:119 - 31, EWC Loss: 1.618
+2023-02-23 18:12:32.503 | INFO     | algorithms.ewc:train:73 - Starting epoch 32 / 50
+2023-02-23 18:12:42.950 | INFO     | algorithms.ewc:train:114 - 32, loss: 2.947
+2023-02-23 18:12:42.952 | INFO     | algorithms.ewc:train:119 - 32, EWC Loss: 1.621
+2023-02-23 18:12:42.953 | INFO     | algorithms.ewc:train:73 - Starting epoch 33 / 50
+2023-02-23 18:12:53.341 | INFO     | algorithms.ewc:train:114 - 33, loss: 2.945
+2023-02-23 18:12:53.343 | INFO     | algorithms.ewc:train:119 - 33, EWC Loss: 1.627
+2023-02-23 18:12:53.344 | INFO     | algorithms.ewc:train:73 - Starting epoch 34 / 50
+2023-02-23 18:13:03.749 | INFO     | algorithms.ewc:train:114 - 34, loss: 2.938
+2023-02-23 18:13:03.751 | INFO     | algorithms.ewc:train:119 - 34, EWC Loss: 1.631
+2023-02-23 18:13:03.752 | INFO     | algorithms.ewc:train:73 - Starting epoch 35 / 50
+2023-02-23 18:13:14.200 | INFO     | algorithms.ewc:train:114 - 35, loss: 2.932
+2023-02-23 18:13:14.202 | INFO     | algorithms.ewc:train:119 - 35, EWC Loss: 1.635
+2023-02-23 18:13:14.203 | INFO     | algorithms.ewc:train:73 - Starting epoch 36 / 50
+2023-02-23 18:13:24.642 | INFO     | algorithms.ewc:train:114 - 36, loss: 2.925
+2023-02-23 18:13:24.643 | INFO     | algorithms.ewc:train:119 - 36, EWC Loss: 1.638
+2023-02-23 18:13:24.644 | INFO     | algorithms.ewc:train:73 - Starting epoch 37 / 50
+2023-02-23 18:13:34.987 | INFO     | algorithms.ewc:train:114 - 37, loss: 2.922
+2023-02-23 18:13:34.989 | INFO     | algorithms.ewc:train:119 - 37, EWC Loss: 1.643
+2023-02-23 18:13:34.990 | INFO     | algorithms.ewc:train:73 - Starting epoch 38 / 50
+2023-02-23 18:13:45.533 | INFO     | algorithms.ewc:train:114 - 38, loss: 2.918
+2023-02-23 18:13:45.535 | INFO     | algorithms.ewc:train:119 - 38, EWC Loss: 1.645
+2023-02-23 18:13:45.536 | INFO     | algorithms.ewc:train:73 - Starting epoch 39 / 50
+2023-02-23 18:13:55.874 | INFO     | algorithms.ewc:train:114 - 39, loss: 2.913
+2023-02-23 18:13:55.875 | INFO     | algorithms.ewc:train:119 - 39, EWC Loss: 1.649
+2023-02-23 18:13:55.876 | INFO     | algorithms.ewc:train:73 - Starting epoch 40 / 50
+2023-02-23 18:14:06.307 | INFO     | algorithms.ewc:train:114 - 40, loss: 2.910
+2023-02-23 18:14:06.308 | INFO     | algorithms.ewc:train:119 - 40, EWC Loss: 1.651
+2023-02-23 18:14:06.309 | INFO     | algorithms.ewc:train:73 - Starting epoch 41 / 50
+2023-02-23 18:14:16.690 | INFO     | algorithms.ewc:train:114 - 41, loss: 2.906
+2023-02-23 18:14:16.691 | INFO     | algorithms.ewc:train:119 - 41, EWC Loss: 1.655
+2023-02-23 18:14:16.692 | INFO     | algorithms.ewc:train:73 - Starting epoch 42 / 50
+2023-02-23 18:14:27.000 | INFO     | algorithms.ewc:train:114 - 42, loss: 2.900
+2023-02-23 18:14:27.001 | INFO     | algorithms.ewc:train:119 - 42, EWC Loss: 1.657
+2023-02-23 18:14:27.002 | INFO     | algorithms.ewc:train:73 - Starting epoch 43 / 50
+2023-02-23 18:14:37.413 | INFO     | algorithms.ewc:train:114 - 43, loss: 2.899
+2023-02-23 18:14:37.415 | INFO     | algorithms.ewc:train:119 - 43, EWC Loss: 1.660
+2023-02-23 18:14:37.416 | INFO     | algorithms.ewc:train:73 - Starting epoch 44 / 50
+2023-02-23 18:14:47.825 | INFO     | algorithms.ewc:train:114 - 44, loss: 2.894
+2023-02-23 18:14:47.827 | INFO     | algorithms.ewc:train:119 - 44, EWC Loss: 1.662
+2023-02-23 18:14:47.829 | INFO     | algorithms.ewc:train:73 - Starting epoch 45 / 50
+2023-02-23 18:14:58.246 | INFO     | algorithms.ewc:train:114 - 45, loss: 2.890
+2023-02-23 18:14:58.247 | INFO     | algorithms.ewc:train:119 - 45, EWC Loss: 1.665
+2023-02-23 18:14:58.248 | INFO     | algorithms.ewc:train:73 - Starting epoch 46 / 50
+2023-02-23 18:15:08.586 | INFO     | algorithms.ewc:train:114 - 46, loss: 2.887
+2023-02-23 18:15:08.587 | INFO     | algorithms.ewc:train:119 - 46, EWC Loss: 1.666
+2023-02-23 18:15:08.588 | INFO     | algorithms.ewc:train:73 - Starting epoch 47 / 50
+2023-02-23 18:15:18.990 | INFO     | algorithms.ewc:train:114 - 47, loss: 2.885
+2023-02-23 18:15:18.991 | INFO     | algorithms.ewc:train:119 - 47, EWC Loss: 1.669
+2023-02-23 18:15:18.992 | INFO     | algorithms.ewc:train:73 - Starting epoch 48 / 50
+2023-02-23 18:15:29.510 | INFO     | algorithms.ewc:train:114 - 48, loss: 2.878
+2023-02-23 18:15:29.512 | INFO     | algorithms.ewc:train:119 - 48, EWC Loss: 1.670
+2023-02-23 18:15:29.512 | INFO     | algorithms.ewc:train:73 - Starting epoch 49 / 50
+2023-02-23 18:15:40.050 | INFO     | algorithms.ewc:train:114 - 49, loss: 2.878
+2023-02-23 18:15:40.052 | INFO     | algorithms.ewc:train:119 - 49, EWC Loss: 1.673
+2023-02-23 18:15:40.053 | INFO     | algorithms.ewc:train:73 - Starting epoch 50 / 50
+2023-02-23 18:15:50.577 | INFO     | algorithms.ewc:train:114 - 50, loss: 2.874
+2023-02-23 18:15:50.578 | INFO     | algorithms.ewc:train:119 - 50, EWC Loss: 1.674
+2023-02-23 18:15:50.580 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 4
+2023-02-23 18:15:55.672 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/ewc/1677173349.4549162_CIFAR10_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-02-23 18:15:55.675 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1678 / 10000 samples (16.78% correct)
+2023-02-23 18:15:55.873 | INFO     | algorithms.ewc:train:139 - Training complete
+2023-02-23 18:15:55.877 | INFO     | __main__:run_experiment:300 - Training and evaluation completed!
+2023-02-23 18:15:55.879 | INFO     | __main__:run_experiment:314 - Wrote usage stats to file
+2023-02-23 18:15:55.880 | INFO     | __main__:main:363 - Complete
+2023-02-23 18:15:55.881 | INFO     | __main__:close_tensorboard_writer:262 - Shut down TensorBoard

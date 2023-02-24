@@ -324,6 +324,8 @@ def main():
     if config.samples is not None:
         if config.algorithm in ["gdumb", "rainbow", "scr", "der", "derpp", "novel_bn", "novel_rd"]:
             algorithm_setup.options["max_memory_samples"] = config.samples
+        elif config.algorithm in ["offline", "l2p", "ewc", "finetuning"]:
+            print(f"{config.algorithm} is not a sample-based approach, ignoring --samples flag")
         else:
             assert 1 == 0, f"Invalid algorithm {config.algorithm} for sample setting"
 
