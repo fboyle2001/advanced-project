@@ -13,7 +13,7 @@ echo:
 
 @REM 9767, 2843, 2214, 5953, 2461
 
-FOR %%s IN (2843, 2214, 5953, 2461) DO (
+FOR %%s IN (5953, 2461) DO (
     FOR %%a in (offline) DO (
         echo Seed: %%s
         echo Executing: python result_generator.py --algorithm %%a --dataset %dataset% --cpt %cpt% --seed %%s --samples %samples%
