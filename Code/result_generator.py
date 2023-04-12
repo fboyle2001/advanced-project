@@ -155,7 +155,7 @@ algorithm_setups = {
     "novel_bn": AlgorithmSetup(
         algorithm=experiments.NovelImplementation,
         options={
-            "max_memory_samples": 500,
+            "max_memory_samples": 5000,
             "uncertainty_type": "batch_normalised"
         },
         reduced_model=False,
@@ -164,7 +164,7 @@ algorithm_setups = {
     "novel_rd": AlgorithmSetup(
         algorithm=experiments.NovelImplementation,
         options={
-            "max_memory_samples": 500,
+            "max_memory_samples": 5000,
             "uncertainty_type": "relative_distances"
         },
         reduced_model=False,
