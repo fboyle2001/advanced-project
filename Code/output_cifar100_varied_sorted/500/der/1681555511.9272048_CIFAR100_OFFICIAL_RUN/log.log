@@ -1,0 +1,687 @@
+2023-04-15 11:45:11.957 | INFO     | __main__:setup_files:218 - Experiment Name: OFFICIAL_RUN
+2023-04-15 11:45:11.958 | INFO     | __main__:main:334 - Command line arguments: Configuration(algorithm='der', dataset='cifar100', classes_per_task=20, seed=2214, samples=500)
+2023-04-15 11:45:11.961 | INFO     | __main__:main:338 - Seeded random to 2214
+2023-04-15 11:45:11.961 | INFO     | __main__:main:342 - Got CUDA device
+2023-04-15 11:45:11.962 | INFO     | __main__:force_cuda_load:268 - Forcing CUDA initialisation...
+2023-04-15 11:45:12.019 | INFO     | __main__:main:346 - CUDA initialised
+2023-04-15 11:45:12.021 | INFO     | __main__:setup_shutdown_hook:264 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN
+2023-04-15 11:45:12.022 | INFO     | __main__:main:350 - Setup shutdown hooks
+2023-04-15 11:45:12.049 | INFO     | __main__:main:355 - Model is setup
+2023-04-15 11:45:12.051 | INFO     | __main__:main:357 - Complete pre-setup, starting experiment
+2023-04-15 11:45:13.223 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 20 (5 tasks) with a randomised split
+2023-04-15 11:45:13.225 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-04-15 11:45:13.245 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar100.CIFAR100",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR100",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))\n)",
+  "classes": "apple, aquarium_fish, baby, bear, beaver, bed, bee, beetle, bicycle, bottle, bowl, boy, bridge, bus, butterfly, camel, can, castle, caterpillar, cattle, chair, chimpanzee, clock, cloud, cockroach, couch, crab, crocodile, cup, dinosaur, dolphin, elephant, flatfish, forest, fox, girl, hamster, house, kangaroo, keyboard, lamp, lawn_mower, leopard, lion, lizard, lobster, man, maple_tree, motorcycle, mountain, mouse, mushroom, oak_tree, orange, orchid, otter, palm_tree, pear, pickup_truck, pine_tree, plain, plate, poppy, porcupine, possum, rabbit, raccoon, ray, road, rocket, rose, sea, seal, shark, shrew, skunk, skyscraper, snail, snake, spider, squirrel, streetcar, sunflower, sweet_pepper, table, tank, telephone, television, tiger, tractor, train, trout, tulip, turtle, wardrobe, whale, willow_tree, wolf, woman, worm",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    20
+  ],
+  "task_split_indices": [
+    [
+      83,
+      48,
+      78,
+      11,
+      67,
+      62,
+      66,
+      85,
+      2,
+      53,
+      76,
+      96,
+      17,
+      92,
+      3,
+      63,
+      97,
+      45,
+      61,
+      6
+    ],
+    [
+      77,
+      13,
+      90,
+      75,
+      44,
+      18,
+      98,
+      8,
+      91,
+      64,
+      4,
+      57,
+      24,
+      80,
+      25,
+      1,
+      99,
+      21,
+      46,
+      95
+    ],
+    [
+      86,
+      42,
+      22,
+      65,
+      58,
+      20,
+      9,
+      87,
+      79,
+      27,
+      29,
+      7,
+      51,
+      37,
+      50,
+      38,
+      40,
+      60,
+      68,
+      15
+    ],
+    [
+      84,
+      32,
+      49,
+      41,
+      30,
+      69,
+      33,
+      82,
+      55,
+      93,
+      28,
+      26,
+      0,
+      52,
+      36,
+      39,
+      94,
+      70,
+      43,
+      72
+    ],
+    [
+      81,
+      5,
+      74,
+      10,
+      73,
+      71,
+      23,
+      34,
+      47,
+      14,
+      88,
+      54,
+      31,
+      19,
+      16,
+      56,
+      12,
+      59,
+      89,
+      35
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "sweet_pepper",
+      "motorcycle",
+      "snake",
+      "boy",
+      "ray",
+      "poppy",
+      "raccoon",
+      "tank",
+      "baby",
+      "orange",
+      "skyscraper",
+      "willow_tree",
+      "castle",
+      "tulip",
+      "bear",
+      "porcupine",
+      "wolf",
+      "lobster",
+      "plate",
+      "bee"
+    ],
+    [
+      "snail",
+      "bus",
+      "train",
+      "skunk",
+      "lizard",
+      "caterpillar",
+      "woman",
+      "bicycle",
+      "trout",
+      "possum",
+      "beaver",
+      "pear",
+      "cockroach",
+      "squirrel",
+      "couch",
+      "aquarium_fish",
+      "worm",
+      "chimpanzee",
+      "man",
+      "whale"
+    ],
+    [
+      "telephone",
+      "leopard",
+      "clock",
+      "rabbit",
+      "pickup_truck",
+      "chair",
+      "bottle",
+      "television",
+      "spider",
+      "crocodile",
+      "dinosaur",
+      "beetle",
+      "mushroom",
+      "house",
+      "mouse",
+      "kangaroo",
+      "lamp",
+      "plain",
+      "road",
+      "camel"
+    ],
+    [
+      "table",
+      "flatfish",
+      "mountain",
+      "lawn_mower",
+      "dolphin",
+      "rocket",
+      "forest",
+      "sunflower",
+      "otter",
+      "turtle",
+      "cup",
+      "crab",
+      "apple",
+      "oak_tree",
+      "hamster",
+      "keyboard",
+      "wardrobe",
+      "rose",
+      "lion",
+      "seal"
+    ],
+    [
+      "streetcar",
+      "bed",
+      "shrew",
+      "bowl",
+      "shark",
+      "sea",
+      "cloud",
+      "fox",
+      "maple_tree",
+      "butterfly",
+      "tiger",
+      "orchid",
+      "elephant",
+      "cattle",
+      "can",
+      "palm_tree",
+      "bridge",
+      "pine_tree",
+      "tractor",
+      "girl"
+    ]
+  ]
+}
+2023-04-15 11:45:13.251 | DEBUG    | __main__:run_experiment:292 - PID: 7812
+2023-04-15 11:45:13.253 | INFO     | __main__:run_experiment:294 - Starting...
+2023-04-15 11:45:13.253 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.der_pp.DarkExperiencePlusPlus",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar100.CIFAR100",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "epochs_per_task": 1,
+  "batch_size": 16,
+  "max_memory_samples": 500,
+  "alpha": 0.5,
+  "beta": 0
+}
+2023-04-15 11:45:13.255 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-04-15 11:45:13.257 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-04-15 11:45:13.258 | INFO     | algorithms.der_pp:train:86 - Task 1 / 5
+2023-04-15 11:45:13.259 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['sweet_pepper', 'motorcycle', 'snake', 'boy', 'ray', 'poppy', 'raccoon', 'tank', 'baby', 'orange', 'skyscraper', 'willow_tree', 'castle', 'tulip', 'bear', 'porcupine', 'wolf', 'lobster', 'plate', 'bee']
+2023-04-15 11:45:13.259 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-04-15 11:45:17.196 | INFO     | algorithms.der_pp:train:159 - 0:1:40, loss: 5.053
+2023-04-15 11:45:19.162 | INFO     | algorithms.der_pp:train:159 - 0:1:80, loss: 4.695
+2023-04-15 11:45:21.150 | INFO     | algorithms.der_pp:train:159 - 0:1:120, loss: 4.594
+2023-04-15 11:45:23.139 | INFO     | algorithms.der_pp:train:159 - 0:1:160, loss: 4.497
+2023-04-15 11:45:25.127 | INFO     | algorithms.der_pp:train:159 - 0:1:200, loss: 4.243
+2023-04-15 11:45:27.167 | INFO     | algorithms.der_pp:train:159 - 0:1:240, loss: 4.156
+2023-04-15 11:45:29.233 | INFO     | algorithms.der_pp:train:159 - 0:1:280, loss: 4.169
+2023-04-15 11:45:31.262 | INFO     | algorithms.der_pp:train:159 - 0:1:320, loss: 4.105
+2023-04-15 11:45:33.280 | INFO     | algorithms.der_pp:train:159 - 0:1:360, loss: 3.867
+2023-04-15 11:45:35.301 | INFO     | algorithms.der_pp:train:159 - 0:1:400, loss: 3.849
+2023-04-15 11:45:37.320 | INFO     | algorithms.der_pp:train:159 - 0:1:440, loss: 3.840
+2023-04-15 11:45:39.339 | INFO     | algorithms.der_pp:train:159 - 0:1:480, loss: 3.694
+2023-04-15 11:45:41.361 | INFO     | algorithms.der_pp:train:159 - 0:1:520, loss: 3.577
+2023-04-15 11:45:43.387 | INFO     | algorithms.der_pp:train:159 - 0:1:560, loss: 3.604
+2023-04-15 11:45:45.410 | INFO     | algorithms.der_pp:train:159 - 0:1:600, loss: 3.529
+2023-04-15 11:45:46.620 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-04-15 11:45:46.621 | DEBUG    | algorithms.der_pp:train:165 - 85 has 25 samples
+2023-04-15 11:45:46.622 | DEBUG    | algorithms.der_pp:train:165 - 53 has 25 samples
+2023-04-15 11:45:46.622 | DEBUG    | algorithms.der_pp:train:165 - 11 has 25 samples
+2023-04-15 11:45:46.623 | DEBUG    | algorithms.der_pp:train:165 - 96 has 25 samples
+2023-04-15 11:45:46.624 | DEBUG    | algorithms.der_pp:train:165 - 2 has 25 samples
+2023-04-15 11:45:46.624 | DEBUG    | algorithms.der_pp:train:165 - 78 has 25 samples
+2023-04-15 11:45:46.625 | DEBUG    | algorithms.der_pp:train:165 - 61 has 25 samples
+2023-04-15 11:45:46.626 | DEBUG    | algorithms.der_pp:train:165 - 97 has 25 samples
+2023-04-15 11:45:46.627 | DEBUG    | algorithms.der_pp:train:165 - 67 has 25 samples
+2023-04-15 11:45:46.627 | DEBUG    | algorithms.der_pp:train:165 - 83 has 25 samples
+2023-04-15 11:45:46.628 | DEBUG    | algorithms.der_pp:train:165 - 48 has 25 samples
+2023-04-15 11:45:46.629 | DEBUG    | algorithms.der_pp:train:165 - 6 has 25 samples
+2023-04-15 11:45:46.629 | DEBUG    | algorithms.der_pp:train:165 - 92 has 25 samples
+2023-04-15 11:45:46.630 | DEBUG    | algorithms.der_pp:train:165 - 62 has 25 samples
+2023-04-15 11:45:46.631 | DEBUG    | algorithms.der_pp:train:165 - 17 has 25 samples
+2023-04-15 11:45:46.632 | DEBUG    | algorithms.der_pp:train:165 - 45 has 25 samples
+2023-04-15 11:45:46.632 | DEBUG    | algorithms.der_pp:train:165 - 76 has 25 samples
+2023-04-15 11:45:46.633 | DEBUG    | algorithms.der_pp:train:165 - 66 has 25 samples
+2023-04-15 11:45:46.634 | DEBUG    | algorithms.der_pp:train:165 - 3 has 25 samples
+2023-04-15 11:45:46.634 | DEBUG    | algorithms.der_pp:train:165 - 63 has 25 samples
+2023-04-15 11:45:46.635 | INFO     | algorithms.der_pp:train:170 - 1, loss: 4.077
+2023-04-15 11:45:46.636 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 0
+2023-04-15 11:45:50.686 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-04-15 11:45:50.688 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 579 / 10000 samples (5.79% correct)
+2023-04-15 11:45:51.167 | INFO     | algorithms.der_pp:train:86 - Task 2 / 5
+2023-04-15 11:45:51.173 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['snail', 'bus', 'train', 'skunk', 'lizard', 'caterpillar', 'woman', 'bicycle', 'trout', 'possum', 'beaver', 'pear', 'cockroach', 'squirrel', 'couch', 'aquarium_fish', 'worm', 'chimpanzee', 'man', 'whale']
+2023-04-15 11:45:51.174 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-04-15 11:45:53.263 | INFO     | algorithms.der_pp:train:159 - 1:1:40, loss: 5.215
+2023-04-15 11:45:55.303 | INFO     | algorithms.der_pp:train:159 - 1:1:80, loss: 4.829
+2023-04-15 11:45:57.324 | INFO     | algorithms.der_pp:train:159 - 1:1:120, loss: 4.587
+2023-04-15 11:45:59.346 | INFO     | algorithms.der_pp:train:159 - 1:1:160, loss: 4.463
+2023-04-15 11:46:01.374 | INFO     | algorithms.der_pp:train:159 - 1:1:200, loss: 4.436
+2023-04-15 11:46:03.400 | INFO     | algorithms.der_pp:train:159 - 1:1:240, loss: 4.325
+2023-04-15 11:46:05.421 | INFO     | algorithms.der_pp:train:159 - 1:1:280, loss: 4.420
+2023-04-15 11:46:07.436 | INFO     | algorithms.der_pp:train:159 - 1:1:320, loss: 4.285
+2023-04-15 11:46:09.456 | INFO     | algorithms.der_pp:train:159 - 1:1:360, loss: 4.247
+2023-04-15 11:46:11.471 | INFO     | algorithms.der_pp:train:159 - 1:1:400, loss: 4.202
+2023-04-15 11:46:13.493 | INFO     | algorithms.der_pp:train:159 - 1:1:440, loss: 4.120
+2023-04-15 11:46:15.513 | INFO     | algorithms.der_pp:train:159 - 1:1:480, loss: 4.050
+2023-04-15 11:46:17.526 | INFO     | algorithms.der_pp:train:159 - 1:1:520, loss: 4.059
+2023-04-15 11:46:19.547 | INFO     | algorithms.der_pp:train:159 - 1:1:560, loss: 4.120
+2023-04-15 11:46:21.567 | INFO     | algorithms.der_pp:train:159 - 1:1:600, loss: 4.021
+2023-04-15 11:46:22.784 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-04-15 11:46:22.785 | DEBUG    | algorithms.der_pp:train:165 - 85 has 12 samples
+2023-04-15 11:46:22.786 | DEBUG    | algorithms.der_pp:train:165 - 53 has 12 samples
+2023-04-15 11:46:22.786 | DEBUG    | algorithms.der_pp:train:165 - 11 has 12 samples
+2023-04-15 11:46:22.787 | DEBUG    | algorithms.der_pp:train:165 - 96 has 12 samples
+2023-04-15 11:46:22.788 | DEBUG    | algorithms.der_pp:train:165 - 2 has 12 samples
+2023-04-15 11:46:22.788 | DEBUG    | algorithms.der_pp:train:165 - 78 has 12 samples
+2023-04-15 11:46:22.789 | DEBUG    | algorithms.der_pp:train:165 - 61 has 12 samples
+2023-04-15 11:46:22.790 | DEBUG    | algorithms.der_pp:train:165 - 97 has 12 samples
+2023-04-15 11:46:22.790 | DEBUG    | algorithms.der_pp:train:165 - 67 has 12 samples
+2023-04-15 11:46:22.791 | DEBUG    | algorithms.der_pp:train:165 - 83 has 12 samples
+2023-04-15 11:46:22.792 | DEBUG    | algorithms.der_pp:train:165 - 48 has 12 samples
+2023-04-15 11:46:22.792 | DEBUG    | algorithms.der_pp:train:165 - 6 has 12 samples
+2023-04-15 11:46:22.793 | DEBUG    | algorithms.der_pp:train:165 - 92 has 12 samples
+2023-04-15 11:46:22.794 | DEBUG    | algorithms.der_pp:train:165 - 62 has 12 samples
+2023-04-15 11:46:22.794 | DEBUG    | algorithms.der_pp:train:165 - 17 has 12 samples
+2023-04-15 11:46:22.795 | DEBUG    | algorithms.der_pp:train:165 - 45 has 12 samples
+2023-04-15 11:46:22.796 | DEBUG    | algorithms.der_pp:train:165 - 76 has 12 samples
+2023-04-15 11:46:22.796 | DEBUG    | algorithms.der_pp:train:165 - 66 has 12 samples
+2023-04-15 11:46:22.797 | DEBUG    | algorithms.der_pp:train:165 - 3 has 12 samples
+2023-04-15 11:46:22.798 | DEBUG    | algorithms.der_pp:train:165 - 63 has 12 samples
+2023-04-15 11:46:22.798 | DEBUG    | algorithms.der_pp:train:165 - 80 has 13 samples
+2023-04-15 11:46:22.799 | DEBUG    | algorithms.der_pp:train:165 - 46 has 13 samples
+2023-04-15 11:46:22.800 | DEBUG    | algorithms.der_pp:train:165 - 1 has 13 samples
+2023-04-15 11:46:22.800 | DEBUG    | algorithms.der_pp:train:165 - 91 has 13 samples
+2023-04-15 11:46:22.801 | DEBUG    | algorithms.der_pp:train:165 - 4 has 13 samples
+2023-04-15 11:46:22.802 | DEBUG    | algorithms.der_pp:train:165 - 77 has 13 samples
+2023-04-15 11:46:22.803 | DEBUG    | algorithms.der_pp:train:165 - 18 has 13 samples
+2023-04-15 11:46:22.803 | DEBUG    | algorithms.der_pp:train:165 - 44 has 13 samples
+2023-04-15 11:46:22.804 | DEBUG    | algorithms.der_pp:train:165 - 98 has 13 samples
+2023-04-15 11:46:22.805 | DEBUG    | algorithms.der_pp:train:165 - 21 has 13 samples
+2023-04-15 11:46:22.806 | DEBUG    | algorithms.der_pp:train:165 - 24 has 13 samples
+2023-04-15 11:46:22.806 | DEBUG    | algorithms.der_pp:train:165 - 25 has 13 samples
+2023-04-15 11:46:22.807 | DEBUG    | algorithms.der_pp:train:165 - 57 has 13 samples
+2023-04-15 11:46:22.808 | DEBUG    | algorithms.der_pp:train:165 - 64 has 13 samples
+2023-04-15 11:46:22.808 | DEBUG    | algorithms.der_pp:train:165 - 99 has 13 samples
+2023-04-15 11:46:22.809 | DEBUG    | algorithms.der_pp:train:165 - 13 has 13 samples
+2023-04-15 11:46:22.810 | DEBUG    | algorithms.der_pp:train:165 - 8 has 13 samples
+2023-04-15 11:46:22.811 | DEBUG    | algorithms.der_pp:train:165 - 75 has 13 samples
+2023-04-15 11:46:22.811 | DEBUG    | algorithms.der_pp:train:165 - 90 has 13 samples
+2023-04-15 11:46:22.812 | DEBUG    | algorithms.der_pp:train:165 - 95 has 13 samples
+2023-04-15 11:46:22.813 | INFO     | algorithms.der_pp:train:170 - 1, loss: 4.347
+2023-04-15 11:46:22.814 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 1
+2023-04-15 11:46:26.814 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-04-15 11:46:26.816 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 606 / 10000 samples (6.06% correct)
+2023-04-15 11:46:27.191 | INFO     | algorithms.der_pp:train:86 - Task 3 / 5
+2023-04-15 11:46:27.196 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['telephone', 'leopard', 'clock', 'rabbit', 'pickup_truck', 'chair', 'bottle', 'television', 'spider', 'crocodile', 'dinosaur', 'beetle', 'mushroom', 'house', 'mouse', 'kangaroo', 'lamp', 'plain', 'road', 'camel']
+2023-04-15 11:46:27.197 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-04-15 11:46:29.279 | INFO     | algorithms.der_pp:train:159 - 2:1:40, loss: 5.371
+2023-04-15 11:46:31.326 | INFO     | algorithms.der_pp:train:159 - 2:1:80, loss: 4.978
+2023-04-15 11:46:33.344 | INFO     | algorithms.der_pp:train:159 - 2:1:120, loss: 4.789
+2023-04-15 11:46:35.374 | INFO     | algorithms.der_pp:train:159 - 2:1:160, loss: 4.805
+2023-04-15 11:46:37.398 | INFO     | algorithms.der_pp:train:159 - 2:1:200, loss: 4.786
+2023-04-15 11:46:39.426 | INFO     | algorithms.der_pp:train:159 - 2:1:240, loss: 4.562
+2023-04-15 11:46:41.443 | INFO     | algorithms.der_pp:train:159 - 2:1:280, loss: 4.531
+2023-04-15 11:46:43.470 | INFO     | algorithms.der_pp:train:159 - 2:1:320, loss: 4.448
+2023-04-15 11:46:45.497 | INFO     | algorithms.der_pp:train:159 - 2:1:360, loss: 4.402
+2023-04-15 11:46:47.519 | INFO     | algorithms.der_pp:train:159 - 2:1:400, loss: 4.317
+2023-04-15 11:46:49.543 | INFO     | algorithms.der_pp:train:159 - 2:1:440, loss: 4.368
+2023-04-15 11:46:51.567 | INFO     | algorithms.der_pp:train:159 - 2:1:480, loss: 4.265
+2023-04-15 11:46:53.589 | INFO     | algorithms.der_pp:train:159 - 2:1:520, loss: 4.228
+2023-04-15 11:46:55.613 | INFO     | algorithms.der_pp:train:159 - 2:1:560, loss: 4.251
+2023-04-15 11:46:57.637 | INFO     | algorithms.der_pp:train:159 - 2:1:600, loss: 4.177
+2023-04-15 11:46:58.854 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-04-15 11:46:58.855 | DEBUG    | algorithms.der_pp:train:165 - 85 has 8 samples
+2023-04-15 11:46:58.856 | DEBUG    | algorithms.der_pp:train:165 - 53 has 8 samples
+2023-04-15 11:46:58.857 | DEBUG    | algorithms.der_pp:train:165 - 11 has 8 samples
+2023-04-15 11:46:58.857 | DEBUG    | algorithms.der_pp:train:165 - 96 has 8 samples
+2023-04-15 11:46:58.858 | DEBUG    | algorithms.der_pp:train:165 - 2 has 8 samples
+2023-04-15 11:46:58.859 | DEBUG    | algorithms.der_pp:train:165 - 78 has 8 samples
+2023-04-15 11:46:58.860 | DEBUG    | algorithms.der_pp:train:165 - 61 has 8 samples
+2023-04-15 11:46:58.860 | DEBUG    | algorithms.der_pp:train:165 - 97 has 8 samples
+2023-04-15 11:46:58.861 | DEBUG    | algorithms.der_pp:train:165 - 67 has 8 samples
+2023-04-15 11:46:58.862 | DEBUG    | algorithms.der_pp:train:165 - 83 has 8 samples
+2023-04-15 11:46:58.863 | DEBUG    | algorithms.der_pp:train:165 - 48 has 8 samples
+2023-04-15 11:46:58.863 | DEBUG    | algorithms.der_pp:train:165 - 6 has 8 samples
+2023-04-15 11:46:58.864 | DEBUG    | algorithms.der_pp:train:165 - 92 has 8 samples
+2023-04-15 11:46:58.865 | DEBUG    | algorithms.der_pp:train:165 - 62 has 8 samples
+2023-04-15 11:46:58.865 | DEBUG    | algorithms.der_pp:train:165 - 17 has 8 samples
+2023-04-15 11:46:58.866 | DEBUG    | algorithms.der_pp:train:165 - 45 has 8 samples
+2023-04-15 11:46:58.867 | DEBUG    | algorithms.der_pp:train:165 - 76 has 8 samples
+2023-04-15 11:46:58.868 | DEBUG    | algorithms.der_pp:train:165 - 66 has 8 samples
+2023-04-15 11:46:58.868 | DEBUG    | algorithms.der_pp:train:165 - 3 has 8 samples
+2023-04-15 11:46:58.869 | DEBUG    | algorithms.der_pp:train:165 - 63 has 8 samples
+2023-04-15 11:46:58.870 | DEBUG    | algorithms.der_pp:train:165 - 80 has 8 samples
+2023-04-15 11:46:58.871 | DEBUG    | algorithms.der_pp:train:165 - 46 has 8 samples
+2023-04-15 11:46:58.871 | DEBUG    | algorithms.der_pp:train:165 - 1 has 8 samples
+2023-04-15 11:46:58.872 | DEBUG    | algorithms.der_pp:train:165 - 91 has 8 samples
+2023-04-15 11:46:58.873 | DEBUG    | algorithms.der_pp:train:165 - 4 has 8 samples
+2023-04-15 11:46:58.873 | DEBUG    | algorithms.der_pp:train:165 - 77 has 8 samples
+2023-04-15 11:46:58.874 | DEBUG    | algorithms.der_pp:train:165 - 18 has 8 samples
+2023-04-15 11:46:58.875 | DEBUG    | algorithms.der_pp:train:165 - 44 has 8 samples
+2023-04-15 11:46:58.876 | DEBUG    | algorithms.der_pp:train:165 - 98 has 8 samples
+2023-04-15 11:46:58.876 | DEBUG    | algorithms.der_pp:train:165 - 21 has 8 samples
+2023-04-15 11:46:58.877 | DEBUG    | algorithms.der_pp:train:165 - 24 has 8 samples
+2023-04-15 11:46:58.878 | DEBUG    | algorithms.der_pp:train:165 - 25 has 8 samples
+2023-04-15 11:46:58.878 | DEBUG    | algorithms.der_pp:train:165 - 57 has 8 samples
+2023-04-15 11:46:58.879 | DEBUG    | algorithms.der_pp:train:165 - 64 has 8 samples
+2023-04-15 11:46:58.880 | DEBUG    | algorithms.der_pp:train:165 - 99 has 8 samples
+2023-04-15 11:46:58.881 | DEBUG    | algorithms.der_pp:train:165 - 13 has 8 samples
+2023-04-15 11:46:58.881 | DEBUG    | algorithms.der_pp:train:165 - 8 has 8 samples
+2023-04-15 11:46:58.882 | DEBUG    | algorithms.der_pp:train:165 - 75 has 8 samples
+2023-04-15 11:46:58.883 | DEBUG    | algorithms.der_pp:train:165 - 90 has 8 samples
+2023-04-15 11:46:58.884 | DEBUG    | algorithms.der_pp:train:165 - 95 has 8 samples
+2023-04-15 11:46:58.884 | DEBUG    | algorithms.der_pp:train:165 - 86 has 9 samples
+2023-04-15 11:46:58.885 | DEBUG    | algorithms.der_pp:train:165 - 79 has 9 samples
+2023-04-15 11:46:58.886 | DEBUG    | algorithms.der_pp:train:165 - 15 has 9 samples
+2023-04-15 11:46:58.886 | DEBUG    | algorithms.der_pp:train:165 - 9 has 9 samples
+2023-04-15 11:46:58.887 | DEBUG    | algorithms.der_pp:train:165 - 40 has 9 samples
+2023-04-15 11:46:58.888 | DEBUG    | algorithms.der_pp:train:165 - 50 has 9 samples
+2023-04-15 11:46:58.889 | DEBUG    | algorithms.der_pp:train:165 - 29 has 9 samples
+2023-04-15 11:46:58.889 | DEBUG    | algorithms.der_pp:train:165 - 37 has 9 samples
+2023-04-15 11:46:58.890 | DEBUG    | algorithms.der_pp:train:165 - 22 has 9 samples
+2023-04-15 11:46:58.891 | DEBUG    | algorithms.der_pp:train:165 - 27 has 9 samples
+2023-04-15 11:46:58.891 | DEBUG    | algorithms.der_pp:train:165 - 20 has 9 samples
+2023-04-15 11:46:58.892 | DEBUG    | algorithms.der_pp:train:165 - 60 has 9 samples
+2023-04-15 11:46:58.893 | DEBUG    | algorithms.der_pp:train:165 - 38 has 9 samples
+2023-04-15 11:46:58.894 | DEBUG    | algorithms.der_pp:train:165 - 7 has 9 samples
+2023-04-15 11:46:58.894 | DEBUG    | algorithms.der_pp:train:165 - 65 has 9 samples
+2023-04-15 11:46:58.895 | DEBUG    | algorithms.der_pp:train:165 - 42 has 9 samples
+2023-04-15 11:46:58.896 | DEBUG    | algorithms.der_pp:train:165 - 51 has 9 samples
+2023-04-15 11:46:58.896 | DEBUG    | algorithms.der_pp:train:165 - 87 has 9 samples
+2023-04-15 11:46:58.897 | DEBUG    | algorithms.der_pp:train:165 - 58 has 9 samples
+2023-04-15 11:46:58.898 | DEBUG    | algorithms.der_pp:train:165 - 68 has 9 samples
+2023-04-15 11:46:58.899 | INFO     | algorithms.der_pp:train:170 - 1, loss: 4.540
+2023-04-15 11:46:58.899 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 2
+2023-04-15 11:47:02.920 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-04-15 11:47:02.922 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 565 / 10000 samples (5.65% correct)
+2023-04-15 11:47:03.347 | INFO     | algorithms.der_pp:train:86 - Task 4 / 5
+2023-04-15 11:47:03.352 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['table', 'flatfish', 'mountain', 'lawn_mower', 'dolphin', 'rocket', 'forest', 'sunflower', 'otter', 'turtle', 'cup', 'crab', 'apple', 'oak_tree', 'hamster', 'keyboard', 'wardrobe', 'rose', 'lion', 'seal']
+2023-04-15 11:47:03.353 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-04-15 11:47:05.445 | INFO     | algorithms.der_pp:train:159 - 3:1:40, loss: 5.371
+2023-04-15 11:47:07.501 | INFO     | algorithms.der_pp:train:159 - 3:1:80, loss: 4.856
+2023-04-15 11:47:09.530 | INFO     | algorithms.der_pp:train:159 - 3:1:120, loss: 4.527
+2023-04-15 11:47:11.556 | INFO     | algorithms.der_pp:train:159 - 3:1:160, loss: 4.350
+2023-04-15 11:47:13.587 | INFO     | algorithms.der_pp:train:159 - 3:1:200, loss: 4.348
+2023-04-15 11:47:15.617 | INFO     | algorithms.der_pp:train:159 - 3:1:240, loss: 4.148
+2023-04-15 11:47:17.644 | INFO     | algorithms.der_pp:train:159 - 3:1:280, loss: 4.192
+2023-04-15 11:47:19.669 | INFO     | algorithms.der_pp:train:159 - 3:1:320, loss: 4.030
+2023-04-15 11:47:21.695 | INFO     | algorithms.der_pp:train:159 - 3:1:360, loss: 3.941
+2023-04-15 11:47:23.724 | INFO     | algorithms.der_pp:train:159 - 3:1:400, loss: 4.029
+2023-04-15 11:47:25.751 | INFO     | algorithms.der_pp:train:159 - 3:1:440, loss: 3.900
+2023-04-15 11:47:27.780 | INFO     | algorithms.der_pp:train:159 - 3:1:480, loss: 3.790
+2023-04-15 11:47:29.806 | INFO     | algorithms.der_pp:train:159 - 3:1:520, loss: 3.839
+2023-04-15 11:47:31.847 | INFO     | algorithms.der_pp:train:159 - 3:1:560, loss: 3.832
+2023-04-15 11:47:33.911 | INFO     | algorithms.der_pp:train:159 - 3:1:600, loss: 3.710
+2023-04-15 11:47:35.135 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-04-15 11:47:35.136 | DEBUG    | algorithms.der_pp:train:165 - 85 has 6 samples
+2023-04-15 11:47:35.136 | DEBUG    | algorithms.der_pp:train:165 - 53 has 6 samples
+2023-04-15 11:47:35.137 | DEBUG    | algorithms.der_pp:train:165 - 11 has 6 samples
+2023-04-15 11:47:35.138 | DEBUG    | algorithms.der_pp:train:165 - 96 has 6 samples
+2023-04-15 11:47:35.139 | DEBUG    | algorithms.der_pp:train:165 - 2 has 6 samples
+2023-04-15 11:47:35.139 | DEBUG    | algorithms.der_pp:train:165 - 78 has 6 samples
+2023-04-15 11:47:35.140 | DEBUG    | algorithms.der_pp:train:165 - 61 has 6 samples
+2023-04-15 11:47:35.141 | DEBUG    | algorithms.der_pp:train:165 - 97 has 6 samples
+2023-04-15 11:47:35.142 | DEBUG    | algorithms.der_pp:train:165 - 67 has 6 samples
+2023-04-15 11:47:35.142 | DEBUG    | algorithms.der_pp:train:165 - 83 has 6 samples
+2023-04-15 11:47:35.143 | DEBUG    | algorithms.der_pp:train:165 - 48 has 6 samples
+2023-04-15 11:47:35.144 | DEBUG    | algorithms.der_pp:train:165 - 6 has 6 samples
+2023-04-15 11:47:35.144 | DEBUG    | algorithms.der_pp:train:165 - 92 has 6 samples
+2023-04-15 11:47:35.145 | DEBUG    | algorithms.der_pp:train:165 - 62 has 6 samples
+2023-04-15 11:47:35.146 | DEBUG    | algorithms.der_pp:train:165 - 17 has 6 samples
+2023-04-15 11:47:35.147 | DEBUG    | algorithms.der_pp:train:165 - 45 has 6 samples
+2023-04-15 11:47:35.147 | DEBUG    | algorithms.der_pp:train:165 - 76 has 6 samples
+2023-04-15 11:47:35.148 | DEBUG    | algorithms.der_pp:train:165 - 66 has 6 samples
+2023-04-15 11:47:35.149 | DEBUG    | algorithms.der_pp:train:165 - 3 has 6 samples
+2023-04-15 11:47:35.150 | DEBUG    | algorithms.der_pp:train:165 - 63 has 6 samples
+2023-04-15 11:47:35.150 | DEBUG    | algorithms.der_pp:train:165 - 80 has 6 samples
+2023-04-15 11:47:35.151 | DEBUG    | algorithms.der_pp:train:165 - 46 has 6 samples
+2023-04-15 11:47:35.152 | DEBUG    | algorithms.der_pp:train:165 - 1 has 6 samples
+2023-04-15 11:47:35.152 | DEBUG    | algorithms.der_pp:train:165 - 91 has 6 samples
+2023-04-15 11:47:35.153 | DEBUG    | algorithms.der_pp:train:165 - 4 has 6 samples
+2023-04-15 11:47:35.154 | DEBUG    | algorithms.der_pp:train:165 - 77 has 6 samples
+2023-04-15 11:47:35.155 | DEBUG    | algorithms.der_pp:train:165 - 18 has 6 samples
+2023-04-15 11:47:35.155 | DEBUG    | algorithms.der_pp:train:165 - 44 has 6 samples
+2023-04-15 11:47:35.156 | DEBUG    | algorithms.der_pp:train:165 - 98 has 6 samples
+2023-04-15 11:47:35.157 | DEBUG    | algorithms.der_pp:train:165 - 21 has 6 samples
+2023-04-15 11:47:35.158 | DEBUG    | algorithms.der_pp:train:165 - 24 has 6 samples
+2023-04-15 11:47:35.158 | DEBUG    | algorithms.der_pp:train:165 - 25 has 6 samples
+2023-04-15 11:47:35.159 | DEBUG    | algorithms.der_pp:train:165 - 57 has 6 samples
+2023-04-15 11:47:35.160 | DEBUG    | algorithms.der_pp:train:165 - 64 has 6 samples
+2023-04-15 11:47:35.161 | DEBUG    | algorithms.der_pp:train:165 - 99 has 6 samples
+2023-04-15 11:47:35.161 | DEBUG    | algorithms.der_pp:train:165 - 13 has 6 samples
+2023-04-15 11:47:35.162 | DEBUG    | algorithms.der_pp:train:165 - 8 has 6 samples
+2023-04-15 11:47:35.163 | DEBUG    | algorithms.der_pp:train:165 - 75 has 6 samples
+2023-04-15 11:47:35.164 | DEBUG    | algorithms.der_pp:train:165 - 90 has 6 samples
+2023-04-15 11:47:35.164 | DEBUG    | algorithms.der_pp:train:165 - 95 has 6 samples
+2023-04-15 11:47:35.165 | DEBUG    | algorithms.der_pp:train:165 - 86 has 6 samples
+2023-04-15 11:47:35.166 | DEBUG    | algorithms.der_pp:train:165 - 79 has 6 samples
+2023-04-15 11:47:35.167 | DEBUG    | algorithms.der_pp:train:165 - 15 has 6 samples
+2023-04-15 11:47:35.167 | DEBUG    | algorithms.der_pp:train:165 - 9 has 6 samples
+2023-04-15 11:47:35.168 | DEBUG    | algorithms.der_pp:train:165 - 40 has 6 samples
+2023-04-15 11:47:35.169 | DEBUG    | algorithms.der_pp:train:165 - 50 has 6 samples
+2023-04-15 11:47:35.170 | DEBUG    | algorithms.der_pp:train:165 - 29 has 6 samples
+2023-04-15 11:47:35.170 | DEBUG    | algorithms.der_pp:train:165 - 37 has 6 samples
+2023-04-15 11:47:35.171 | DEBUG    | algorithms.der_pp:train:165 - 22 has 6 samples
+2023-04-15 11:47:35.172 | DEBUG    | algorithms.der_pp:train:165 - 27 has 6 samples
+2023-04-15 11:47:35.172 | DEBUG    | algorithms.der_pp:train:165 - 20 has 6 samples
+2023-04-15 11:47:35.173 | DEBUG    | algorithms.der_pp:train:165 - 60 has 6 samples
+2023-04-15 11:47:35.174 | DEBUG    | algorithms.der_pp:train:165 - 38 has 6 samples
+2023-04-15 11:47:35.175 | DEBUG    | algorithms.der_pp:train:165 - 7 has 6 samples
+2023-04-15 11:47:35.175 | DEBUG    | algorithms.der_pp:train:165 - 65 has 6 samples
+2023-04-15 11:47:35.176 | DEBUG    | algorithms.der_pp:train:165 - 42 has 6 samples
+2023-04-15 11:47:35.177 | DEBUG    | algorithms.der_pp:train:165 - 51 has 6 samples
+2023-04-15 11:47:35.178 | DEBUG    | algorithms.der_pp:train:165 - 87 has 6 samples
+2023-04-15 11:47:35.178 | DEBUG    | algorithms.der_pp:train:165 - 58 has 6 samples
+2023-04-15 11:47:35.179 | DEBUG    | algorithms.der_pp:train:165 - 68 has 6 samples
+2023-04-15 11:47:35.180 | DEBUG    | algorithms.der_pp:train:165 - 52 has 7 samples
+2023-04-15 11:47:35.180 | DEBUG    | algorithms.der_pp:train:165 - 84 has 7 samples
+2023-04-15 11:47:35.181 | DEBUG    | algorithms.der_pp:train:165 - 94 has 7 samples
+2023-04-15 11:47:35.182 | DEBUG    | algorithms.der_pp:train:165 - 82 has 7 samples
+2023-04-15 11:47:35.183 | DEBUG    | algorithms.der_pp:train:165 - 28 has 7 samples
+2023-04-15 11:47:35.183 | DEBUG    | algorithms.der_pp:train:165 - 26 has 7 samples
+2023-04-15 11:47:35.184 | DEBUG    | algorithms.der_pp:train:165 - 49 has 7 samples
+2023-04-15 11:47:35.185 | DEBUG    | algorithms.der_pp:train:165 - 72 has 7 samples
+2023-04-15 11:47:35.185 | DEBUG    | algorithms.der_pp:train:165 - 39 has 7 samples
+2023-04-15 11:47:35.186 | DEBUG    | algorithms.der_pp:train:165 - 33 has 7 samples
+2023-04-15 11:47:35.187 | DEBUG    | algorithms.der_pp:train:165 - 43 has 7 samples
+2023-04-15 11:47:35.188 | DEBUG    | algorithms.der_pp:train:165 - 30 has 7 samples
+2023-04-15 11:47:35.188 | DEBUG    | algorithms.der_pp:train:165 - 93 has 7 samples
+2023-04-15 11:47:35.189 | DEBUG    | algorithms.der_pp:train:165 - 69 has 7 samples
+2023-04-15 11:47:35.190 | DEBUG    | algorithms.der_pp:train:165 - 70 has 7 samples
+2023-04-15 11:47:35.191 | DEBUG    | algorithms.der_pp:train:165 - 36 has 7 samples
+2023-04-15 11:47:35.191 | DEBUG    | algorithms.der_pp:train:165 - 32 has 7 samples
+2023-04-15 11:47:35.192 | DEBUG    | algorithms.der_pp:train:165 - 55 has 7 samples
+2023-04-15 11:47:35.193 | DEBUG    | algorithms.der_pp:train:165 - 0 has 7 samples
+2023-04-15 11:47:35.193 | DEBUG    | algorithms.der_pp:train:165 - 41 has 7 samples
+2023-04-15 11:47:35.194 | INFO     | algorithms.der_pp:train:170 - 1, loss: 4.176
+2023-04-15 11:47:35.195 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 3
+2023-04-15 11:47:39.274 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-04-15 11:47:39.275 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 738 / 10000 samples (7.38% correct)
+2023-04-15 11:47:39.642 | INFO     | algorithms.der_pp:train:86 - Task 5 / 5
+2023-04-15 11:47:39.647 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['streetcar', 'bed', 'shrew', 'bowl', 'shark', 'sea', 'cloud', 'fox', 'maple_tree', 'butterfly', 'tiger', 'orchid', 'elephant', 'cattle', 'can', 'palm_tree', 'bridge', 'pine_tree', 'tractor', 'girl']
+2023-04-15 11:47:39.648 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-04-15 11:47:41.751 | INFO     | algorithms.der_pp:train:159 - 4:1:40, loss: 5.410
+2023-04-15 11:47:43.811 | INFO     | algorithms.der_pp:train:159 - 4:1:80, loss: 5.077
+2023-04-15 11:47:45.842 | INFO     | algorithms.der_pp:train:159 - 4:1:120, loss: 4.882
+2023-04-15 11:47:47.873 | INFO     | algorithms.der_pp:train:159 - 4:1:160, loss: 4.754
+2023-04-15 11:47:49.905 | INFO     | algorithms.der_pp:train:159 - 4:1:200, loss: 4.578
+2023-04-15 11:47:51.942 | INFO     | algorithms.der_pp:train:159 - 4:1:240, loss: 4.556
+2023-04-15 11:47:53.979 | INFO     | algorithms.der_pp:train:159 - 4:1:280, loss: 4.461
+2023-04-15 11:47:56.014 | INFO     | algorithms.der_pp:train:159 - 4:1:320, loss: 4.373
+2023-04-15 11:47:58.046 | INFO     | algorithms.der_pp:train:159 - 4:1:360, loss: 4.246
+2023-04-15 11:48:00.082 | INFO     | algorithms.der_pp:train:159 - 4:1:400, loss: 4.246
+2023-04-15 11:48:02.113 | INFO     | algorithms.der_pp:train:159 - 4:1:440, loss: 4.218
+2023-04-15 11:48:04.141 | INFO     | algorithms.der_pp:train:159 - 4:1:480, loss: 4.150
+2023-04-15 11:48:06.173 | INFO     | algorithms.der_pp:train:159 - 4:1:520, loss: 4.154
+2023-04-15 11:48:08.205 | INFO     | algorithms.der_pp:train:159 - 4:1:560, loss: 3.959
+2023-04-15 11:48:10.238 | INFO     | algorithms.der_pp:train:159 - 4:1:600, loss: 4.048
+2023-04-15 11:48:11.456 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-04-15 11:48:11.457 | DEBUG    | algorithms.der_pp:train:165 - 85 has 5 samples
+2023-04-15 11:48:11.457 | DEBUG    | algorithms.der_pp:train:165 - 53 has 5 samples
+2023-04-15 11:48:11.458 | DEBUG    | algorithms.der_pp:train:165 - 11 has 5 samples
+2023-04-15 11:48:11.459 | DEBUG    | algorithms.der_pp:train:165 - 96 has 5 samples
+2023-04-15 11:48:11.460 | DEBUG    | algorithms.der_pp:train:165 - 2 has 5 samples
+2023-04-15 11:48:11.460 | DEBUG    | algorithms.der_pp:train:165 - 78 has 5 samples
+2023-04-15 11:48:11.461 | DEBUG    | algorithms.der_pp:train:165 - 61 has 5 samples
+2023-04-15 11:48:11.462 | DEBUG    | algorithms.der_pp:train:165 - 97 has 5 samples
+2023-04-15 11:48:11.462 | DEBUG    | algorithms.der_pp:train:165 - 67 has 5 samples
+2023-04-15 11:48:11.463 | DEBUG    | algorithms.der_pp:train:165 - 83 has 5 samples
+2023-04-15 11:48:11.464 | DEBUG    | algorithms.der_pp:train:165 - 48 has 5 samples
+2023-04-15 11:48:11.465 | DEBUG    | algorithms.der_pp:train:165 - 6 has 5 samples
+2023-04-15 11:48:11.465 | DEBUG    | algorithms.der_pp:train:165 - 92 has 5 samples
+2023-04-15 11:48:11.466 | DEBUG    | algorithms.der_pp:train:165 - 62 has 5 samples
+2023-04-15 11:48:11.467 | DEBUG    | algorithms.der_pp:train:165 - 17 has 5 samples
+2023-04-15 11:48:11.468 | DEBUG    | algorithms.der_pp:train:165 - 45 has 5 samples
+2023-04-15 11:48:11.468 | DEBUG    | algorithms.der_pp:train:165 - 76 has 5 samples
+2023-04-15 11:48:11.469 | DEBUG    | algorithms.der_pp:train:165 - 66 has 5 samples
+2023-04-15 11:48:11.470 | DEBUG    | algorithms.der_pp:train:165 - 3 has 5 samples
+2023-04-15 11:48:11.470 | DEBUG    | algorithms.der_pp:train:165 - 63 has 5 samples
+2023-04-15 11:48:11.471 | DEBUG    | algorithms.der_pp:train:165 - 80 has 5 samples
+2023-04-15 11:48:11.472 | DEBUG    | algorithms.der_pp:train:165 - 46 has 5 samples
+2023-04-15 11:48:11.473 | DEBUG    | algorithms.der_pp:train:165 - 1 has 5 samples
+2023-04-15 11:48:11.473 | DEBUG    | algorithms.der_pp:train:165 - 91 has 5 samples
+2023-04-15 11:48:11.474 | DEBUG    | algorithms.der_pp:train:165 - 4 has 5 samples
+2023-04-15 11:48:11.475 | DEBUG    | algorithms.der_pp:train:165 - 77 has 5 samples
+2023-04-15 11:48:11.475 | DEBUG    | algorithms.der_pp:train:165 - 18 has 5 samples
+2023-04-15 11:48:11.476 | DEBUG    | algorithms.der_pp:train:165 - 44 has 5 samples
+2023-04-15 11:48:11.477 | DEBUG    | algorithms.der_pp:train:165 - 98 has 5 samples
+2023-04-15 11:48:11.478 | DEBUG    | algorithms.der_pp:train:165 - 21 has 5 samples
+2023-04-15 11:48:11.478 | DEBUG    | algorithms.der_pp:train:165 - 24 has 5 samples
+2023-04-15 11:48:11.479 | DEBUG    | algorithms.der_pp:train:165 - 25 has 5 samples
+2023-04-15 11:48:11.480 | DEBUG    | algorithms.der_pp:train:165 - 57 has 5 samples
+2023-04-15 11:48:11.480 | DEBUG    | algorithms.der_pp:train:165 - 64 has 5 samples
+2023-04-15 11:48:11.481 | DEBUG    | algorithms.der_pp:train:165 - 99 has 5 samples
+2023-04-15 11:48:11.482 | DEBUG    | algorithms.der_pp:train:165 - 13 has 5 samples
+2023-04-15 11:48:11.482 | DEBUG    | algorithms.der_pp:train:165 - 8 has 5 samples
+2023-04-15 11:48:11.483 | DEBUG    | algorithms.der_pp:train:165 - 75 has 5 samples
+2023-04-15 11:48:11.484 | DEBUG    | algorithms.der_pp:train:165 - 90 has 5 samples
+2023-04-15 11:48:11.485 | DEBUG    | algorithms.der_pp:train:165 - 95 has 5 samples
+2023-04-15 11:48:11.485 | DEBUG    | algorithms.der_pp:train:165 - 86 has 5 samples
+2023-04-15 11:48:11.486 | DEBUG    | algorithms.der_pp:train:165 - 79 has 5 samples
+2023-04-15 11:48:11.487 | DEBUG    | algorithms.der_pp:train:165 - 15 has 5 samples
+2023-04-15 11:48:11.487 | DEBUG    | algorithms.der_pp:train:165 - 9 has 5 samples
+2023-04-15 11:48:11.488 | DEBUG    | algorithms.der_pp:train:165 - 40 has 5 samples
+2023-04-15 11:48:11.489 | DEBUG    | algorithms.der_pp:train:165 - 50 has 5 samples
+2023-04-15 11:48:11.490 | DEBUG    | algorithms.der_pp:train:165 - 29 has 5 samples
+2023-04-15 11:48:11.490 | DEBUG    | algorithms.der_pp:train:165 - 37 has 5 samples
+2023-04-15 11:48:11.491 | DEBUG    | algorithms.der_pp:train:165 - 22 has 5 samples
+2023-04-15 11:48:11.492 | DEBUG    | algorithms.der_pp:train:165 - 27 has 5 samples
+2023-04-15 11:48:11.492 | DEBUG    | algorithms.der_pp:train:165 - 20 has 5 samples
+2023-04-15 11:48:11.493 | DEBUG    | algorithms.der_pp:train:165 - 60 has 5 samples
+2023-04-15 11:48:11.494 | DEBUG    | algorithms.der_pp:train:165 - 38 has 5 samples
+2023-04-15 11:48:11.495 | DEBUG    | algorithms.der_pp:train:165 - 7 has 5 samples
+2023-04-15 11:48:11.495 | DEBUG    | algorithms.der_pp:train:165 - 65 has 5 samples
+2023-04-15 11:48:11.496 | DEBUG    | algorithms.der_pp:train:165 - 42 has 5 samples
+2023-04-15 11:48:11.497 | DEBUG    | algorithms.der_pp:train:165 - 51 has 5 samples
+2023-04-15 11:48:11.497 | DEBUG    | algorithms.der_pp:train:165 - 87 has 5 samples
+2023-04-15 11:48:11.498 | DEBUG    | algorithms.der_pp:train:165 - 58 has 5 samples
+2023-04-15 11:48:11.499 | DEBUG    | algorithms.der_pp:train:165 - 68 has 5 samples
+2023-04-15 11:48:11.499 | DEBUG    | algorithms.der_pp:train:165 - 52 has 5 samples
+2023-04-15 11:48:11.500 | DEBUG    | algorithms.der_pp:train:165 - 84 has 5 samples
+2023-04-15 11:48:11.501 | DEBUG    | algorithms.der_pp:train:165 - 94 has 5 samples
+2023-04-15 11:48:11.502 | DEBUG    | algorithms.der_pp:train:165 - 82 has 5 samples
+2023-04-15 11:48:11.502 | DEBUG    | algorithms.der_pp:train:165 - 28 has 5 samples
+2023-04-15 11:48:11.503 | DEBUG    | algorithms.der_pp:train:165 - 26 has 5 samples
+2023-04-15 11:48:11.504 | DEBUG    | algorithms.der_pp:train:165 - 49 has 5 samples
+2023-04-15 11:48:11.504 | DEBUG    | algorithms.der_pp:train:165 - 72 has 5 samples
+2023-04-15 11:48:11.505 | DEBUG    | algorithms.der_pp:train:165 - 39 has 5 samples
+2023-04-15 11:48:11.506 | DEBUG    | algorithms.der_pp:train:165 - 33 has 5 samples
+2023-04-15 11:48:11.507 | DEBUG    | algorithms.der_pp:train:165 - 43 has 5 samples
+2023-04-15 11:48:11.507 | DEBUG    | algorithms.der_pp:train:165 - 30 has 5 samples
+2023-04-15 11:48:11.508 | DEBUG    | algorithms.der_pp:train:165 - 93 has 5 samples
+2023-04-15 11:48:11.509 | DEBUG    | algorithms.der_pp:train:165 - 69 has 5 samples
+2023-04-15 11:48:11.509 | DEBUG    | algorithms.der_pp:train:165 - 70 has 5 samples
+2023-04-15 11:48:11.510 | DEBUG    | algorithms.der_pp:train:165 - 36 has 5 samples
+2023-04-15 11:48:11.511 | DEBUG    | algorithms.der_pp:train:165 - 32 has 5 samples
+2023-04-15 11:48:11.511 | DEBUG    | algorithms.der_pp:train:165 - 55 has 5 samples
+2023-04-15 11:48:11.512 | DEBUG    | algorithms.der_pp:train:165 - 0 has 5 samples
+2023-04-15 11:48:11.513 | DEBUG    | algorithms.der_pp:train:165 - 41 has 5 samples
+2023-04-15 11:48:11.513 | DEBUG    | algorithms.der_pp:train:165 - 59 has 5 samples
+2023-04-15 11:48:11.514 | DEBUG    | algorithms.der_pp:train:165 - 81 has 5 samples
+2023-04-15 11:48:11.515 | DEBUG    | algorithms.der_pp:train:165 - 34 has 5 samples
+2023-04-15 11:48:11.516 | DEBUG    | algorithms.der_pp:train:165 - 12 has 5 samples
+2023-04-15 11:48:11.516 | DEBUG    | algorithms.der_pp:train:165 - 71 has 5 samples
+2023-04-15 11:48:11.517 | DEBUG    | algorithms.der_pp:train:165 - 74 has 5 samples
+2023-04-15 11:48:11.518 | DEBUG    | algorithms.der_pp:train:165 - 47 has 5 samples
+2023-04-15 11:48:11.518 | DEBUG    | algorithms.der_pp:train:165 - 88 has 5 samples
+2023-04-15 11:48:11.519 | DEBUG    | algorithms.der_pp:train:165 - 89 has 5 samples
+2023-04-15 11:48:11.520 | DEBUG    | algorithms.der_pp:train:165 - 35 has 5 samples
+2023-04-15 11:48:11.521 | DEBUG    | algorithms.der_pp:train:165 - 16 has 5 samples
+2023-04-15 11:48:11.521 | DEBUG    | algorithms.der_pp:train:165 - 14 has 5 samples
+2023-04-15 11:48:11.522 | DEBUG    | algorithms.der_pp:train:165 - 73 has 5 samples
+2023-04-15 11:48:11.523 | DEBUG    | algorithms.der_pp:train:165 - 54 has 5 samples
+2023-04-15 11:48:11.523 | DEBUG    | algorithms.der_pp:train:165 - 10 has 5 samples
+2023-04-15 11:48:11.524 | DEBUG    | algorithms.der_pp:train:165 - 5 has 5 samples
+2023-04-15 11:48:11.525 | DEBUG    | algorithms.der_pp:train:165 - 19 has 5 samples
+2023-04-15 11:48:11.526 | DEBUG    | algorithms.der_pp:train:165 - 31 has 5 samples
+2023-04-15 11:48:11.526 | DEBUG    | algorithms.der_pp:train:165 - 23 has 5 samples
+2023-04-15 11:48:11.527 | DEBUG    | algorithms.der_pp:train:165 - 56 has 5 samples
+2023-04-15 11:48:11.528 | INFO     | algorithms.der_pp:train:170 - 1, loss: 4.453
+2023-04-15 11:48:11.528 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 4
+2023-04-15 11:48:15.584 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar100_varied_sampling/der_pp/1681555511.9272048_CIFAR100_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-04-15 11:48:15.586 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 669 / 10000 samples (6.69% correct)
+2023-04-15 11:48:15.953 | INFO     | algorithms.der_pp:train:178 - Training complete
+2023-04-15 11:48:15.958 | INFO     | __main__:run_experiment:300 - Training and evaluation completed!
+2023-04-15 11:48:15.960 | INFO     | __main__:run_experiment:314 - Wrote usage stats to file
+2023-04-15 11:48:15.960 | INFO     | __main__:main:363 - Complete
+2023-04-15 11:48:15.961 | INFO     | __main__:close_tensorboard_writer:262 - Shut down TensorBoard

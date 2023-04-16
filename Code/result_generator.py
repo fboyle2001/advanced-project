@@ -21,7 +21,7 @@ import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-PARENT_DIRECTORY = "./output_cifar10_0.5k"
+PARENT_DIRECTORY = "./output_cifar10_varied_sampling"
 @dataclass
 class Configuration:
     algorithm: str

@@ -1,0 +1,237 @@
+2023-02-01 13:36:04.385 | INFO     | __main__:setup_files:206 - Experiment Name: OFFICIAL_RUN
+2023-02-01 13:36:04.386 | INFO     | __main__:main:311 - Command line arguments: Configuration(algorithm='derpp', dataset='cifar10', classes_per_task=2, seed=9767)
+2023-02-01 13:36:04.388 | INFO     | __main__:main:315 - Seeded random to 9767
+2023-02-01 13:36:04.389 | INFO     | __main__:main:319 - Got CUDA device
+2023-02-01 13:36:04.390 | INFO     | __main__:force_cuda_load:254 - Forcing CUDA initialisation...
+2023-02-01 13:36:04.459 | INFO     | __main__:main:323 - CUDA initialised
+2023-02-01 13:36:04.461 | INFO     | __main__:setup_shutdown_hook:250 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN
+2023-02-01 13:36:04.462 | INFO     | __main__:main:327 - Setup shutdown hooks
+2023-02-01 13:36:04.591 | INFO     | __main__:main:332 - Model is setup
+2023-02-01 13:36:04.593 | INFO     | __main__:main:334 - Complete pre-setup, starting experiment
+2023-02-01 13:36:05.852 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-02-01 13:36:05.853 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-02-01 13:36:05.874 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(32, 32), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      0,
+      6
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      9,
+      8
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "plane",
+      "frog"
+    ],
+    [
+      "deer",
+      "dog"
+    ],
+    [
+      "horse",
+      "bird"
+    ],
+    [
+      "car",
+      "cat"
+    ],
+    [
+      "truck",
+      "ship"
+    ]
+  ]
+}
+2023-02-01 13:36:05.880 | DEBUG    | __main__:run_experiment:278 - PID: 28112
+2023-02-01 13:36:05.882 | INFO     | __main__:run_experiment:280 - Starting...
+2023-02-01 13:36:05.882 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "algorithms.der_pp.DarkExperiencePlusPlus",
+  "model_class": "models.cifar.resnet.ResNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "torch.nn.modules.loss.CrossEntropyLoss",
+  "epochs_per_task": 1,
+  "batch_size": 16,
+  "max_memory_samples": 500,
+  "alpha": 0.5,
+  "beta": 0.5
+}
+2023-02-01 13:36:05.884 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-02-01 13:36:05.885 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-02-01 13:36:05.886 | INFO     | algorithms.der_pp:train:86 - Task 1 / 5
+2023-02-01 13:36:05.887 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['plane', 'frog']
+2023-02-01 13:36:05.887 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-02-01 13:36:11.189 | INFO     | algorithms.der_pp:train:159 - 0:1:40, loss: 3.147
+2023-02-01 13:36:13.797 | INFO     | algorithms.der_pp:train:159 - 0:1:80, loss: 2.403
+2023-02-01 13:36:16.398 | INFO     | algorithms.der_pp:train:159 - 0:1:120, loss: 2.002
+2023-02-01 13:36:19.015 | INFO     | algorithms.der_pp:train:159 - 0:1:160, loss: 1.749
+2023-02-01 13:36:21.629 | INFO     | algorithms.der_pp:train:159 - 0:1:200, loss: 1.586
+2023-02-01 13:36:24.242 | INFO     | algorithms.der_pp:train:159 - 0:1:240, loss: 1.272
+2023-02-01 13:36:26.860 | INFO     | algorithms.der_pp:train:159 - 0:1:280, loss: 1.206
+2023-02-01 13:36:29.474 | INFO     | algorithms.der_pp:train:159 - 0:1:320, loss: 1.112
+2023-02-01 13:36:32.085 | INFO     | algorithms.der_pp:train:159 - 0:1:360, loss: 1.055
+2023-02-01 13:36:34.697 | INFO     | algorithms.der_pp:train:159 - 0:1:400, loss: 1.062
+2023-02-01 13:36:37.308 | INFO     | algorithms.der_pp:train:159 - 0:1:440, loss: 0.994
+2023-02-01 13:36:39.924 | INFO     | algorithms.der_pp:train:159 - 0:1:480, loss: 0.857
+2023-02-01 13:36:42.546 | INFO     | algorithms.der_pp:train:159 - 0:1:520, loss: 0.778
+2023-02-01 13:36:45.163 | INFO     | algorithms.der_pp:train:159 - 0:1:560, loss: 0.795
+2023-02-01 13:36:47.776 | INFO     | algorithms.der_pp:train:159 - 0:1:600, loss: 0.770
+2023-02-01 13:36:49.345 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-02-01 13:36:49.346 | DEBUG    | algorithms.der_pp:train:165 - 6 has 250 samples
+2023-02-01 13:36:49.347 | DEBUG    | algorithms.der_pp:train:165 - 0 has 250 samples
+2023-02-01 13:36:49.348 | INFO     | algorithms.der_pp:train:170 - 1, loss: 1.363
+2023-02-01 13:36:49.349 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 0
+2023-02-01 13:36:54.244 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN/task_0_accuracy_results.json
+2023-02-01 13:36:54.245 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 1846 / 10000 samples (18.46% correct)
+2023-02-01 13:36:54.484 | INFO     | algorithms.der_pp:train:86 - Task 2 / 5
+2023-02-01 13:36:54.488 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['deer', 'dog']
+2023-02-01 13:36:54.488 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-02-01 13:36:57.164 | INFO     | algorithms.der_pp:train:159 - 1:1:40, loss: 4.750
+2023-02-01 13:36:59.769 | INFO     | algorithms.der_pp:train:159 - 1:1:80, loss: 3.921
+2023-02-01 13:37:02.387 | INFO     | algorithms.der_pp:train:159 - 1:1:120, loss: 3.369
+2023-02-01 13:37:05.002 | INFO     | algorithms.der_pp:train:159 - 1:1:160, loss: 3.093
+2023-02-01 13:37:07.621 | INFO     | algorithms.der_pp:train:159 - 1:1:200, loss: 2.758
+2023-02-01 13:37:10.233 | INFO     | algorithms.der_pp:train:159 - 1:1:240, loss: 2.538
+2023-02-01 13:37:12.854 | INFO     | algorithms.der_pp:train:159 - 1:1:280, loss: 2.370
+2023-02-01 13:37:15.476 | INFO     | algorithms.der_pp:train:159 - 1:1:320, loss: 2.207
+2023-02-01 13:37:18.099 | INFO     | algorithms.der_pp:train:159 - 1:1:360, loss: 2.137
+2023-02-01 13:37:20.724 | INFO     | algorithms.der_pp:train:159 - 1:1:400, loss: 2.151
+2023-02-01 13:37:23.342 | INFO     | algorithms.der_pp:train:159 - 1:1:440, loss: 2.068
+2023-02-01 13:37:25.961 | INFO     | algorithms.der_pp:train:159 - 1:1:480, loss: 2.011
+2023-02-01 13:37:28.579 | INFO     | algorithms.der_pp:train:159 - 1:1:520, loss: 1.878
+2023-02-01 13:37:31.200 | INFO     | algorithms.der_pp:train:159 - 1:1:560, loss: 1.858
+2023-02-01 13:37:33.819 | INFO     | algorithms.der_pp:train:159 - 1:1:600, loss: 1.869
+2023-02-01 13:37:35.395 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-02-01 13:37:35.396 | DEBUG    | algorithms.der_pp:train:165 - 6 has 125 samples
+2023-02-01 13:37:35.397 | DEBUG    | algorithms.der_pp:train:165 - 0 has 125 samples
+2023-02-01 13:37:35.397 | DEBUG    | algorithms.der_pp:train:165 - 4 has 125 samples
+2023-02-01 13:37:35.398 | DEBUG    | algorithms.der_pp:train:165 - 5 has 125 samples
+2023-02-01 13:37:35.399 | INFO     | algorithms.der_pp:train:170 - 1, loss: 2.571
+2023-02-01 13:37:35.400 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 1
+2023-02-01 13:37:40.108 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN/task_1_accuracy_results.json
+2023-02-01 13:37:40.110 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2565 / 10000 samples (25.65% correct)
+2023-02-01 13:37:40.248 | INFO     | algorithms.der_pp:train:86 - Task 3 / 5
+2023-02-01 13:37:40.253 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['horse', 'bird']
+2023-02-01 13:37:40.254 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-02-01 13:37:42.938 | INFO     | algorithms.der_pp:train:159 - 2:1:40, loss: 4.839
+2023-02-01 13:37:45.558 | INFO     | algorithms.der_pp:train:159 - 2:1:80, loss: 4.086
+2023-02-01 13:37:48.173 | INFO     | algorithms.der_pp:train:159 - 2:1:120, loss: 3.657
+2023-02-01 13:37:50.794 | INFO     | algorithms.der_pp:train:159 - 2:1:160, loss: 3.350
+2023-02-01 13:37:53.421 | INFO     | algorithms.der_pp:train:159 - 2:1:200, loss: 3.153
+2023-02-01 13:37:56.042 | INFO     | algorithms.der_pp:train:159 - 2:1:240, loss: 3.038
+2023-02-01 13:37:58.664 | INFO     | algorithms.der_pp:train:159 - 2:1:280, loss: 2.846
+2023-02-01 13:38:01.286 | INFO     | algorithms.der_pp:train:159 - 2:1:320, loss: 2.767
+2023-02-01 13:38:03.910 | INFO     | algorithms.der_pp:train:159 - 2:1:360, loss: 2.581
+2023-02-01 13:38:06.530 | INFO     | algorithms.der_pp:train:159 - 2:1:400, loss: 2.485
+2023-02-01 13:38:09.147 | INFO     | algorithms.der_pp:train:159 - 2:1:440, loss: 2.441
+2023-02-01 13:38:11.770 | INFO     | algorithms.der_pp:train:159 - 2:1:480, loss: 2.406
+2023-02-01 13:38:14.385 | INFO     | algorithms.der_pp:train:159 - 2:1:520, loss: 2.412
+2023-02-01 13:38:17.005 | INFO     | algorithms.der_pp:train:159 - 2:1:560, loss: 2.336
+2023-02-01 13:38:19.618 | INFO     | algorithms.der_pp:train:159 - 2:1:600, loss: 2.305
+2023-02-01 13:38:21.195 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-02-01 13:38:21.196 | DEBUG    | algorithms.der_pp:train:165 - 6 has 83 samples
+2023-02-01 13:38:21.197 | DEBUG    | algorithms.der_pp:train:165 - 0 has 83 samples
+2023-02-01 13:38:21.197 | DEBUG    | algorithms.der_pp:train:165 - 4 has 83 samples
+2023-02-01 13:38:21.198 | DEBUG    | algorithms.der_pp:train:165 - 5 has 83 samples
+2023-02-01 13:38:21.199 | DEBUG    | algorithms.der_pp:train:165 - 2 has 84 samples
+2023-02-01 13:38:21.200 | DEBUG    | algorithms.der_pp:train:165 - 7 has 84 samples
+2023-02-01 13:38:21.201 | INFO     | algorithms.der_pp:train:170 - 1, loss: 2.951
+2023-02-01 13:38:21.201 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 2
+2023-02-01 13:38:25.903 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN/task_2_accuracy_results.json
+2023-02-01 13:38:25.904 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2995 / 10000 samples (29.95% correct)
+2023-02-01 13:38:26.042 | INFO     | algorithms.der_pp:train:86 - Task 4 / 5
+2023-02-01 13:38:26.047 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['car', 'cat']
+2023-02-01 13:38:26.048 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-02-01 13:38:28.723 | INFO     | algorithms.der_pp:train:159 - 3:1:40, loss: 4.764
+2023-02-01 13:38:31.342 | INFO     | algorithms.der_pp:train:159 - 3:1:80, loss: 3.899
+2023-02-01 13:38:33.963 | INFO     | algorithms.der_pp:train:159 - 3:1:120, loss: 3.458
+2023-02-01 13:38:36.579 | INFO     | algorithms.der_pp:train:159 - 3:1:160, loss: 3.178
+2023-02-01 13:38:39.194 | INFO     | algorithms.der_pp:train:159 - 3:1:200, loss: 2.825
+2023-02-01 13:38:41.813 | INFO     | algorithms.der_pp:train:159 - 3:1:240, loss: 2.739
+2023-02-01 13:38:44.433 | INFO     | algorithms.der_pp:train:159 - 3:1:280, loss: 2.484
+2023-02-01 13:38:47.044 | INFO     | algorithms.der_pp:train:159 - 3:1:320, loss: 2.444
+2023-02-01 13:38:49.659 | INFO     | algorithms.der_pp:train:159 - 3:1:360, loss: 2.369
+2023-02-01 13:38:52.276 | INFO     | algorithms.der_pp:train:159 - 3:1:400, loss: 2.345
+2023-02-01 13:38:54.898 | INFO     | algorithms.der_pp:train:159 - 3:1:440, loss: 2.260
+2023-02-01 13:38:57.513 | INFO     | algorithms.der_pp:train:159 - 3:1:480, loss: 2.142
+2023-02-01 13:39:00.136 | INFO     | algorithms.der_pp:train:159 - 3:1:520, loss: 2.215
+2023-02-01 13:39:02.753 | INFO     | algorithms.der_pp:train:159 - 3:1:560, loss: 2.104
+2023-02-01 13:39:05.374 | INFO     | algorithms.der_pp:train:159 - 3:1:600, loss: 2.112
+2023-02-01 13:39:06.946 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-02-01 13:39:07.038 | DEBUG    | algorithms.der_pp:train:165 - 6 has 62 samples
+2023-02-01 13:39:07.039 | DEBUG    | algorithms.der_pp:train:165 - 0 has 62 samples
+2023-02-01 13:39:07.039 | DEBUG    | algorithms.der_pp:train:165 - 4 has 62 samples
+2023-02-01 13:39:07.040 | DEBUG    | algorithms.der_pp:train:165 - 5 has 62 samples
+2023-02-01 13:39:07.041 | DEBUG    | algorithms.der_pp:train:165 - 2 has 63 samples
+2023-02-01 13:39:07.042 | DEBUG    | algorithms.der_pp:train:165 - 7 has 63 samples
+2023-02-01 13:39:07.042 | DEBUG    | algorithms.der_pp:train:165 - 3 has 63 samples
+2023-02-01 13:39:07.043 | DEBUG    | algorithms.der_pp:train:165 - 1 has 63 samples
+2023-02-01 13:39:07.044 | INFO     | algorithms.der_pp:train:170 - 1, loss: 2.731
+2023-02-01 13:39:07.045 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 3
+2023-02-01 13:39:11.770 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN/task_3_accuracy_results.json
+2023-02-01 13:39:11.772 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 3664 / 10000 samples (36.64% correct)
+2023-02-01 13:39:11.908 | INFO     | algorithms.der_pp:train:86 - Task 5 / 5
+2023-02-01 13:39:11.912 | INFO     | algorithms.der_pp:train:87 - Classes in task: ['truck', 'ship']
+2023-02-01 13:39:11.914 | INFO     | algorithms.der_pp:train:95 - Starting epoch 1 / 1
+2023-02-01 13:39:14.597 | INFO     | algorithms.der_pp:train:159 - 4:1:40, loss: 5.203
+2023-02-01 13:39:17.212 | INFO     | algorithms.der_pp:train:159 - 4:1:80, loss: 4.268
+2023-02-01 13:39:19.834 | INFO     | algorithms.der_pp:train:159 - 4:1:120, loss: 3.855
+2023-02-01 13:39:22.457 | INFO     | algorithms.der_pp:train:159 - 4:1:160, loss: 3.507
+2023-02-01 13:39:25.076 | INFO     | algorithms.der_pp:train:159 - 4:1:200, loss: 3.160
+2023-02-01 13:39:27.700 | INFO     | algorithms.der_pp:train:159 - 4:1:240, loss: 2.965
+2023-02-01 13:39:30.326 | INFO     | algorithms.der_pp:train:159 - 4:1:280, loss: 2.765
+2023-02-01 13:39:32.943 | INFO     | algorithms.der_pp:train:159 - 4:1:320, loss: 2.611
+2023-02-01 13:39:35.570 | INFO     | algorithms.der_pp:train:159 - 4:1:360, loss: 2.511
+2023-02-01 13:39:38.187 | INFO     | algorithms.der_pp:train:159 - 4:1:400, loss: 2.486
+2023-02-01 13:39:40.804 | INFO     | algorithms.der_pp:train:159 - 4:1:440, loss: 2.399
+2023-02-01 13:39:43.419 | INFO     | algorithms.der_pp:train:159 - 4:1:480, loss: 2.266
+2023-02-01 13:39:46.037 | INFO     | algorithms.der_pp:train:159 - 4:1:520, loss: 2.191
+2023-02-01 13:39:48.659 | INFO     | algorithms.der_pp:train:159 - 4:1:560, loss: 2.152
+2023-02-01 13:39:51.283 | INFO     | algorithms.der_pp:train:159 - 4:1:600, loss: 2.181
+2023-02-01 13:39:52.860 | DEBUG    | algorithms.der_pp:train:162 - Current sample stats:
+2023-02-01 13:39:52.860 | DEBUG    | algorithms.der_pp:train:165 - 6 has 50 samples
+2023-02-01 13:39:52.861 | DEBUG    | algorithms.der_pp:train:165 - 0 has 50 samples
+2023-02-01 13:39:52.862 | DEBUG    | algorithms.der_pp:train:165 - 4 has 50 samples
+2023-02-01 13:39:52.863 | DEBUG    | algorithms.der_pp:train:165 - 5 has 50 samples
+2023-02-01 13:39:52.864 | DEBUG    | algorithms.der_pp:train:165 - 2 has 50 samples
+2023-02-01 13:39:52.864 | DEBUG    | algorithms.der_pp:train:165 - 7 has 50 samples
+2023-02-01 13:39:52.865 | DEBUG    | algorithms.der_pp:train:165 - 3 has 50 samples
+2023-02-01 13:39:52.866 | DEBUG    | algorithms.der_pp:train:165 - 1 has 50 samples
+2023-02-01 13:39:52.867 | DEBUG    | algorithms.der_pp:train:165 - 8 has 50 samples
+2023-02-01 13:39:52.867 | DEBUG    | algorithms.der_pp:train:165 - 9 has 50 samples
+2023-02-01 13:39:52.868 | INFO     | algorithms.der_pp:train:170 - 1, loss: 2.938
+2023-02-01 13:39:52.869 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 4
+2023-02-01 13:39:57.572 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_0.5k/der_pp/1675258564.2811425_CIFAR10_OFFICIAL_RUN/task_4_accuracy_results.json
+2023-02-01 13:39:57.574 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4181 / 10000 samples (41.81% correct)
+2023-02-01 13:39:57.714 | INFO     | algorithms.der_pp:train:178 - Training complete
+2023-02-01 13:39:57.719 | INFO     | __main__:run_experiment:286 - Training and evaluation completed!
+2023-02-01 13:39:57.761 | INFO     | __main__:run_experiment:300 - Wrote usage stats to file
+2023-02-01 13:39:57.763 | INFO     | __main__:main:340 - Complete
+2023-02-01 13:39:57.763 | INFO     | __main__:close_tensorboard_writer:248 - Shut down TensorBoard

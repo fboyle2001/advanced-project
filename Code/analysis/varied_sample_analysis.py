@@ -40,10 +40,10 @@ def generate_structure(parent: str, buffer_size: int):
             "folder": f"{parent}/{buffer_size}/novel_bn",
             "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
         },
-        # "Novel RD": {
-        #     "folder": f"{parent}/{buffer_size}/novel_rd",
-        #     "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
-        # },
+        "Novel RD": {
+            "folder": f"{parent}/{buffer_size}/novel_rd",
+            "task_files": {i: f"task_{i * 70}_results.json" for i in [1, 2, 3, 4, 5]}
+        },
         # "EWC": {
         #     "folder": f"{parent}/{buffer_size}/ewc",
         #     "task_files": None 
@@ -154,11 +154,11 @@ def plot_final_accuracy_over_size(by_size: Dict[int, Dict[str, TechniqueData]], 
     
 
 def main():
-    parent_folder = "output_cifar10_varied_sorted"
+    parent_folder = "output_cifar100_varied_sorted"
     by_size = load_by_buffer_size(f"../{parent_folder}", [200, 500, 1000, 2000, 5000])
     fin_acc_over_size = plot_final_accuracy_over_size(by_size, parent_folder)
 
-    fin_acc_over_size.savefig(f"./variable_sampling/{parent_folder}.png", bbox_inches="tight")
+    fin_acc_over_size.savefig(f"./variable_sampling/regen_{parent_folder}.png", bbox_inches="tight")
 
     # plt.show()
 
