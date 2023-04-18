@@ -399,8 +399,11 @@ class NovelImplementation(BaseCLAlgorithm):
 
                 running_loss = 0
 
-                if epoch % 10 == 0 and epoch != 0:
+                if epoch == self.epochs_per_task:
                     self.run_base_task_metrics(epoch_offset)
+
+                # if epoch % 10 == 0 and epoch != 0:
+                #     self.run_base_task_metrics(epoch_offset)
         
         self.run_base_task_metrics(999)
         logger.info("Training complete")

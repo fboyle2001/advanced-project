@@ -1,0 +1,903 @@
+2023-04-18 04:51:13.042 | INFO     | __main__:setup_files:218 - Experiment Name: OFFICIAL_RUN
+2023-04-18 04:51:13.044 | INFO     | __main__:main:334 - Command line arguments: Configuration(algorithm='novel_rd', dataset='cifar10', classes_per_task=2, seed=2843, samples=1000)
+2023-04-18 04:51:13.061 | INFO     | __main__:main:338 - Seeded random to 2843
+2023-04-18 04:51:13.063 | INFO     | __main__:main:342 - Got CUDA device
+2023-04-18 04:51:13.064 | INFO     | __main__:force_cuda_load:268 - Forcing CUDA initialisation...
+2023-04-18 04:51:13.120 | INFO     | __main__:main:346 - CUDA initialised
+2023-04-18 04:51:13.122 | INFO     | __main__:setup_shutdown_hook:264 - To access TensorBoard, run the command: tensorboard --logdir=./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN
+2023-04-18 04:51:13.123 | INFO     | __main__:main:350 - Setup shutdown hooks
+2023-04-18 04:51:13.247 | INFO     | __main__:main:355 - Model is setup
+2023-04-18 04:51:13.249 | INFO     | __main__:main:357 - Complete pre-setup, starting experiment
+2023-04-18 04:51:14.450 | INFO     | datasets.dataset_base:__init__:80 - Using disjoint tasks with 2 (5 tasks) with a randomised split
+2023-04-18 04:51:14.452 | DEBUG    | datasets.dataset_base:_setup_task_datasets:95 - Splitting dataset into 5 disjoint tasks
+2023-04-18 04:51:14.471 | INFO     | datasets.dataset_base:__init__:85 - {
+  "name": "datasets.cifar10.CIFAR10",
+  "dataset_class": "torchvision.datasets.cifar.CIFAR10",
+  "training_dataset_parameters": "{'train': True, 'download': True}",
+  "testing_dataset_parameters": "{'train': False, 'download': True}",
+  "training_transform": "Compose(\n    Resize(size=(224, 224), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n    RandomCrop(size=(224, 224), padding=4)\n    RandomHorizontalFlip(p=0.5)\n)",
+  "testing_transform": "Compose(\n    Resize(size=(224, 224), interpolation=bilinear, max_size=None, antialias=None)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+  "classes": "plane, car, bird, cat, deer, dog, frog, horse, ship, truck",
+  "disjoint": true,
+  "task_count": 5,
+  "classes_per_task": [
+    2
+  ],
+  "task_split_indices": [
+    [
+      4,
+      3
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      0,
+      9
+    ]
+  ],
+  "task_split_classes": [
+    [
+      "deer",
+      "cat"
+    ],
+    [
+      "horse",
+      "bird"
+    ],
+    [
+      "car",
+      "frog"
+    ],
+    [
+      "dog",
+      "ship"
+    ],
+    [
+      "plane",
+      "truck"
+    ]
+  ]
+}
+2023-04-18 04:51:15.571 | WARNING  | models.vit.vit_models:build_backbone:149 - OVERRIDE: FREEZING PRETRAINED MODEL DIRECTLY EXCEPT
+2023-04-18 04:51:15.573 | INFO     | models.vit.vit_models:setup_head:158 - SETUP HEAD
+2023-04-18 04:51:15.721 | DEBUG    | __main__:run_experiment:292 - PID: 25636
+2023-04-18 04:51:15.722 | INFO     | __main__:run_experiment:294 - Starting...
+2023-04-18 04:51:15.723 | INFO     | algorithms.algorithm_base:train:116 - {
+  "name": "experiments.finalised_novel_impl.NovelImplementation",
+  "model_class": "experiments.finalised_novel_impl.TestNet",
+  "device": "cuda:0",
+  "dataset_class": "datasets.cifar10.CIFAR10",
+  "optimiser_class": "torch.optim.sgd.SGD",
+  "loss_criterion_class": "experiments.finalised_novel_impl.SupConLoss",
+  "epochs_per_task": 70,
+  "batch_size": 16,
+  "uncertainty_type": "relative_distances",
+  "max_memory_samples": 1000,
+  "classification_type": "ncm",
+  "end_train_only": false
+}
+2023-04-18 04:51:15.724 | DEBUG    | algorithms.algorithm_base:_setup_training:109 - Model moved to cuda:0 and set to train mode
+2023-04-18 04:51:15.725 | INFO     | algorithms.algorithm_base:train:118 - Starting training
+2023-04-18 04:51:15.725 | INFO     | experiments.finalised_novel_impl:train:302 - Task 1 / 5
+2023-04-18 04:51:15.726 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['deer', 'cat']
+2023-04-18 04:51:15.727 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-04-18 04:51:15.728 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-04-18 04:51:15.729 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-04-18 05:02:13.461 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 05:02:13.463 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([])
+2023-04-18 05:02:13.464 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([])
+2023-04-18 05:02:13.465 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-04-18 05:02:13.466 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-04-18 05:02:13.476 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-04-18 05:02:13.481 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-04-18 05:02:13.482 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-04-18 05:02:28.938 | INFO     | experiments.finalised_novel_impl:train:396 - 1:1, loss: 4.231
+2023-04-18 05:02:28.939 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-04-18 05:02:44.337 | INFO     | experiments.finalised_novel_impl:train:396 - 1:2, loss: 4.231
+2023-04-18 05:02:44.338 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-04-18 05:02:59.735 | INFO     | experiments.finalised_novel_impl:train:396 - 1:3, loss: 4.231
+2023-04-18 05:02:59.736 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-04-18 05:03:15.122 | INFO     | experiments.finalised_novel_impl:train:396 - 1:4, loss: 4.231
+2023-04-18 05:03:15.123 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-04-18 05:03:30.521 | INFO     | experiments.finalised_novel_impl:train:396 - 1:5, loss: 4.231
+2023-04-18 05:03:30.521 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-04-18 05:03:45.918 | INFO     | experiments.finalised_novel_impl:train:396 - 1:6, loss: 4.231
+2023-04-18 05:03:45.919 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-04-18 05:04:01.314 | INFO     | experiments.finalised_novel_impl:train:396 - 1:7, loss: 4.230
+2023-04-18 05:04:01.314 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-04-18 05:04:16.718 | INFO     | experiments.finalised_novel_impl:train:396 - 1:8, loss: 4.231
+2023-04-18 05:04:16.719 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-04-18 05:04:32.122 | INFO     | experiments.finalised_novel_impl:train:396 - 1:9, loss: 4.230
+2023-04-18 05:04:32.123 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-04-18 05:04:47.510 | INFO     | experiments.finalised_novel_impl:train:396 - 1:10, loss: 4.230
+2023-04-18 05:04:47.511 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-04-18 05:05:02.915 | INFO     | experiments.finalised_novel_impl:train:396 - 1:11, loss: 4.230
+2023-04-18 05:05:02.916 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-04-18 05:05:18.310 | INFO     | experiments.finalised_novel_impl:train:396 - 1:12, loss: 4.230
+2023-04-18 05:05:18.311 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-04-18 05:05:33.717 | INFO     | experiments.finalised_novel_impl:train:396 - 1:13, loss: 4.230
+2023-04-18 05:05:33.717 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-04-18 05:05:49.124 | INFO     | experiments.finalised_novel_impl:train:396 - 1:14, loss: 4.230
+2023-04-18 05:05:49.125 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-04-18 05:06:04.524 | INFO     | experiments.finalised_novel_impl:train:396 - 1:15, loss: 4.230
+2023-04-18 05:06:04.524 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-04-18 05:06:19.919 | INFO     | experiments.finalised_novel_impl:train:396 - 1:16, loss: 4.230
+2023-04-18 05:06:19.920 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-04-18 05:06:35.315 | INFO     | experiments.finalised_novel_impl:train:396 - 1:17, loss: 4.230
+2023-04-18 05:06:35.316 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-04-18 05:06:50.718 | INFO     | experiments.finalised_novel_impl:train:396 - 1:18, loss: 4.230
+2023-04-18 05:06:50.719 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-04-18 05:07:06.126 | INFO     | experiments.finalised_novel_impl:train:396 - 1:19, loss: 4.230
+2023-04-18 05:07:06.127 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-04-18 05:07:21.530 | INFO     | experiments.finalised_novel_impl:train:396 - 1:20, loss: 4.230
+2023-04-18 05:07:21.530 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-04-18 05:07:36.915 | INFO     | experiments.finalised_novel_impl:train:396 - 1:21, loss: 4.230
+2023-04-18 05:07:36.915 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-04-18 05:07:52.309 | INFO     | experiments.finalised_novel_impl:train:396 - 1:22, loss: 4.230
+2023-04-18 05:07:52.310 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-04-18 05:08:07.703 | INFO     | experiments.finalised_novel_impl:train:396 - 1:23, loss: 4.230
+2023-04-18 05:08:07.704 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-04-18 05:08:23.098 | INFO     | experiments.finalised_novel_impl:train:396 - 1:24, loss: 4.230
+2023-04-18 05:08:23.099 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-04-18 05:08:38.497 | INFO     | experiments.finalised_novel_impl:train:396 - 1:25, loss: 4.230
+2023-04-18 05:08:38.498 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-04-18 05:08:53.890 | INFO     | experiments.finalised_novel_impl:train:396 - 1:26, loss: 4.230
+2023-04-18 05:08:53.891 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-04-18 05:09:09.282 | INFO     | experiments.finalised_novel_impl:train:396 - 1:27, loss: 4.230
+2023-04-18 05:09:09.283 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-04-18 05:09:24.681 | INFO     | experiments.finalised_novel_impl:train:396 - 1:28, loss: 4.230
+2023-04-18 05:09:24.682 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-04-18 05:09:40.067 | INFO     | experiments.finalised_novel_impl:train:396 - 1:29, loss: 4.230
+2023-04-18 05:09:40.068 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-04-18 05:09:55.458 | INFO     | experiments.finalised_novel_impl:train:396 - 1:30, loss: 4.230
+2023-04-18 05:09:55.459 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-04-18 05:10:10.856 | INFO     | experiments.finalised_novel_impl:train:396 - 1:31, loss: 4.230
+2023-04-18 05:10:10.857 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-04-18 05:10:26.243 | INFO     | experiments.finalised_novel_impl:train:396 - 1:32, loss: 4.230
+2023-04-18 05:10:26.243 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-04-18 05:10:41.635 | INFO     | experiments.finalised_novel_impl:train:396 - 1:33, loss: 4.230
+2023-04-18 05:10:41.636 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-04-18 05:10:57.025 | INFO     | experiments.finalised_novel_impl:train:396 - 1:34, loss: 4.230
+2023-04-18 05:10:57.026 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-04-18 05:11:12.424 | INFO     | experiments.finalised_novel_impl:train:396 - 1:35, loss: 4.230
+2023-04-18 05:11:12.425 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-04-18 05:11:27.830 | INFO     | experiments.finalised_novel_impl:train:396 - 1:36, loss: 4.230
+2023-04-18 05:11:27.831 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-04-18 05:11:43.222 | INFO     | experiments.finalised_novel_impl:train:396 - 1:37, loss: 4.230
+2023-04-18 05:11:43.223 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-04-18 05:11:58.613 | INFO     | experiments.finalised_novel_impl:train:396 - 1:38, loss: 4.230
+2023-04-18 05:11:58.614 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-04-18 05:12:14.030 | INFO     | experiments.finalised_novel_impl:train:396 - 1:39, loss: 4.230
+2023-04-18 05:12:14.031 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-04-18 05:12:29.427 | INFO     | experiments.finalised_novel_impl:train:396 - 1:40, loss: 4.230
+2023-04-18 05:12:29.428 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-04-18 05:12:44.822 | INFO     | experiments.finalised_novel_impl:train:396 - 1:41, loss: 4.230
+2023-04-18 05:12:44.823 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-04-18 05:13:00.221 | INFO     | experiments.finalised_novel_impl:train:396 - 1:42, loss: 4.230
+2023-04-18 05:13:00.222 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-04-18 05:13:15.617 | INFO     | experiments.finalised_novel_impl:train:396 - 1:43, loss: 4.230
+2023-04-18 05:13:15.618 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-04-18 05:13:31.018 | INFO     | experiments.finalised_novel_impl:train:396 - 1:44, loss: 4.230
+2023-04-18 05:13:31.019 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-04-18 05:13:46.405 | INFO     | experiments.finalised_novel_impl:train:396 - 1:45, loss: 4.230
+2023-04-18 05:13:46.406 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-04-18 05:14:01.808 | INFO     | experiments.finalised_novel_impl:train:396 - 1:46, loss: 4.230
+2023-04-18 05:14:01.809 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-04-18 05:14:17.204 | INFO     | experiments.finalised_novel_impl:train:396 - 1:47, loss: 4.230
+2023-04-18 05:14:17.205 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-04-18 05:14:32.604 | INFO     | experiments.finalised_novel_impl:train:396 - 1:48, loss: 4.230
+2023-04-18 05:14:32.605 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-04-18 05:14:48.004 | INFO     | experiments.finalised_novel_impl:train:396 - 1:49, loss: 4.230
+2023-04-18 05:14:48.005 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-04-18 05:15:03.392 | INFO     | experiments.finalised_novel_impl:train:396 - 1:50, loss: 4.230
+2023-04-18 05:15:03.393 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-04-18 05:15:18.798 | INFO     | experiments.finalised_novel_impl:train:396 - 1:51, loss: 4.230
+2023-04-18 05:15:18.799 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-04-18 05:15:34.186 | INFO     | experiments.finalised_novel_impl:train:396 - 1:52, loss: 4.230
+2023-04-18 05:15:34.187 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-04-18 05:15:49.582 | INFO     | experiments.finalised_novel_impl:train:396 - 1:53, loss: 4.230
+2023-04-18 05:15:49.583 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-04-18 05:16:04.976 | INFO     | experiments.finalised_novel_impl:train:396 - 1:54, loss: 4.230
+2023-04-18 05:16:04.977 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-04-18 05:16:20.387 | INFO     | experiments.finalised_novel_impl:train:396 - 1:55, loss: 4.230
+2023-04-18 05:16:20.388 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-04-18 05:16:35.787 | INFO     | experiments.finalised_novel_impl:train:396 - 1:56, loss: 4.230
+2023-04-18 05:16:35.787 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-04-18 05:16:51.192 | INFO     | experiments.finalised_novel_impl:train:396 - 1:57, loss: 4.230
+2023-04-18 05:16:51.193 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-04-18 05:17:06.604 | INFO     | experiments.finalised_novel_impl:train:396 - 1:58, loss: 4.230
+2023-04-18 05:17:06.604 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-04-18 05:17:22.004 | INFO     | experiments.finalised_novel_impl:train:396 - 1:59, loss: 4.230
+2023-04-18 05:17:22.005 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-04-18 05:17:37.412 | INFO     | experiments.finalised_novel_impl:train:396 - 1:60, loss: 4.230
+2023-04-18 05:17:37.413 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-04-18 05:17:52.802 | INFO     | experiments.finalised_novel_impl:train:396 - 1:61, loss: 4.230
+2023-04-18 05:17:52.803 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-04-18 05:18:08.210 | INFO     | experiments.finalised_novel_impl:train:396 - 1:62, loss: 4.230
+2023-04-18 05:18:08.211 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-04-18 05:18:23.600 | INFO     | experiments.finalised_novel_impl:train:396 - 1:63, loss: 4.230
+2023-04-18 05:18:23.601 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-04-18 05:18:38.993 | INFO     | experiments.finalised_novel_impl:train:396 - 1:64, loss: 4.230
+2023-04-18 05:18:38.993 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-04-18 05:18:54.387 | INFO     | experiments.finalised_novel_impl:train:396 - 1:65, loss: 4.230
+2023-04-18 05:18:54.388 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-04-18 05:19:09.794 | INFO     | experiments.finalised_novel_impl:train:396 - 1:66, loss: 4.230
+2023-04-18 05:19:09.795 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-04-18 05:19:25.184 | INFO     | experiments.finalised_novel_impl:train:396 - 1:67, loss: 4.230
+2023-04-18 05:19:25.185 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-04-18 05:19:40.579 | INFO     | experiments.finalised_novel_impl:train:396 - 1:68, loss: 4.230
+2023-04-18 05:19:40.580 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-04-18 05:19:55.984 | INFO     | experiments.finalised_novel_impl:train:396 - 1:69, loss: 4.230
+2023-04-18 05:19:55.985 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-04-18 05:20:11.378 | INFO     | experiments.finalised_novel_impl:train:396 - 1:70, loss: 4.230
+2023-04-18 05:20:11.379 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 70
+2023-04-18 05:20:11.404 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 05:20:19.160 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([4, 3])
+2023-04-18 05:21:36.154 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_70_accuracy_results.json
+2023-04-18 05:21:36.155 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 2772 / 10000 samples (27.72% correct)
+2023-04-18 05:21:36.660 | INFO     | experiments.finalised_novel_impl:train:302 - Task 2 / 5
+2023-04-18 05:21:36.664 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['horse', 'bird']
+2023-04-18 05:21:36.665 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-04-18 05:21:36.665 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-04-18 05:21:36.666 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-04-18 05:32:33.005 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 05:32:40.724 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([4, 3])
+2023-04-18 05:32:40.743 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([4, 3])
+2023-04-18 05:32:40.744 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-04-18 05:33:13.607 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-04-18 05:33:46.452 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-04-18 05:33:46.455 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-04-18 05:33:46.464 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-04-18 05:33:46.470 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-04-18 05:33:46.473 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-04-18 05:34:01.937 | INFO     | experiments.finalised_novel_impl:train:396 - 2:1, loss: 4.230
+2023-04-18 05:34:01.938 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-04-18 05:34:17.395 | INFO     | experiments.finalised_novel_impl:train:396 - 2:2, loss: 4.230
+2023-04-18 05:34:17.396 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-04-18 05:34:32.863 | INFO     | experiments.finalised_novel_impl:train:396 - 2:3, loss: 4.230
+2023-04-18 05:34:32.864 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-04-18 05:34:48.337 | INFO     | experiments.finalised_novel_impl:train:396 - 2:4, loss: 4.230
+2023-04-18 05:34:48.338 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-04-18 05:35:03.814 | INFO     | experiments.finalised_novel_impl:train:396 - 2:5, loss: 4.230
+2023-04-18 05:35:03.815 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-04-18 05:35:19.286 | INFO     | experiments.finalised_novel_impl:train:396 - 2:6, loss: 4.229
+2023-04-18 05:35:19.287 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-04-18 05:35:34.758 | INFO     | experiments.finalised_novel_impl:train:396 - 2:7, loss: 4.229
+2023-04-18 05:35:34.759 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-04-18 05:35:50.239 | INFO     | experiments.finalised_novel_impl:train:396 - 2:8, loss: 4.229
+2023-04-18 05:35:50.240 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-04-18 05:36:05.708 | INFO     | experiments.finalised_novel_impl:train:396 - 2:9, loss: 4.229
+2023-04-18 05:36:05.709 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-04-18 05:36:21.190 | INFO     | experiments.finalised_novel_impl:train:396 - 2:10, loss: 4.229
+2023-04-18 05:36:21.191 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-04-18 05:36:36.649 | INFO     | experiments.finalised_novel_impl:train:396 - 2:11, loss: 4.228
+2023-04-18 05:36:36.649 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-04-18 05:36:52.111 | INFO     | experiments.finalised_novel_impl:train:396 - 2:12, loss: 4.227
+2023-04-18 05:36:52.112 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-04-18 05:37:07.591 | INFO     | experiments.finalised_novel_impl:train:396 - 2:13, loss: 4.227
+2023-04-18 05:37:07.591 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-04-18 05:37:23.049 | INFO     | experiments.finalised_novel_impl:train:396 - 2:14, loss: 4.226
+2023-04-18 05:37:23.050 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-04-18 05:37:38.518 | INFO     | experiments.finalised_novel_impl:train:396 - 2:15, loss: 4.226
+2023-04-18 05:37:38.519 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-04-18 05:37:53.998 | INFO     | experiments.finalised_novel_impl:train:396 - 2:16, loss: 4.227
+2023-04-18 05:37:53.999 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-04-18 05:38:09.468 | INFO     | experiments.finalised_novel_impl:train:396 - 2:17, loss: 4.226
+2023-04-18 05:38:09.469 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-04-18 05:38:24.943 | INFO     | experiments.finalised_novel_impl:train:396 - 2:18, loss: 4.226
+2023-04-18 05:38:24.944 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-04-18 05:38:40.406 | INFO     | experiments.finalised_novel_impl:train:396 - 2:19, loss: 4.225
+2023-04-18 05:38:40.407 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-04-18 05:38:55.874 | INFO     | experiments.finalised_novel_impl:train:396 - 2:20, loss: 4.225
+2023-04-18 05:38:55.875 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-04-18 05:39:11.357 | INFO     | experiments.finalised_novel_impl:train:396 - 2:21, loss: 4.226
+2023-04-18 05:39:11.358 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-04-18 05:39:26.823 | INFO     | experiments.finalised_novel_impl:train:396 - 2:22, loss: 4.223
+2023-04-18 05:39:26.824 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-04-18 05:39:42.283 | INFO     | experiments.finalised_novel_impl:train:396 - 2:23, loss: 4.223
+2023-04-18 05:39:42.284 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-04-18 05:39:57.769 | INFO     | experiments.finalised_novel_impl:train:396 - 2:24, loss: 4.223
+2023-04-18 05:39:57.770 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-04-18 05:40:13.226 | INFO     | experiments.finalised_novel_impl:train:396 - 2:25, loss: 4.222
+2023-04-18 05:40:13.227 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-04-18 05:40:28.683 | INFO     | experiments.finalised_novel_impl:train:396 - 2:26, loss: 4.223
+2023-04-18 05:40:28.684 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-04-18 05:40:44.147 | INFO     | experiments.finalised_novel_impl:train:396 - 2:27, loss: 4.220
+2023-04-18 05:40:44.148 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-04-18 05:40:59.617 | INFO     | experiments.finalised_novel_impl:train:396 - 2:28, loss: 4.220
+2023-04-18 05:40:59.618 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-04-18 05:41:15.080 | INFO     | experiments.finalised_novel_impl:train:396 - 2:29, loss: 4.220
+2023-04-18 05:41:15.081 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-04-18 05:41:30.549 | INFO     | experiments.finalised_novel_impl:train:396 - 2:30, loss: 4.221
+2023-04-18 05:41:30.550 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-04-18 05:41:46.019 | INFO     | experiments.finalised_novel_impl:train:396 - 2:31, loss: 4.220
+2023-04-18 05:41:46.019 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-04-18 05:42:01.491 | INFO     | experiments.finalised_novel_impl:train:396 - 2:32, loss: 4.221
+2023-04-18 05:42:01.492 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-04-18 05:42:16.981 | INFO     | experiments.finalised_novel_impl:train:396 - 2:33, loss: 4.221
+2023-04-18 05:42:16.982 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-04-18 05:42:32.432 | INFO     | experiments.finalised_novel_impl:train:396 - 2:34, loss: 4.221
+2023-04-18 05:42:32.433 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-04-18 05:42:47.908 | INFO     | experiments.finalised_novel_impl:train:396 - 2:35, loss: 4.221
+2023-04-18 05:42:47.909 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-04-18 05:43:03.368 | INFO     | experiments.finalised_novel_impl:train:396 - 2:36, loss: 4.221
+2023-04-18 05:43:03.369 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-04-18 05:43:18.838 | INFO     | experiments.finalised_novel_impl:train:396 - 2:37, loss: 4.222
+2023-04-18 05:43:18.839 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-04-18 05:43:34.318 | INFO     | experiments.finalised_novel_impl:train:396 - 2:38, loss: 4.220
+2023-04-18 05:43:34.319 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-04-18 05:43:49.785 | INFO     | experiments.finalised_novel_impl:train:396 - 2:39, loss: 4.220
+2023-04-18 05:43:49.786 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-04-18 05:44:05.263 | INFO     | experiments.finalised_novel_impl:train:396 - 2:40, loss: 4.218
+2023-04-18 05:44:05.263 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-04-18 05:44:20.735 | INFO     | experiments.finalised_novel_impl:train:396 - 2:41, loss: 4.218
+2023-04-18 05:44:20.736 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-04-18 05:44:36.210 | INFO     | experiments.finalised_novel_impl:train:396 - 2:42, loss: 4.218
+2023-04-18 05:44:36.211 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-04-18 05:44:51.677 | INFO     | experiments.finalised_novel_impl:train:396 - 2:43, loss: 4.219
+2023-04-18 05:44:51.678 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-04-18 05:45:07.160 | INFO     | experiments.finalised_novel_impl:train:396 - 2:44, loss: 4.219
+2023-04-18 05:45:07.161 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-04-18 05:45:22.632 | INFO     | experiments.finalised_novel_impl:train:396 - 2:45, loss: 4.216
+2023-04-18 05:45:22.633 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-04-18 05:45:38.112 | INFO     | experiments.finalised_novel_impl:train:396 - 2:46, loss: 4.216
+2023-04-18 05:45:38.112 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-04-18 05:45:53.576 | INFO     | experiments.finalised_novel_impl:train:396 - 2:47, loss: 4.215
+2023-04-18 05:45:53.577 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-04-18 05:46:09.053 | INFO     | experiments.finalised_novel_impl:train:396 - 2:48, loss: 4.213
+2023-04-18 05:46:09.053 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-04-18 05:46:24.516 | INFO     | experiments.finalised_novel_impl:train:396 - 2:49, loss: 4.214
+2023-04-18 05:46:24.517 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-04-18 05:46:39.981 | INFO     | experiments.finalised_novel_impl:train:396 - 2:50, loss: 4.212
+2023-04-18 05:46:39.982 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-04-18 05:46:55.453 | INFO     | experiments.finalised_novel_impl:train:396 - 2:51, loss: 4.212
+2023-04-18 05:46:55.454 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-04-18 05:47:10.922 | INFO     | experiments.finalised_novel_impl:train:396 - 2:52, loss: 4.212
+2023-04-18 05:47:10.923 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-04-18 05:47:26.394 | INFO     | experiments.finalised_novel_impl:train:396 - 2:53, loss: 4.211
+2023-04-18 05:47:26.394 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-04-18 05:47:41.861 | INFO     | experiments.finalised_novel_impl:train:396 - 2:54, loss: 4.211
+2023-04-18 05:47:41.862 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-04-18 05:47:57.333 | INFO     | experiments.finalised_novel_impl:train:396 - 2:55, loss: 4.211
+2023-04-18 05:47:57.334 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-04-18 05:48:12.806 | INFO     | experiments.finalised_novel_impl:train:396 - 2:56, loss: 4.212
+2023-04-18 05:48:12.807 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-04-18 05:48:28.270 | INFO     | experiments.finalised_novel_impl:train:396 - 2:57, loss: 4.209
+2023-04-18 05:48:28.271 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-04-18 05:48:43.735 | INFO     | experiments.finalised_novel_impl:train:396 - 2:58, loss: 4.212
+2023-04-18 05:48:43.736 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-04-18 05:48:59.214 | INFO     | experiments.finalised_novel_impl:train:396 - 2:59, loss: 4.210
+2023-04-18 05:48:59.215 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-04-18 05:49:14.725 | INFO     | experiments.finalised_novel_impl:train:396 - 2:60, loss: 4.210
+2023-04-18 05:49:14.726 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-04-18 05:49:30.203 | INFO     | experiments.finalised_novel_impl:train:396 - 2:61, loss: 4.209
+2023-04-18 05:49:30.204 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-04-18 05:49:45.725 | INFO     | experiments.finalised_novel_impl:train:396 - 2:62, loss: 4.207
+2023-04-18 05:49:45.726 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-04-18 05:50:01.235 | INFO     | experiments.finalised_novel_impl:train:396 - 2:63, loss: 4.208
+2023-04-18 05:50:01.236 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-04-18 05:50:16.690 | INFO     | experiments.finalised_novel_impl:train:396 - 2:64, loss: 4.212
+2023-04-18 05:50:16.691 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-04-18 05:50:32.157 | INFO     | experiments.finalised_novel_impl:train:396 - 2:65, loss: 4.215
+2023-04-18 05:50:32.158 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-04-18 05:50:47.635 | INFO     | experiments.finalised_novel_impl:train:396 - 2:66, loss: 4.216
+2023-04-18 05:50:47.636 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-04-18 05:51:03.105 | INFO     | experiments.finalised_novel_impl:train:396 - 2:67, loss: 4.215
+2023-04-18 05:51:03.106 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-04-18 05:51:18.613 | INFO     | experiments.finalised_novel_impl:train:396 - 2:68, loss: 4.214
+2023-04-18 05:51:18.614 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-04-18 05:51:34.092 | INFO     | experiments.finalised_novel_impl:train:396 - 2:69, loss: 4.212
+2023-04-18 05:51:34.093 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-04-18 05:51:49.570 | INFO     | experiments.finalised_novel_impl:train:396 - 2:70, loss: 4.211
+2023-04-18 05:51:49.571 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 140
+2023-04-18 05:51:49.599 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 05:51:57.424 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([2, 7, 4, 3])
+2023-04-18 05:53:14.964 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_140_accuracy_results.json
+2023-04-18 05:53:14.965 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 4217 / 10000 samples (42.17% correct)
+2023-04-18 05:53:15.094 | INFO     | experiments.finalised_novel_impl:train:302 - Task 3 / 5
+2023-04-18 05:53:15.099 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['car', 'frog']
+2023-04-18 05:53:15.100 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-04-18 05:53:15.101 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-04-18 05:53:15.102 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-04-18 06:04:11.444 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 06:04:19.185 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([2, 7, 4, 3])
+2023-04-18 06:04:19.195 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([2, 7, 4, 3])
+2023-04-18 06:04:19.196 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 2
+2023-04-18 06:04:35.638 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-04-18 06:04:52.056 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-04-18 06:05:08.449 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-04-18 06:05:24.844 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-04-18 06:05:24.847 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-04-18 06:05:24.857 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-04-18 06:05:24.862 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-04-18 06:05:24.869 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-04-18 06:05:40.311 | INFO     | experiments.finalised_novel_impl:train:396 - 3:1, loss: 4.202
+2023-04-18 06:05:40.312 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-04-18 06:05:55.740 | INFO     | experiments.finalised_novel_impl:train:396 - 3:2, loss: 4.203
+2023-04-18 06:05:55.740 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-04-18 06:06:11.150 | INFO     | experiments.finalised_novel_impl:train:396 - 3:3, loss: 4.200
+2023-04-18 06:06:11.151 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-04-18 06:06:26.556 | INFO     | experiments.finalised_novel_impl:train:396 - 3:4, loss: 4.200
+2023-04-18 06:06:26.557 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-04-18 06:06:41.960 | INFO     | experiments.finalised_novel_impl:train:396 - 3:5, loss: 4.198
+2023-04-18 06:06:41.961 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-04-18 06:06:57.355 | INFO     | experiments.finalised_novel_impl:train:396 - 3:6, loss: 4.194
+2023-04-18 06:06:57.355 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-04-18 06:07:12.761 | INFO     | experiments.finalised_novel_impl:train:396 - 3:7, loss: 4.194
+2023-04-18 06:07:12.762 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-04-18 06:07:28.174 | INFO     | experiments.finalised_novel_impl:train:396 - 3:8, loss: 4.195
+2023-04-18 06:07:28.175 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-04-18 06:07:43.581 | INFO     | experiments.finalised_novel_impl:train:396 - 3:9, loss: 4.194
+2023-04-18 06:07:43.582 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-04-18 06:07:58.981 | INFO     | experiments.finalised_novel_impl:train:396 - 3:10, loss: 4.193
+2023-04-18 06:07:58.982 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-04-18 06:08:14.393 | INFO     | experiments.finalised_novel_impl:train:396 - 3:11, loss: 4.193
+2023-04-18 06:08:14.394 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-04-18 06:08:29.802 | INFO     | experiments.finalised_novel_impl:train:396 - 3:12, loss: 4.193
+2023-04-18 06:08:29.803 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-04-18 06:08:45.213 | INFO     | experiments.finalised_novel_impl:train:396 - 3:13, loss: 4.190
+2023-04-18 06:08:45.214 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-04-18 06:09:00.622 | INFO     | experiments.finalised_novel_impl:train:396 - 3:14, loss: 4.188
+2023-04-18 06:09:00.623 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-04-18 06:09:16.040 | INFO     | experiments.finalised_novel_impl:train:396 - 3:15, loss: 4.188
+2023-04-18 06:09:16.041 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-04-18 06:09:31.459 | INFO     | experiments.finalised_novel_impl:train:396 - 3:16, loss: 4.191
+2023-04-18 06:09:31.459 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-04-18 06:09:46.865 | INFO     | experiments.finalised_novel_impl:train:396 - 3:17, loss: 4.188
+2023-04-18 06:09:46.866 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-04-18 06:10:02.280 | INFO     | experiments.finalised_novel_impl:train:396 - 3:18, loss: 4.189
+2023-04-18 06:10:02.281 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-04-18 06:10:17.678 | INFO     | experiments.finalised_novel_impl:train:396 - 3:19, loss: 4.189
+2023-04-18 06:10:17.678 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-04-18 06:10:33.087 | INFO     | experiments.finalised_novel_impl:train:396 - 3:20, loss: 4.189
+2023-04-18 06:10:33.088 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-04-18 06:10:48.508 | INFO     | experiments.finalised_novel_impl:train:396 - 3:21, loss: 4.189
+2023-04-18 06:10:48.509 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-04-18 06:11:03.923 | INFO     | experiments.finalised_novel_impl:train:396 - 3:22, loss: 4.185
+2023-04-18 06:11:03.924 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-04-18 06:11:19.324 | INFO     | experiments.finalised_novel_impl:train:396 - 3:23, loss: 4.185
+2023-04-18 06:11:19.325 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-04-18 06:11:34.716 | INFO     | experiments.finalised_novel_impl:train:396 - 3:24, loss: 4.184
+2023-04-18 06:11:34.717 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-04-18 06:11:50.111 | INFO     | experiments.finalised_novel_impl:train:396 - 3:25, loss: 4.184
+2023-04-18 06:11:50.112 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-04-18 06:12:05.529 | INFO     | experiments.finalised_novel_impl:train:396 - 3:26, loss: 4.184
+2023-04-18 06:12:05.529 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-04-18 06:12:20.962 | INFO     | experiments.finalised_novel_impl:train:396 - 3:27, loss: 4.185
+2023-04-18 06:12:20.963 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-04-18 06:12:36.371 | INFO     | experiments.finalised_novel_impl:train:396 - 3:28, loss: 4.182
+2023-04-18 06:12:36.372 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-04-18 06:12:51.794 | INFO     | experiments.finalised_novel_impl:train:396 - 3:29, loss: 4.179
+2023-04-18 06:12:51.795 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-04-18 06:13:07.209 | INFO     | experiments.finalised_novel_impl:train:396 - 3:30, loss: 4.177
+2023-04-18 06:13:07.210 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-04-18 06:13:22.606 | INFO     | experiments.finalised_novel_impl:train:396 - 3:31, loss: 4.178
+2023-04-18 06:13:22.607 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-04-18 06:13:38.010 | INFO     | experiments.finalised_novel_impl:train:396 - 3:32, loss: 4.184
+2023-04-18 06:13:38.011 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-04-18 06:13:53.409 | INFO     | experiments.finalised_novel_impl:train:396 - 3:33, loss: 4.184
+2023-04-18 06:13:53.410 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-04-18 06:14:08.817 | INFO     | experiments.finalised_novel_impl:train:396 - 3:34, loss: 4.183
+2023-04-18 06:14:08.818 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-04-18 06:14:24.221 | INFO     | experiments.finalised_novel_impl:train:396 - 3:35, loss: 4.185
+2023-04-18 06:14:24.222 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-04-18 06:14:39.629 | INFO     | experiments.finalised_novel_impl:train:396 - 3:36, loss: 4.183
+2023-04-18 06:14:39.630 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-04-18 06:14:55.032 | INFO     | experiments.finalised_novel_impl:train:396 - 3:37, loss: 4.183
+2023-04-18 06:14:55.033 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-04-18 06:15:10.425 | INFO     | experiments.finalised_novel_impl:train:396 - 3:38, loss: 4.180
+2023-04-18 06:15:10.426 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-04-18 06:15:25.838 | INFO     | experiments.finalised_novel_impl:train:396 - 3:39, loss: 4.182
+2023-04-18 06:15:25.839 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-04-18 06:15:41.258 | INFO     | experiments.finalised_novel_impl:train:396 - 3:40, loss: 4.183
+2023-04-18 06:15:41.259 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-04-18 06:15:56.672 | INFO     | experiments.finalised_novel_impl:train:396 - 3:41, loss: 4.180
+2023-04-18 06:15:56.673 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-04-18 06:16:12.078 | INFO     | experiments.finalised_novel_impl:train:396 - 3:42, loss: 4.180
+2023-04-18 06:16:12.079 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-04-18 06:16:27.496 | INFO     | experiments.finalised_novel_impl:train:396 - 3:43, loss: 4.179
+2023-04-18 06:16:27.497 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-04-18 06:16:42.909 | INFO     | experiments.finalised_novel_impl:train:396 - 3:44, loss: 4.177
+2023-04-18 06:16:42.910 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-04-18 06:16:58.318 | INFO     | experiments.finalised_novel_impl:train:396 - 3:45, loss: 4.169
+2023-04-18 06:16:58.319 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-04-18 06:17:13.729 | INFO     | experiments.finalised_novel_impl:train:396 - 3:46, loss: 4.175
+2023-04-18 06:17:13.730 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-04-18 06:17:29.129 | INFO     | experiments.finalised_novel_impl:train:396 - 3:47, loss: 4.174
+2023-04-18 06:17:29.130 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-04-18 06:17:44.549 | INFO     | experiments.finalised_novel_impl:train:396 - 3:48, loss: 4.170
+2023-04-18 06:17:44.549 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-04-18 06:17:59.953 | INFO     | experiments.finalised_novel_impl:train:396 - 3:49, loss: 4.169
+2023-04-18 06:17:59.954 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-04-18 06:18:15.356 | INFO     | experiments.finalised_novel_impl:train:396 - 3:50, loss: 4.168
+2023-04-18 06:18:15.357 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-04-18 06:18:30.763 | INFO     | experiments.finalised_novel_impl:train:396 - 3:51, loss: 4.167
+2023-04-18 06:18:30.764 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-04-18 06:18:46.196 | INFO     | experiments.finalised_novel_impl:train:396 - 3:52, loss: 4.168
+2023-04-18 06:18:46.197 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-04-18 06:19:01.590 | INFO     | experiments.finalised_novel_impl:train:396 - 3:53, loss: 4.169
+2023-04-18 06:19:01.591 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-04-18 06:19:16.987 | INFO     | experiments.finalised_novel_impl:train:396 - 3:54, loss: 4.169
+2023-04-18 06:19:16.988 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-04-18 06:19:32.382 | INFO     | experiments.finalised_novel_impl:train:396 - 3:55, loss: 4.163
+2023-04-18 06:19:32.383 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-04-18 06:19:47.818 | INFO     | experiments.finalised_novel_impl:train:396 - 3:56, loss: 4.166
+2023-04-18 06:19:47.819 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-04-18 06:20:03.220 | INFO     | experiments.finalised_novel_impl:train:396 - 3:57, loss: 4.167
+2023-04-18 06:20:03.221 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-04-18 06:20:18.624 | INFO     | experiments.finalised_novel_impl:train:396 - 3:58, loss: 4.169
+2023-04-18 06:20:18.625 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-04-18 06:20:34.040 | INFO     | experiments.finalised_novel_impl:train:396 - 3:59, loss: 4.169
+2023-04-18 06:20:34.040 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-04-18 06:20:49.452 | INFO     | experiments.finalised_novel_impl:train:396 - 3:60, loss: 4.165
+2023-04-18 06:20:49.452 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-04-18 06:21:04.862 | INFO     | experiments.finalised_novel_impl:train:396 - 3:61, loss: 4.162
+2023-04-18 06:21:04.863 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-04-18 06:21:20.265 | INFO     | experiments.finalised_novel_impl:train:396 - 3:62, loss: 4.162
+2023-04-18 06:21:20.266 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-04-18 06:21:35.668 | INFO     | experiments.finalised_novel_impl:train:396 - 3:63, loss: 4.161
+2023-04-18 06:21:35.669 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-04-18 06:21:51.068 | INFO     | experiments.finalised_novel_impl:train:396 - 3:64, loss: 4.166
+2023-04-18 06:21:51.069 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-04-18 06:22:06.495 | INFO     | experiments.finalised_novel_impl:train:396 - 3:65, loss: 4.180
+2023-04-18 06:22:06.496 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-04-18 06:22:21.902 | INFO     | experiments.finalised_novel_impl:train:396 - 3:66, loss: 4.177
+2023-04-18 06:22:21.903 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-04-18 06:22:37.307 | INFO     | experiments.finalised_novel_impl:train:396 - 3:67, loss: 4.175
+2023-04-18 06:22:37.308 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-04-18 06:22:52.708 | INFO     | experiments.finalised_novel_impl:train:396 - 3:68, loss: 4.168
+2023-04-18 06:22:52.708 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-04-18 06:23:08.121 | INFO     | experiments.finalised_novel_impl:train:396 - 3:69, loss: 4.173
+2023-04-18 06:23:08.122 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-04-18 06:23:23.531 | INFO     | experiments.finalised_novel_impl:train:396 - 3:70, loss: 4.174
+2023-04-18 06:23:23.532 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 210
+2023-04-18 06:23:23.560 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 06:23:31.381 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([1, 6, 2, 7, 4, 3])
+2023-04-18 06:24:49.051 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_210_accuracy_results.json
+2023-04-18 06:24:49.052 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 6032 / 10000 samples (60.32% correct)
+2023-04-18 06:24:49.182 | INFO     | experiments.finalised_novel_impl:train:302 - Task 4 / 5
+2023-04-18 06:24:49.187 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['dog', 'ship']
+2023-04-18 06:24:49.187 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-04-18 06:24:49.188 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-04-18 06:24:49.189 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-04-18 06:35:45.512 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 06:35:53.250 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([1, 6, 2, 7, 4, 3])
+2023-04-18 06:35:53.257 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([1, 6, 2, 7, 4, 3])
+2023-04-18 06:35:53.258 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 1
+2023-04-18 06:36:04.179 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 6
+2023-04-18 06:36:15.112 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 2
+2023-04-18 06:36:26.055 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-04-18 06:36:36.920 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-04-18 06:36:47.811 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-04-18 06:36:58.670 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-04-18 06:36:58.673 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-04-18 06:36:58.683 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-04-18 06:36:58.689 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-04-18 06:36:58.691 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-04-18 06:37:14.154 | INFO     | experiments.finalised_novel_impl:train:396 - 4:1, loss: 4.219
+2023-04-18 06:37:14.155 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-04-18 06:37:29.622 | INFO     | experiments.finalised_novel_impl:train:396 - 4:2, loss: 4.216
+2023-04-18 06:37:29.623 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-04-18 06:37:45.099 | INFO     | experiments.finalised_novel_impl:train:396 - 4:3, loss: 4.206
+2023-04-18 06:37:45.100 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-04-18 06:38:00.581 | INFO     | experiments.finalised_novel_impl:train:396 - 4:4, loss: 4.211
+2023-04-18 06:38:00.582 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-04-18 06:38:16.055 | INFO     | experiments.finalised_novel_impl:train:396 - 4:5, loss: 4.205
+2023-04-18 06:38:16.056 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-04-18 06:38:31.526 | INFO     | experiments.finalised_novel_impl:train:396 - 4:6, loss: 4.197
+2023-04-18 06:38:31.527 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-04-18 06:38:47.006 | INFO     | experiments.finalised_novel_impl:train:396 - 4:7, loss: 4.195
+2023-04-18 06:38:47.007 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-04-18 06:39:02.486 | INFO     | experiments.finalised_novel_impl:train:396 - 4:8, loss: 4.200
+2023-04-18 06:39:02.487 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-04-18 06:39:17.962 | INFO     | experiments.finalised_novel_impl:train:396 - 4:9, loss: 4.198
+2023-04-18 06:39:17.963 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-04-18 06:39:33.426 | INFO     | experiments.finalised_novel_impl:train:396 - 4:10, loss: 4.193
+2023-04-18 06:39:33.426 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-04-18 06:39:48.891 | INFO     | experiments.finalised_novel_impl:train:396 - 4:11, loss: 4.192
+2023-04-18 06:39:48.892 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-04-18 06:40:04.377 | INFO     | experiments.finalised_novel_impl:train:396 - 4:12, loss: 4.187
+2023-04-18 06:40:04.378 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-04-18 06:40:19.865 | INFO     | experiments.finalised_novel_impl:train:396 - 4:13, loss: 4.181
+2023-04-18 06:40:19.865 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-04-18 06:40:35.341 | INFO     | experiments.finalised_novel_impl:train:396 - 4:14, loss: 4.178
+2023-04-18 06:40:35.342 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-04-18 06:40:50.812 | INFO     | experiments.finalised_novel_impl:train:396 - 4:15, loss: 4.177
+2023-04-18 06:40:50.813 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-04-18 06:41:06.297 | INFO     | experiments.finalised_novel_impl:train:396 - 4:16, loss: 4.194
+2023-04-18 06:41:06.298 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-04-18 06:41:21.790 | INFO     | experiments.finalised_novel_impl:train:396 - 4:17, loss: 4.190
+2023-04-18 06:41:21.791 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-04-18 06:41:37.271 | INFO     | experiments.finalised_novel_impl:train:396 - 4:18, loss: 4.190
+2023-04-18 06:41:37.271 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-04-18 06:41:52.756 | INFO     | experiments.finalised_novel_impl:train:396 - 4:19, loss: 4.182
+2023-04-18 06:41:52.757 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-04-18 06:42:08.235 | INFO     | experiments.finalised_novel_impl:train:396 - 4:20, loss: 4.181
+2023-04-18 06:42:08.236 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-04-18 06:42:23.737 | INFO     | experiments.finalised_novel_impl:train:396 - 4:21, loss: 4.179
+2023-04-18 06:42:23.738 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-04-18 06:42:39.207 | INFO     | experiments.finalised_novel_impl:train:396 - 4:22, loss: 4.176
+2023-04-18 06:42:39.208 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-04-18 06:42:54.690 | INFO     | experiments.finalised_novel_impl:train:396 - 4:23, loss: 4.181
+2023-04-18 06:42:54.691 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-04-18 06:43:10.170 | INFO     | experiments.finalised_novel_impl:train:396 - 4:24, loss: 4.173
+2023-04-18 06:43:10.171 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-04-18 06:43:25.650 | INFO     | experiments.finalised_novel_impl:train:396 - 4:25, loss: 4.172
+2023-04-18 06:43:25.651 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-04-18 06:43:41.132 | INFO     | experiments.finalised_novel_impl:train:396 - 4:26, loss: 4.165
+2023-04-18 06:43:41.133 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-04-18 06:43:56.607 | INFO     | experiments.finalised_novel_impl:train:396 - 4:27, loss: 4.172
+2023-04-18 06:43:56.608 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-04-18 06:44:12.075 | INFO     | experiments.finalised_novel_impl:train:396 - 4:28, loss: 4.163
+2023-04-18 06:44:12.076 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-04-18 06:44:27.555 | INFO     | experiments.finalised_novel_impl:train:396 - 4:29, loss: 4.161
+2023-04-18 06:44:27.556 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-04-18 06:44:43.018 | INFO     | experiments.finalised_novel_impl:train:396 - 4:30, loss: 4.166
+2023-04-18 06:44:43.019 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-04-18 06:44:58.508 | INFO     | experiments.finalised_novel_impl:train:396 - 4:31, loss: 4.164
+2023-04-18 06:44:58.509 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-04-18 06:45:13.984 | INFO     | experiments.finalised_novel_impl:train:396 - 4:32, loss: 4.179
+2023-04-18 06:45:13.985 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-04-18 06:45:29.468 | INFO     | experiments.finalised_novel_impl:train:396 - 4:33, loss: 4.178
+2023-04-18 06:45:29.469 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-04-18 06:45:44.944 | INFO     | experiments.finalised_novel_impl:train:396 - 4:34, loss: 4.177
+2023-04-18 06:45:44.945 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-04-18 06:46:00.425 | INFO     | experiments.finalised_novel_impl:train:396 - 4:35, loss: 4.177
+2023-04-18 06:46:00.426 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-04-18 06:46:15.893 | INFO     | experiments.finalised_novel_impl:train:396 - 4:36, loss: 4.173
+2023-04-18 06:46:15.894 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-04-18 06:46:31.372 | INFO     | experiments.finalised_novel_impl:train:396 - 4:37, loss: 4.173
+2023-04-18 06:46:31.373 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-04-18 06:46:46.869 | INFO     | experiments.finalised_novel_impl:train:396 - 4:38, loss: 4.170
+2023-04-18 06:46:46.870 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-04-18 06:47:02.354 | INFO     | experiments.finalised_novel_impl:train:396 - 4:39, loss: 4.175
+2023-04-18 06:47:02.355 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-04-18 06:47:17.830 | INFO     | experiments.finalised_novel_impl:train:396 - 4:40, loss: 4.171
+2023-04-18 06:47:17.831 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-04-18 06:47:33.291 | INFO     | experiments.finalised_novel_impl:train:396 - 4:41, loss: 4.164
+2023-04-18 06:47:33.292 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-04-18 06:47:48.759 | INFO     | experiments.finalised_novel_impl:train:396 - 4:42, loss: 4.162
+2023-04-18 06:47:48.760 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-04-18 06:48:04.220 | INFO     | experiments.finalised_novel_impl:train:396 - 4:43, loss: 4.166
+2023-04-18 06:48:04.220 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-04-18 06:48:19.689 | INFO     | experiments.finalised_novel_impl:train:396 - 4:44, loss: 4.165
+2023-04-18 06:48:19.690 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-04-18 06:48:35.161 | INFO     | experiments.finalised_novel_impl:train:396 - 4:45, loss: 4.164
+2023-04-18 06:48:35.162 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-04-18 06:48:50.646 | INFO     | experiments.finalised_novel_impl:train:396 - 4:46, loss: 4.164
+2023-04-18 06:48:50.647 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-04-18 06:49:06.165 | INFO     | experiments.finalised_novel_impl:train:396 - 4:47, loss: 4.156
+2023-04-18 06:49:06.166 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-04-18 06:49:21.667 | INFO     | experiments.finalised_novel_impl:train:396 - 4:48, loss: 4.154
+2023-04-18 06:49:21.668 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-04-18 06:49:37.177 | INFO     | experiments.finalised_novel_impl:train:396 - 4:49, loss: 4.161
+2023-04-18 06:49:37.177 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-04-18 06:49:52.720 | INFO     | experiments.finalised_novel_impl:train:396 - 4:50, loss: 4.156
+2023-04-18 06:49:52.721 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-04-18 06:50:08.228 | INFO     | experiments.finalised_novel_impl:train:396 - 4:51, loss: 4.153
+2023-04-18 06:50:08.228 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-04-18 06:50:23.694 | INFO     | experiments.finalised_novel_impl:train:396 - 4:52, loss: 4.159
+2023-04-18 06:50:23.695 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-04-18 06:50:39.148 | INFO     | experiments.finalised_novel_impl:train:396 - 4:53, loss: 4.155
+2023-04-18 06:50:39.149 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-04-18 06:50:54.611 | INFO     | experiments.finalised_novel_impl:train:396 - 4:54, loss: 4.154
+2023-04-18 06:50:54.612 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-04-18 06:51:10.080 | INFO     | experiments.finalised_novel_impl:train:396 - 4:55, loss: 4.156
+2023-04-18 06:51:10.081 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-04-18 06:51:25.553 | INFO     | experiments.finalised_novel_impl:train:396 - 4:56, loss: 4.153
+2023-04-18 06:51:25.553 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-04-18 06:51:41.009 | INFO     | experiments.finalised_novel_impl:train:396 - 4:57, loss: 4.158
+2023-04-18 06:51:41.010 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-04-18 06:51:56.480 | INFO     | experiments.finalised_novel_impl:train:396 - 4:58, loss: 4.159
+2023-04-18 06:51:56.481 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-04-18 06:52:11.954 | INFO     | experiments.finalised_novel_impl:train:396 - 4:59, loss: 4.153
+2023-04-18 06:52:11.955 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-04-18 06:52:27.416 | INFO     | experiments.finalised_novel_impl:train:396 - 4:60, loss: 4.151
+2023-04-18 06:52:27.417 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-04-18 06:52:42.882 | INFO     | experiments.finalised_novel_impl:train:396 - 4:61, loss: 4.146
+2023-04-18 06:52:42.883 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-04-18 06:52:58.345 | INFO     | experiments.finalised_novel_impl:train:396 - 4:62, loss: 4.152
+2023-04-18 06:52:58.346 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-04-18 06:53:13.819 | INFO     | experiments.finalised_novel_impl:train:396 - 4:63, loss: 4.158
+2023-04-18 06:53:13.820 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-04-18 06:53:29.292 | INFO     | experiments.finalised_novel_impl:train:396 - 4:64, loss: 4.155
+2023-04-18 06:53:29.293 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-04-18 06:53:44.760 | INFO     | experiments.finalised_novel_impl:train:396 - 4:65, loss: 4.159
+2023-04-18 06:53:44.761 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-04-18 06:54:00.232 | INFO     | experiments.finalised_novel_impl:train:396 - 4:66, loss: 4.164
+2023-04-18 06:54:00.233 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-04-18 06:54:15.695 | INFO     | experiments.finalised_novel_impl:train:396 - 4:67, loss: 4.169
+2023-04-18 06:54:15.696 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-04-18 06:54:31.163 | INFO     | experiments.finalised_novel_impl:train:396 - 4:68, loss: 4.161
+2023-04-18 06:54:31.164 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-04-18 06:54:46.634 | INFO     | experiments.finalised_novel_impl:train:396 - 4:69, loss: 4.158
+2023-04-18 06:54:46.635 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-04-18 06:55:02.103 | INFO     | experiments.finalised_novel_impl:train:396 - 4:70, loss: 4.164
+2023-04-18 06:55:02.103 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 280
+2023-04-18 06:55:02.131 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 06:55:09.905 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([8, 5, 1, 6, 2, 7, 4, 3])
+2023-04-18 06:56:27.468 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_280_accuracy_results.json
+2023-04-18 06:56:27.469 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 7633 / 10000 samples (76.33% correct)
+2023-04-18 06:56:27.603 | INFO     | experiments.finalised_novel_impl:train:302 - Task 5 / 5
+2023-04-18 06:56:27.608 | INFO     | experiments.finalised_novel_impl:train:303 - Classes in task: ['plane', 'truck']
+2023-04-18 06:56:27.609 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:207 - Starting memory update
+2023-04-18 06:56:27.609 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:219 - Using uncertainty type: relative_distances _secondary_uncertainty
+2023-04-18 06:56:27.610 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:221 - Processing new task samples
+2023-04-18 07:07:23.822 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 07:07:31.515 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([8, 5, 1, 6, 2, 7, 4, 3])
+2023-04-18 07:07:31.520 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:239 - Processing old task samples: total targets = dict_keys([8, 5, 1, 6, 2, 7, 4, 3])
+2023-04-18 07:07:31.521 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 8
+2023-04-18 07:07:39.786 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 5
+2023-04-18 07:07:47.952 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 1
+2023-04-18 07:07:56.196 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 6
+2023-04-18 07:08:04.421 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 2
+2023-04-18 07:08:12.588 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 7
+2023-04-18 07:08:20.793 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 4
+2023-04-18 07:08:29.025 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:242 - On target 3
+2023-04-18 07:08:37.217 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:267 - Drawing memory samples
+2023-04-18 07:08:37.220 | DEBUG    | experiments.finalised_novel_impl:_uncertainity_memory_update:287 - Creating buffer
+2023-04-18 07:08:37.229 | INFO     | experiments.finalised_novel_impl:_uncertainity_memory_update:296 - Memory update completed
+2023-04-18 07:08:37.239 | INFO     | experiments.finalised_novel_impl:train:318 - Populated buffer
+2023-04-18 07:08:37.242 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 1 / 70
+2023-04-18 07:08:52.728 | INFO     | experiments.finalised_novel_impl:train:396 - 5:1, loss: 4.202
+2023-04-18 07:08:52.729 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 2 / 70
+2023-04-18 07:09:08.188 | INFO     | experiments.finalised_novel_impl:train:396 - 5:2, loss: 4.197
+2023-04-18 07:09:08.189 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 3 / 70
+2023-04-18 07:09:23.660 | INFO     | experiments.finalised_novel_impl:train:396 - 5:3, loss: 4.186
+2023-04-18 07:09:23.661 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 4 / 70
+2023-04-18 07:09:39.127 | INFO     | experiments.finalised_novel_impl:train:396 - 5:4, loss: 4.189
+2023-04-18 07:09:39.128 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 5 / 70
+2023-04-18 07:09:54.611 | INFO     | experiments.finalised_novel_impl:train:396 - 5:5, loss: 4.185
+2023-04-18 07:09:54.612 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 6 / 70
+2023-04-18 07:10:10.071 | INFO     | experiments.finalised_novel_impl:train:396 - 5:6, loss: 4.174
+2023-04-18 07:10:10.071 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 7 / 70
+2023-04-18 07:10:25.541 | INFO     | experiments.finalised_novel_impl:train:396 - 5:7, loss: 4.166
+2023-04-18 07:10:25.542 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 8 / 70
+2023-04-18 07:10:41.014 | INFO     | experiments.finalised_novel_impl:train:396 - 5:8, loss: 4.177
+2023-04-18 07:10:41.015 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 9 / 70
+2023-04-18 07:10:56.481 | INFO     | experiments.finalised_novel_impl:train:396 - 5:9, loss: 4.173
+2023-04-18 07:10:56.482 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 10 / 70
+2023-04-18 07:11:11.946 | INFO     | experiments.finalised_novel_impl:train:396 - 5:10, loss: 4.169
+2023-04-18 07:11:11.947 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 11 / 70
+2023-04-18 07:11:27.415 | INFO     | experiments.finalised_novel_impl:train:396 - 5:11, loss: 4.165
+2023-04-18 07:11:27.416 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 12 / 70
+2023-04-18 07:11:42.899 | INFO     | experiments.finalised_novel_impl:train:396 - 5:12, loss: 4.162
+2023-04-18 07:11:42.900 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 13 / 70
+2023-04-18 07:11:58.375 | INFO     | experiments.finalised_novel_impl:train:396 - 5:13, loss: 4.162
+2023-04-18 07:11:58.376 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 14 / 70
+2023-04-18 07:12:13.846 | INFO     | experiments.finalised_novel_impl:train:396 - 5:14, loss: 4.156
+2023-04-18 07:12:13.847 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 15 / 70
+2023-04-18 07:12:29.329 | INFO     | experiments.finalised_novel_impl:train:396 - 5:15, loss: 4.155
+2023-04-18 07:12:29.330 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 16 / 70
+2023-04-18 07:12:44.809 | INFO     | experiments.finalised_novel_impl:train:396 - 5:16, loss: 4.162
+2023-04-18 07:12:44.810 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 17 / 70
+2023-04-18 07:13:00.285 | INFO     | experiments.finalised_novel_impl:train:396 - 5:17, loss: 4.163
+2023-04-18 07:13:00.285 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 18 / 70
+2023-04-18 07:13:15.762 | INFO     | experiments.finalised_novel_impl:train:396 - 5:18, loss: 4.164
+2023-04-18 07:13:15.763 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 19 / 70
+2023-04-18 07:13:31.227 | INFO     | experiments.finalised_novel_impl:train:396 - 5:19, loss: 4.160
+2023-04-18 07:13:31.227 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 20 / 70
+2023-04-18 07:13:46.695 | INFO     | experiments.finalised_novel_impl:train:396 - 5:20, loss: 4.157
+2023-04-18 07:13:46.696 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 21 / 70
+2023-04-18 07:14:02.162 | INFO     | experiments.finalised_novel_impl:train:396 - 5:21, loss: 4.157
+2023-04-18 07:14:02.163 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 22 / 70
+2023-04-18 07:14:17.627 | INFO     | experiments.finalised_novel_impl:train:396 - 5:22, loss: 4.155
+2023-04-18 07:14:17.628 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 23 / 70
+2023-04-18 07:14:33.090 | INFO     | experiments.finalised_novel_impl:train:396 - 5:23, loss: 4.157
+2023-04-18 07:14:33.091 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 24 / 70
+2023-04-18 07:14:48.551 | INFO     | experiments.finalised_novel_impl:train:396 - 5:24, loss: 4.151
+2023-04-18 07:14:48.552 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 25 / 70
+2023-04-18 07:15:04.015 | INFO     | experiments.finalised_novel_impl:train:396 - 5:25, loss: 4.152
+2023-04-18 07:15:04.016 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 26 / 70
+2023-04-18 07:15:19.468 | INFO     | experiments.finalised_novel_impl:train:396 - 5:26, loss: 4.149
+2023-04-18 07:15:19.469 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 27 / 70
+2023-04-18 07:15:34.925 | INFO     | experiments.finalised_novel_impl:train:396 - 5:27, loss: 4.143
+2023-04-18 07:15:34.926 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 28 / 70
+2023-04-18 07:15:50.401 | INFO     | experiments.finalised_novel_impl:train:396 - 5:28, loss: 4.144
+2023-04-18 07:15:50.402 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 29 / 70
+2023-04-18 07:16:05.881 | INFO     | experiments.finalised_novel_impl:train:396 - 5:29, loss: 4.145
+2023-04-18 07:16:05.882 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 30 / 70
+2023-04-18 07:16:21.352 | INFO     | experiments.finalised_novel_impl:train:396 - 5:30, loss: 4.140
+2023-04-18 07:16:21.353 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 31 / 70
+2023-04-18 07:16:36.808 | INFO     | experiments.finalised_novel_impl:train:396 - 5:31, loss: 4.138
+2023-04-18 07:16:36.809 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 32 / 70
+2023-04-18 07:16:52.279 | INFO     | experiments.finalised_novel_impl:train:396 - 5:32, loss: 4.154
+2023-04-18 07:16:52.279 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 33 / 70
+2023-04-18 07:17:07.755 | INFO     | experiments.finalised_novel_impl:train:396 - 5:33, loss: 4.148
+2023-04-18 07:17:07.756 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 34 / 70
+2023-04-18 07:17:23.230 | INFO     | experiments.finalised_novel_impl:train:396 - 5:34, loss: 4.149
+2023-04-18 07:17:23.231 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 35 / 70
+2023-04-18 07:17:38.693 | INFO     | experiments.finalised_novel_impl:train:396 - 5:35, loss: 4.150
+2023-04-18 07:17:38.694 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 36 / 70
+2023-04-18 07:17:54.157 | INFO     | experiments.finalised_novel_impl:train:396 - 5:36, loss: 4.149
+2023-04-18 07:17:54.158 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 37 / 70
+2023-04-18 07:18:09.628 | INFO     | experiments.finalised_novel_impl:train:396 - 5:37, loss: 4.154
+2023-04-18 07:18:09.629 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 38 / 70
+2023-04-18 07:18:25.090 | INFO     | experiments.finalised_novel_impl:train:396 - 5:38, loss: 4.147
+2023-04-18 07:18:25.090 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 39 / 70
+2023-04-18 07:18:40.555 | INFO     | experiments.finalised_novel_impl:train:396 - 5:39, loss: 4.150
+2023-04-18 07:18:40.556 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 40 / 70
+2023-04-18 07:18:56.046 | INFO     | experiments.finalised_novel_impl:train:396 - 5:40, loss: 4.149
+2023-04-18 07:18:56.047 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 41 / 70
+2023-04-18 07:19:11.520 | INFO     | experiments.finalised_novel_impl:train:396 - 5:41, loss: 4.147
+2023-04-18 07:19:11.521 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 42 / 70
+2023-04-18 07:19:26.999 | INFO     | experiments.finalised_novel_impl:train:396 - 5:42, loss: 4.146
+2023-04-18 07:19:27.000 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 43 / 70
+2023-04-18 07:19:42.463 | INFO     | experiments.finalised_novel_impl:train:396 - 5:43, loss: 4.144
+2023-04-18 07:19:42.464 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 44 / 70
+2023-04-18 07:19:57.939 | INFO     | experiments.finalised_novel_impl:train:396 - 5:44, loss: 4.136
+2023-04-18 07:19:57.939 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 45 / 70
+2023-04-18 07:20:13.404 | INFO     | experiments.finalised_novel_impl:train:396 - 5:45, loss: 4.139
+2023-04-18 07:20:13.405 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 46 / 70
+2023-04-18 07:20:28.875 | INFO     | experiments.finalised_novel_impl:train:396 - 5:46, loss: 4.137
+2023-04-18 07:20:28.876 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 47 / 70
+2023-04-18 07:20:44.342 | INFO     | experiments.finalised_novel_impl:train:396 - 5:47, loss: 4.136
+2023-04-18 07:20:44.343 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 48 / 70
+2023-04-18 07:20:59.811 | INFO     | experiments.finalised_novel_impl:train:396 - 5:48, loss: 4.139
+2023-04-18 07:20:59.811 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 49 / 70
+2023-04-18 07:21:15.276 | INFO     | experiments.finalised_novel_impl:train:396 - 5:49, loss: 4.139
+2023-04-18 07:21:15.277 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 50 / 70
+2023-04-18 07:21:30.749 | INFO     | experiments.finalised_novel_impl:train:396 - 5:50, loss: 4.140
+2023-04-18 07:21:30.750 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 51 / 70
+2023-04-18 07:21:46.226 | INFO     | experiments.finalised_novel_impl:train:396 - 5:51, loss: 4.135
+2023-04-18 07:21:46.227 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 52 / 70
+2023-04-18 07:22:01.693 | INFO     | experiments.finalised_novel_impl:train:396 - 5:52, loss: 4.135
+2023-04-18 07:22:01.694 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 53 / 70
+2023-04-18 07:22:17.160 | INFO     | experiments.finalised_novel_impl:train:396 - 5:53, loss: 4.134
+2023-04-18 07:22:17.161 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 54 / 70
+2023-04-18 07:22:32.644 | INFO     | experiments.finalised_novel_impl:train:396 - 5:54, loss: 4.141
+2023-04-18 07:22:32.645 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 55 / 70
+2023-04-18 07:22:48.108 | INFO     | experiments.finalised_novel_impl:train:396 - 5:55, loss: 4.132
+2023-04-18 07:22:48.109 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 56 / 70
+2023-04-18 07:23:03.584 | INFO     | experiments.finalised_novel_impl:train:396 - 5:56, loss: 4.137
+2023-04-18 07:23:03.585 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 57 / 70
+2023-04-18 07:23:19.059 | INFO     | experiments.finalised_novel_impl:train:396 - 5:57, loss: 4.131
+2023-04-18 07:23:19.060 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 58 / 70
+2023-04-18 07:23:34.541 | INFO     | experiments.finalised_novel_impl:train:396 - 5:58, loss: 4.132
+2023-04-18 07:23:34.542 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 59 / 70
+2023-04-18 07:23:50.012 | INFO     | experiments.finalised_novel_impl:train:396 - 5:59, loss: 4.134
+2023-04-18 07:23:50.013 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 60 / 70
+2023-04-18 07:24:05.481 | INFO     | experiments.finalised_novel_impl:train:396 - 5:60, loss: 4.127
+2023-04-18 07:24:05.482 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 61 / 70
+2023-04-18 07:24:20.948 | INFO     | experiments.finalised_novel_impl:train:396 - 5:61, loss: 4.138
+2023-04-18 07:24:20.949 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 62 / 70
+2023-04-18 07:24:36.430 | INFO     | experiments.finalised_novel_impl:train:396 - 5:62, loss: 4.132
+2023-04-18 07:24:36.431 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 63 / 70
+2023-04-18 07:24:51.912 | INFO     | experiments.finalised_novel_impl:train:396 - 5:63, loss: 4.128
+2023-04-18 07:24:51.913 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 64 / 70
+2023-04-18 07:25:07.390 | INFO     | experiments.finalised_novel_impl:train:396 - 5:64, loss: 4.138
+2023-04-18 07:25:07.391 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 65 / 70
+2023-04-18 07:25:22.868 | INFO     | experiments.finalised_novel_impl:train:396 - 5:65, loss: 4.135
+2023-04-18 07:25:22.869 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 66 / 70
+2023-04-18 07:25:38.343 | INFO     | experiments.finalised_novel_impl:train:396 - 5:66, loss: 4.143
+2023-04-18 07:25:38.344 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 67 / 70
+2023-04-18 07:25:53.818 | INFO     | experiments.finalised_novel_impl:train:396 - 5:67, loss: 4.142
+2023-04-18 07:25:53.819 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 68 / 70
+2023-04-18 07:26:09.294 | INFO     | experiments.finalised_novel_impl:train:396 - 5:68, loss: 4.136
+2023-04-18 07:26:09.295 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 69 / 70
+2023-04-18 07:26:24.769 | INFO     | experiments.finalised_novel_impl:train:396 - 5:69, loss: 4.136
+2023-04-18 07:26:24.770 | INFO     | experiments.finalised_novel_impl:train:332 - Starting epoch 70 / 70
+2023-04-18 07:26:40.247 | INFO     | experiments.finalised_novel_impl:train:396 - 5:70, loss: 4.139
+2023-04-18 07:26:40.247 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 350
+2023-04-18 07:26:40.275 | INFO     | experiments.finalised_novel_impl:generate_embeddings:422 - Generating fresh mean embedding vectors
+2023-04-18 07:26:48.134 | DEBUG    | experiments.finalised_novel_impl:generate_embeddings:455 - Generated mean embedding vectors for: dict_keys([0, 9, 8, 5, 1, 6, 2, 7, 4, 3])
+2023-04-18 07:28:05.727 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_350_accuracy_results.json
+2023-04-18 07:28:05.728 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 9001 / 10000 samples (90.01% correct)
+2023-04-18 07:28:05.857 | INFO     | algorithms.algorithm_base:run_base_task_metrics:144 - Running metrics: Task 999
+2023-04-18 07:29:23.475 | DEBUG    | algorithms.algorithm_base:run_base_task_metrics:200 - Raw classification accuracy results saved to ./output_cifar10_varied_sampling/novel/1681789873.0218954_CIFAR10_OFFICIAL_RUN/task_999_accuracy_results.json
+2023-04-18 07:29:23.476 | INFO     | algorithms.algorithm_base:run_base_task_metrics:201 - Correctly classified 9015 / 10000 samples (90.15% correct)
+2023-04-18 07:29:23.610 | INFO     | experiments.finalised_novel_impl:train:409 - Training complete
+2023-04-18 07:29:23.614 | INFO     | __main__:run_experiment:300 - Training and evaluation completed!
+2023-04-18 07:29:23.615 | INFO     | __main__:run_experiment:314 - Wrote usage stats to file
+2023-04-18 07:29:23.616 | INFO     | __main__:main:363 - Complete
+2023-04-18 07:29:23.617 | INFO     | __main__:close_tensorboard_writer:262 - Shut down TensorBoard
